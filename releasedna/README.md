@@ -2,9 +2,9 @@
 
 Package supply-chain forensics for Catalyst Problem Statement 2.
 
-**Milestone 1: working inspection engine, CLI and HTTP API.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.
+**Phase 1, hardened: inspection engine, CLI, durable job API and verification frontend.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.
 
-This is an early static analyzer, not a malware-free certification. There is no AI dependency. The dashboard, release monitoring, persistent history, wheel support and optional open-weight explanation layer are future phases.
+This is an early static analyzer, not a malware-free certification. There is no AI dependency. The local frontend exists to verify real scans and persisted history. Release monitoring, wheel support and the optional open-weight explanation layer remain future work. Phase 2 has not started.
 
 ## Run locally
 
@@ -21,13 +21,17 @@ cd backend
 ..\.venv\Scripts\python -m uvicorn app.api.main:app --host 127.0.0.1 --port 8000
 ```
 
-The API documentation is at http://127.0.0.1:8000/docs. `GET /health` returns engine health. `POST /api/scans` accepts:
+Open http://127.0.0.1:8000/ for the scan frontend, or http://127.0.0.1:8000/docs for API documentation. `GET /health` returns engine/worker health. `POST /api/scans` accepts:
 
 ```json
 {"ecosystem":"npm","name":"is-number","version":"7.0.0"}
 ```
 
-Scans are synchronous and capped at one concurrent scan per API process. Invalid inputs return 422; a busy process returns 429. A completed request can return `INCONCLUSIVE` with a network or inspection error; inspect the report rather than interpreting HTTP 200 as a clean verdict. No arbitrary URL input is exposed. Bind locally: authentication and public-service rate limits are outside this milestone.
+POST returns **202** with a durable job `id`, a `state` (`queued`, `running`, `completed`, `failed`), and a `Location` header. `GET /api/scans/{id}` returns the job and its `result` when available. `GET /api/scans?limit=50&offset=0` returns paginated history (maximum limit 100). The result's `status` is the analysis verdict, separate from job state. An inconclusive comparison can complete successfully; artifact/download errors fail the job and retain any partial report.
+
+SQLite defaults to `releasedna/data/scans.sqlite3`, independent of the working directory. Set `RELEASEDNA_DB` to override it. A single background worker processes a bounded queue of 20 pending jobs. Invalid inputs return 422; a full queue returns 429. Completed/failed jobs persist across restart; queued jobs resume; a running job interrupted before committing its result becomes failed with an explicit restart reason. Graceful shutdown finishes the active scan. A process-level OS lock prevents two workers from owning the same database. Run one API process, without `--workers`. No arbitrary URL input is exposed. Bind locally: authentication and public-service rate limits are outside this milestone.
+
+The old synchronous API response shape has changed: use `job.result.status`, not `job.status`. CLI JSON output remains a direct report and is not automatically added to API history. Earlier CLI/Swagger JSON files are not silently imported into the new database.
 
 ## Demo
 
@@ -39,12 +43,18 @@ No finding or verdict is hardcoded in the demo. The fixtures contain inert code 
 
 ## Verdicts and evidence
 
-- `CLEAN`: source identity is corroborated by a release tag and static package name/version (and npm gitHead when present), inspection completes, and differences are explained without suspicious findings. This is not signed provenance or a malware-free claim.
+- `CLEAN`: **No suspicious differences detected within the available analysis scope.** This requires corroborated source identity, completed inspection and explained differences. It is not signed provenance or a malware-free claim.
 - `REVIEW`: heuristics or unexplained code differences warrant investigation.
 - `HIGH_RISK`: several deterministic indicators reach 70 points; human review is still necessary.
 - `INCONCLUSIVE`: source matching or coverage is inadequate, or non-code differences remain unexplained. This overrides the other status; `suspicion_level` and findings remain visible even if risk is high.
 
 Rule weights are in `backend/app/diff_engine/compare.py`. Each rule contributes once per scan, capped at 100. Scores rank review urgency and are not probabilities. Every finding includes artifact/source paths, a rule, changed-line evidence where applicable, and a bounded unified diff. Binary and permission rules use file hashes/metadata rather than invented text lines.
+
+`artifact.verified` means only that the downloaded bytes match the official registry digest. `source.confidence` and `source.identity_corroborated` describe revision matching; `source.build_provenance_verified` remains false. The former ambiguous `source.verified` field was removed.
+
+`metrics` contains artifact_file_count, source_file_count, unique_comparison_paths, identical_files, added_files, removed_files and changed_files. The legacy total_files_inspected counts artifact plus source file instances, so shared paths count twice. For is-number: 4 + 15 = 19 file instances, but 15 unique comparison paths. The four difference counters sum to unique paths.
+
+Repository-only files carry `omission_kind`, `omission_rule` and an explanation. Entrypoints (`main`, `exports`, `bin`, etc.) and static relative imports from shipped JavaScript take precedence over exclusions. Literal npm `files` lists and simple root ignore entries can explain exclusions. Tests/docs/development conventions are identified separately. Unexplained runtime omissions trigger review; unknown non-code omissions make the result inconclusive. Complex npm glob/negation/nested ignore semantics, dynamic imports and Python dependency resolution are not fully modeled and are never described as fully verified packaging rules.
 
 ## Security boundaries
 
@@ -66,8 +76,8 @@ docker compose up --build
 - PyPI source distributions only. Dynamic versions, setuptools configuration, monorepo mapping beyond npm `repository.directory`, and generated bundles are conservative/partial.
 - Source maps supply corroborating evidence only: a matching `sourcesContent` cannot prove the emitted bundle is authentic.
 - Regex capability rules can miss aliases or advanced obfuscation and can flag benign code. No claim of complete semantic analysis.
-- Repository-only files are shown as packaging omissions. This does not prove the package is functionally complete.
-- npm version metadata does not include a publication timestamp; it is explicitly null in this milestone.
+- Missing-file classifications use supported declarations, limited static imports and conventions; they do not prove complete runtime dependency coverage.
+- npm publication time is read from the official full packument's exact `time[version]` entry. Missing/malformed/unavailable metadata remains null with a reason, never substituted with package `created` or `modified` timestamps.
 - Entirely unchanged files are hash-compared but not malware-scanned. The question answered is release/source divergence.
 - No attestation verification, rebuilding, automatic external notifications or public publishing.
 
@@ -77,4 +87,4 @@ docker compose up --build
 
 Connector references: [npm metadata](https://github.com/npm/registry/blob/main/docs/responses/package-metadata.md), [PyPI JSON API](https://docs.pypi.org/api/json/), [GitHub commits API](https://docs.github.com/en/rest/commits/commits).
 
-Work lives on `feat/inspection-engine`. No remote has been configured and nothing has been published. Use a reviewed pull request when connecting a public repository.
+Hardening work lives on `fix/phase1-hardening`. No remote has been configured and nothing has been published. Use a reviewed pull request when connecting a public repository. See [the Phase 1 audit](docs/phase1-hardening-report.md) for requirement-by-requirement verification.

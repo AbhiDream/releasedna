@@ -8,7 +8,8 @@ from app.core.safety import InspectionError, inspect_archive, safe_path
 
 def resolve(fetcher, release):
     slug, version = release['repo_slug'], release['version']
-    evidence = {'commit': None, 'tag': None, 'confidence': 'unresolved', 'verified': False, 'reasons': []}
+    evidence = {'commit': None, 'tag': None, 'confidence': 'unresolved',
+                'identity_corroborated': False, 'build_provenance_verified': False, 'reasons': []}
     if not slug:
         evidence['reasons'].append('No unambiguous supported GitHub repository in registry metadata')
         return evidence, {}
@@ -73,6 +74,6 @@ def resolve(fetcher, release):
     if not identity:
         evidence['reasons'].append('Source manifest does not statically corroborate package name and version')
     verified = bool(commits and identity and (not head or head == sha))
-    evidence.update(verified=verified, confidence='corroborated' if verified else 'candidate')
+    evidence.update(identity_corroborated=verified, confidence='corroborated' if verified else 'candidate')
     evidence['reasons'].append('Tag/manifest matching is not a cryptographic build provenance verification')
     return evidence, files

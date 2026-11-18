@@ -1,5 +1,7 @@
 # Milestone 1 validation — 19 November 2026 (Asia/Kolkata)
 
+Historical initial validation. The subsequent [Phase 1 hardening audit](phase1-hardening-report.md) documents the current API, 44-test suite, frontend and restart checks.
+
 Executed on Windows with Python 3.13.1. A fresh virtual environment installed the project's three pinned direct dependencies successfully. All 30 unittest cases passed there. Starlette emits a test-client httpx deprecation warning; it does not fail tests or affect scanner HTTP requests. Transitive versions are recorded in requirements-lock.txt.
 
 | Check | Observed result |

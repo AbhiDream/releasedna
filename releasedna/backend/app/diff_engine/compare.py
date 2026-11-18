@@ -3,6 +3,9 @@ import difflib
 import json
 import re
 from pathlib import PurePosixPath
+from app.diff_engine.omissions import Omissions
+
+CLEAN_MEANING = 'No suspicious differences detected within the available analysis scope.'
 
 CAPABILITIES = {
     'PROCESS_EXECUTION': (35, r'\b(?:child_process|execSync|spawnSync|subprocess|os\.system|Popen)\b'),
@@ -21,8 +24,9 @@ def text(data):
         return None
 
 
-def compare(artifact, source, source_verified):
+def compare(artifact, source, source_corroborated):
     rows, findings, limitations = [], [], []
+    omissions = Omissions(artifact, source)
     if not source:
         limitations.append('Source unavailable: added files mean unmatched files, not proven additions')
 
@@ -45,7 +49,11 @@ def compare(artifact, source, source_verified):
         if state == 'identical':
             continue
         if a is None:
-            row.update(classification='expected', explanation='Repository-only file omitted from distribution; packaging commonly excludes development files. This does not establish runtime completeness.')
+            decision = omissions.classify(path)
+            points = decision.pop('points')
+            row.update(decision)
+            if points:
+                finding(row, row['omission_rule'], points, row['explanation'])
             continue
         at, st = text(a.data), text(s.data) if s else ''
         added_lines = []
@@ -126,11 +134,15 @@ def compare(artifact, source, source_verified):
     score = min(100, sum(reasons.values()))
     unresolved = any(r['classification'] == 'unexplained' for r in rows)
     status = 'HIGH_RISK' if score >= 70 else 'REVIEW' if findings else 'CLEAN'
-    if not source_verified or unresolved or limitations:
+    if not source_corroborated or unresolved or limitations:
         status = 'INCONCLUSIVE'
-    return {'status': status, 'risk_score': score, 'risk_reasons': reasons,
+    counts = {key: sum(r['state'] == key for r in rows) for key in ('identical', 'added', 'removed', 'changed')}
+    metrics = {'artifact_file_count': len(artifact), 'source_file_count': len(source),
+               'unique_comparison_paths': len(rows), **{key + '_files': value for key, value in counts.items()}}
+    return {'status': status, 'clean_definition': CLEAN_MEANING, 'risk_score': score, 'risk_reasons': reasons,
             'suspicion_level': 'HIGH_RISK' if score >= 70 else 'REVIEW' if findings else 'NONE',
             'total_files_inspected': len(artifact) + len(source),
-            'counts': {key: sum(r['state'] == key for r in rows) for key in ('identical', 'added', 'removed', 'changed')},
+            'total_files_inspected_definition': 'Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.',
+            'metrics': metrics, 'counts': counts,
             'expected_generated_differences': [r['path'] for r in rows if r['classification'] == 'expected' and r['state'] != 'removed'],
             'findings': findings, 'files': rows, 'limitations': limitations}

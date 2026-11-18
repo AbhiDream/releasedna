@@ -6,7 +6,7 @@ import unittest
 import zipfile
 from unittest.mock import patch
 from fastapi.testclient import TestClient
-from app.api.main import app, slot
+from app.api.main import create_app
 from app.core.safety import File, InspectionError, inspect_archive, validate_url
 from app.connectors.registry import fetch_release, validate_input
 from app.diff_engine.compare import compare
@@ -127,30 +127,6 @@ class EvidenceTests(unittest.TestCase):
     def test_new_executable(self):
         result = compare({'helper': File(b'hello', True)}, {'helper': File(b'hello')}, True)
         self.assertIn('EXECUTABLE_ADDED', result['risk_reasons'])
-
-
-class ApiTests(unittest.TestCase):
-    def setUp(self):
-        self.client = TestClient(app)
-
-    def test_health(self):
-        self.assertEqual(self.client.get('/health').status_code, 200)
-
-    def test_input(self):
-        self.assertEqual(self.client.post('/api/scans', json={'ecosystem': 'npm', 'name': '../bad', 'version': '1'}).status_code, 422)
-
-    def test_concurrency(self):
-        slot.acquire()
-        try:
-            self.assertEqual(self.client.post('/api/scans', json={'ecosystem': 'npm', 'name': 'demo', 'version': '1'}).status_code, 429)
-        finally:
-            slot.release()
-
-    def test_pipeline_delegation(self):
-        with patch('app.api.main.scan', return_value={'status': 'INCONCLUSIVE'}) as mock:
-            response = self.client.post('/api/scans', json={'ecosystem': 'npm', 'name': 'demo', 'version': '1'})
-            self.assertEqual(response.json()['status'], 'INCONCLUSIVE')
-            mock.assert_called_once_with('npm', 'demo', '1')
 
 
 if __name__ == '__main__':

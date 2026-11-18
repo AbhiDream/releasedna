@@ -27,22 +27,22 @@ class ResolutionTests(unittest.TestCase):
     def test_source_identity_correlated(self):
         with patch('app.source_resolver.resolve.inspect_archive', return_value={'package.json': File(b'{"name":"demo","version":"1.0.0"}')}):
             evidence, _ = resolve(FakeSource(), self.release(git_head=SHA))
-        self.assertTrue(evidence['verified'])
+        self.assertTrue(evidence['identity_corroborated'])
 
     def test_tag_head_disagreement(self):
         with patch('app.source_resolver.resolve.inspect_archive', return_value={'package.json': File(b'{"name":"demo","version":"1.0.0"}')}):
             evidence, _ = resolve(FakeSource(), self.release(git_head='b' * 40))
-        self.assertFalse(evidence['verified'])
+        self.assertFalse(evidence['identity_corroborated'])
         self.assertIn('npm gitHead disagrees with release tag', evidence['reasons'])
 
     def test_manifest_disagreement(self):
         with patch('app.source_resolver.resolve.inspect_archive', return_value={'package.json': File(b'{"name":"other","version":"1.0.0"}')}):
             evidence, _ = resolve(FakeSource(), self.release())
-        self.assertFalse(evidence['verified'])
+        self.assertFalse(evidence['identity_corroborated'])
 
     def test_missing_repo(self):
         evidence, files = resolve(FakeSource(), self.release(repo_slug=None))
-        self.assertFalse(evidence['verified'])
+        self.assertFalse(evidence['identity_corroborated'])
         self.assertFalse(files)
 
     def test_network_failure_is_inconclusive(self):

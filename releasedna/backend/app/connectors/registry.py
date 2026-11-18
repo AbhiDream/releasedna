@@ -2,8 +2,30 @@ import base64
 import hashlib
 import hmac
 import re
+from datetime import datetime
+import httpx
 from urllib.parse import quote, urlsplit
 from app.core.safety import InspectionError
+
+
+def npm_publication(fetcher, name, version):
+    url = f'https://registry.npmjs.org/{quote(name, safe="")}'
+    result = {'publication_time': None, 'publication_time_source': url + '#time.' + version,
+              'publication_time_limitation': None}
+    try:
+        packument = fetcher.json(url)
+        if packument.get('name') != name:
+            raise ValueError('Package identity mismatch in publication metadata')
+        value = packument.get('time', {}).get(version)
+        if not isinstance(value, str):
+            raise ValueError('Official registry has no timestamp for this exact release')
+        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        if parsed.tzinfo is None:
+            raise ValueError('Publication timestamp lacks timezone')
+        result['publication_time'] = value
+    except (httpx.HTTPError, ValueError, KeyError, TypeError, AttributeError) as exc:
+        result['publication_time_limitation'] = str(exc)
+    return result
 
 
 def validate_input(ecosystem, name, version):
@@ -66,6 +88,8 @@ def fetch_release(fetcher, ecosystem, name, version):
     actual = hashlib.new(algorithm, blob).hexdigest()
     if not hmac.compare_digest(actual, expected):
         raise InspectionError('Artifact digest does not match official registry metadata')
+    if ecosystem == 'npm':
+        published.update(npm_publication(fetcher, name, version))
     return {'ecosystem': ecosystem, 'name': name, 'version': version, 'publication': published,
             'artifact': {'url': url, 'digest': algorithm + ':' + actual, 'verified': True},
             'repository': 'https://github.com/' + repo if repo else None,

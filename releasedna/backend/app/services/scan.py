@@ -5,7 +5,7 @@ import httpx
 from app.core.safety import Fetcher, InspectionError, inspect_archive
 from app.connectors.registry import fetch_release, validate_input
 from app.source_resolver.resolve import resolve
-from app.diff_engine.compare import compare
+from app.diff_engine.compare import compare, CLEAN_MEANING
 
 
 def scan(ecosystem, name, version):
@@ -16,7 +16,9 @@ def scan(ecosystem, name, version):
               'status': 'INCONCLUSIVE', 'risk_score': None, 'risk_reasons': {},
               'publication': None, 'artifact': None, 'repository': None, 'source': None,
               'total_files_inspected': 0, 'counts': {}, 'findings': [], 'files': [],
-              'limitations': [], 'engine_version': '0.1.0'}
+              'limitations': [], 'engine_version': '0.1.1', 'error': None, 'clean_definition': CLEAN_MEANING,
+              'metrics': {'artifact_file_count': 0, 'source_file_count': 0, 'unique_comparison_paths': 0,
+                          'identical_files': 0, 'added_files': 0, 'removed_files': 0, 'changed_files': 0}}
     fetcher = Fetcher()
     try:
         release, blob = fetch_release(fetcher, ecosystem, name, version)
@@ -25,9 +27,10 @@ def scan(ecosystem, name, version):
         try:
             source_info, source = resolve(fetcher, release)
         except (InspectionError, httpx.HTTPError, ValueError, KeyError, TypeError, AttributeError, RecursionError) as exc:
-            source_info, source = {'verified': False, 'confidence': 'unresolved', 'reasons': [str(exc)]}, {}
+            source_info, source = {'identity_corroborated': False, 'build_provenance_verified': False,
+                                   'confidence': 'unresolved', 'reasons': [str(exc)]}, {}
         result['source'] = source_info
-        result.update(compare(artifact, source, source_info['verified']))
+        result.update(compare(artifact, source, source_info['identity_corroborated']))
         result['limitations'].extend([
             'Static heuristic analysis cannot certify that a package is malware-free.',
             'Builds are never executed; compiled output and complex source layouts may remain unexplained.',
@@ -35,6 +38,7 @@ def scan(ecosystem, name, version):
             'Phase 1 supports npm tarballs and PyPI source distributions, with GitHub source repositories.',
         ])
     except (InspectionError, httpx.HTTPError, ValueError, KeyError, TypeError, AttributeError, RecursionError) as exc:
+        result['error'] = f'{type(exc).__name__}: {exc}'
         result['limitations'].append(f'Inspection could not complete: {type(exc).__name__}: {exc}')
     finally:
         fetcher.close()
