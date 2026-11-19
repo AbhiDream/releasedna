@@ -12,6 +12,8 @@ Open `/evaluation`, `/corpus` and `/fresh-evaluation` for generated evidence rep
 
 ## Run locally
 
+New contributors: follow the [first-run guide with actual frontend screenshots and a five-minute evidence demo](docs/quickstart.md). It records setup, clean/tampered scans, downloads, persistence checks and untested criteria.
+
 Python 3.11 or later. From this directory:
 
 ```powershell
