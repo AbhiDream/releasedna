@@ -9,6 +9,7 @@ from app.connectors.registry import fetch_release
 from app.core.safety import Fetcher, inspect_archive
 from app.source_resolver.resolve import resolve
 from app.diff_engine.compare import compare
+from app.diff_engine.fingerprint import detector_fingerprint
 from app.evaluation_fixtures import pack, tampered_cases, benign_controls
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -222,7 +223,7 @@ def main():
         metrics = summarize(results, tampered, controls)
         payload = {'schema_version':1, 'engine_version':'0.1.3', 'generated_at':datetime.now(timezone.utc).isoformat(),
                    'corpus_sha256':hashlib.sha256(CORPUS.read_bytes()).hexdigest(), 'metrics':metrics,
-                   'detector_sha256':hashlib.sha256(b''.join((Path(__file__).parent/'diff_engine'/name).read_bytes() for name in ('compare.py','generated.py','omissions.py','metadata.py'))).hexdigest(),
+                   'detector_sha256':detector_fingerprint(), 'detector_hash_format':'sha256-named-files-lf-v1',
                    'evaluation_design':'Original development/holdout labels retained for historical comparison. Both sets informed version 0.1.3; this is now a reused development corpus, not a fresh holdout.',
                    'public_releases':results, 'tampered_fixtures':tampered, 'benign_controls':controls}
         write_reports(payload,args.output)
