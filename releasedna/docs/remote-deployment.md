@@ -2,6 +2,8 @@
 
 Updated 20 November 2026. The requested deployment target is a remote service, not a Python web server on the user's laptop. The old host server was stopped after checking that no queued/running jobs remained. No new permanent host server was started.
 
+Live deployment: [releasedna.onrender.com](https://releasedna.onrender.com), Render Free Docker, one instance, manual deployments. Tested application revision: `c560bc9`. See [live evidence](render-smoke-evidence.json). The workspace key is managed in Render Environment; do not commit or share it publicly.
+
 ## Free option: Render Docker demo
 
 The repository-root `render.yaml` defines a **free Docker web service**, one instance, generated workspace access key and no paid disk. It uses the project's Dockerfile, pinned Python dependencies, non-root runtime, and an offline unit-test gate during the image build. The port comes from Render's `PORT` variable. Manual deployment is the default.
@@ -67,27 +69,33 @@ The container entrypoint refuses root execution and a missing/short access key, 
 
 Official references: [Render persistent disks](https://render.com/docs/disks), [Render pricing](https://render.com/pricing), [Compose service controls](https://docs.docker.com/reference/compose-file/services/).
 
-## Verification record
+## Verification record — 20 November 2026 IST
 
 | Requirement | Status | Evidence / limit |
 | --- | --- | --- |
-| Sequential worker + atomic batch | PASS | Regression verifies one running/two queued, FIFO with tied clocks, capacity rollback and continue after failure. |
-| Standalone and archived text differences | PASS | Hashes, exact macro line/path, UTF-8, limits, unsafe paths, unchanged bytes and API job persistence tested. |
-| Remote workspace access gate | PASS locally | Unauthenticated history, queue, uploads and mutation return 401; valid key works; missing required key prevents startup. |
-| Backend suite | PASS | 100 tests, 5.607 seconds on Windows/Python 3.13.1. New tests execute through TestClient and the inspection subprocess, not a deployed Render instance. |
-| Frontend checks | PASS statically | `node --check`, unique HTML IDs and literal JS-to-HTML bindings. New controls have not yet been browser-tested against the hosted service. |
-| Compose + both Render YAML schemas | PASS | Validated against current official Compose/Render schemas. This does not build or launch containers. |
-| PDF visible/white-text audit | PASS | Observed injection documented; neutral badge replaces the matching wording. No claim that all prior influence can be ruled out. |
-| Docker image build + runtime controls | BLOCKED | Docker/WSL unavailable locally; remote provider build has not been launched. Dockerfile test command is a gate, not a fabricated passing container run. |
-| Hosted frontend / real remote end-to-end scan | BLOCKED | Render account/service deployment needed. No live URL has been fabricated. |
-| Free-tier durable persistence / continuous monitoring | NOT SUPPORTED | Deliberate free-tier limitation, clearly shown in UI; persistent tier is optional. |
+| Remote Docker, laptop server stopped | PASS | Render reports Docker/Free, successful image deployment and healthy HTTPS service. No listener on laptop port 8000. |
+| Backend tests | PASS | 109 tests in 9.575s in the project Windows environment; the final Render Docker build also passed its offline test gate. An earlier attempt with the system Python failed imports because it lacked project dependencies; it is not counted as passing. |
+| Sequential queue | PASS | Remote npm, PyPI and text jobs completed; sampled timeline had at most one running job. Regression tests cover FIFO, capacity and failure recovery. |
+| Official npm scan | PASS | is-number@7.0.0: CLEAN/0; artifact 4, source 15, unique paths 15, identical 4, added 0, removed 11, changed 0; official digest and release timestamp available, source corroborated. CLEAN retains its limited definition. |
+| PyPI scan | PASS with uncertainty | packaging@25.0 completed with 72 identical files. Source manifest cannot statically establish its dynamic version, so the verdict remains INCONCLUSIVE and confidence candidate. No malware-free or provenance claim. |
+| Text differences | PASS | API and actual frontend uploads detected SHELL_PIPELINE at build.txt line 2, risk 30, exact diff. User-supplied identity remains INCONCLUSIVE. |
+| Frontend | PASS | Hosted unlock, batch submission, completed history, text uploads, expanded diff, evidence JSON download and corpus HTML download exercised. Groq button explicitly unavailable without key. JavaScript syntax check passed. |
+| Access gate and evidence routes | PASS | All seven tested protected HTML/JSON/schema routes return 401 without key and 200 with key; exact endpoint checks recorded in JSON. |
+| Container boundary | PASS for observed controls | Non-root runtime and Linux address-space limits observed. Writable root, absent Docker marker, enabled network; no claim of Compose-level flags or a separate container per package on Render. |
+| Durable cloud persistence / continuous monitoring | BLOCKED on Free | Redeploy reset the scan database as disclosed. Persistent hosting remains a separate option. Monitor only operates while the service is awake. |
+| Groq live narration | BLOCKED | No key, per user preference. Integration and explicit unavailable state retained. |
+| PDF visible/white-text audit | PASS | See pdf-injection-audit.md; embedded AI-targeted text is not treated as specification authority. Historical influence cannot be ruled out completely. |
 
-## Remote acceptance checks still to run
+## Deployment fixes and repeatable smoke check
 
-The supplied `deploy/verify_remote.py` runs only when explicitly invoked against your deployed HTTPS origin with `RELEASEDNA_API_TOKEN` in the shell environment. It creates two real package jobs and a harmless text comparison, checks the auth gate, observes serial states, checks the exact text finding, and saves complete results without printing the key.
+The first remote run returned INCONCLUSIVE because GitHub REST was rate limited on the shared hosting IP; it was recorded as a failed clean-baseline check. Source resolution now supports bounded public Git HTTPS ref advertisements when REST reports a rate limit, including peeled annotated tags, conflicting-tag rejection, and unchanged manifest/gitHead confidence checks. This follows [Git's public HTTP ref-discovery protocol](https://git-scm.com/docs/http-protocol). No GitHub credentials or Git subprocesses are used. The final successful remote npm and PyPI scans both exercised this fallback (`resolution_transport: git_https_refs`), in addition to offline regression tests and a live public ref-discovery check.
+
+Evidence Lab files are now bundled in the image independently of ephemeral scan storage. The structural corpus is rerun offline during the image build. Public evaluation reports retain their original 19 November timestamps and are explicitly labelled recorded snapshots; they are not represented as new provider evaluations. A detector fingerprint mismatch prevents the bundle build. False alarms and misses remain visible.
+
+Run `deploy/verify_remote.py` against the deployed HTTPS origin with `RELEASEDNA_API_TOKEN` in the environment. It creates two registry jobs and one harmless text comparison, checks authentication and serial states, validates the baseline/text finding, and exports full evidence without printing the key. This is a small smoke test, not an accuracy benchmark or persistent-storage test.
 
 ```powershell
-python releasedna/deploy/verify_remote.py https://YOUR-SERVICE.onrender.com --output remote-verification.json
+python releasedna/deploy/verify_remote.py https://releasedna.onrender.com --output remote-verification.json
 ```
 
-Then manually verify the hosted batch/text forms, Downloads and history. Inspect the container observations and provider logs. On a paid persistent service, restart it and compare saved job IDs/results. On Free, treat lost state as the documented limitation, not a passed persistence test. Do not mark any of these remote checks PASS until actually run.
+For the UI demo: unlock the workspace; queue `npm,is-number,7.0.0` and `pypi,packaging,25.0`; use Text files to compare `normal` with `normal` plus a harmless `m4_syscmd([printf fixture])` line; expand View diff and download the JSON. Nothing in the input text is executed. Download important scan evidence before the free instance restarts.
