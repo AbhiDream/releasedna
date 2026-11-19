@@ -16,7 +16,7 @@ MAX_EXPANDED = 64 * 1024 * 1024
 MAX_FILE = 4 * 1024 * 1024
 MAX_FILES = 6000
 HOSTS = {'registry.npmjs.org', 'pypi.org', 'files.pythonhosted.org',
-         'api.github.com', 'codeload.github.com'}
+         'api.github.com', 'codeload.github.com', 'github.com'}
 
 
 class InspectionError(ValueError):
@@ -28,6 +28,9 @@ def validate_url(url):
     if (p.scheme != 'https' or p.hostname not in HOSTS or p.port not in (None, 443)
             or p.username or p.password or p.fragment):
         raise InspectionError('URL must use HTTPS on an approved registry/source host')
+    if p.hostname == 'github.com' and (not re.fullmatch(r'/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\.git/info/refs', p.path)
+                                      or p.query != 'service=git-upload-pack'):
+        raise InspectionError('Only public Git reference discovery is allowed on github.com')
     return url
 
 

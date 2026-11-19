@@ -242,14 +242,21 @@ async function health() {
 }
 health();uploads().catch(error=>{el('local-error').textContent=error.message;});
 
-api('/api/explanation/config').then(config=>{if(!config.configured){el('explain').textContent='Groq explanation · key not configured';el('explain').disabled=true;}}).catch(()=>{});
+async function explanationConfig() {
+  try {
+    const config = await api('/api/explanation/config');
+    el('explain').disabled = !config.configured;
+    el('explain').textContent = config.configured ? 'Explain findings' : 'Groq explanation · key not configured';
+  } catch { el('explain').disabled = true; }
+}
+explanationConfig();
 
 el('access-form').addEventListener('submit', async event => {
   event.preventDefault(); workspaceKey=el('access-key').value.trim();
   try {
     await api('/api/queue'); sessionStorage.setItem('releasedna-access-key',workspaceKey);
     el('access-key').value='';el('access-panel').hidden=true;el('access-error').textContent='';
-    await Promise.all([history(),uploads(),monitor()]);el('error').textContent='';el('local-error').textContent='';el('monitor-error').textContent='';
+    await Promise.all([history(),uploads(),monitor(),explanationConfig()]);el('error').textContent='';el('local-error').textContent='';el('monitor-error').textContent='';
   } catch(error) {workspaceKey='';sessionStorage.removeItem('releasedna-access-key');el('access-error').textContent=error.message;}
 });
 el('batch-form').addEventListener('submit',async event=>{
