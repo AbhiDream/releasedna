@@ -122,3 +122,4 @@ Capture retrieves archives without installing them. Subsequent `run` commands re
 The structural corpus command also writes `data/demo-xz-artifact.tgz` and `data/demo-xz-source.tgz` (plus a debug-style pair). Select these in **Local archives** to demonstrate an actual queued comparison, the ivory anomaly badge, exact changed line, diff and evidence download. They are harmless synthetic analogues, not historical malware or organizer test data.
 
 `GROQ_API_KEY` enables optional narration through `openai/gpt-oss-20b`. Without a key the frontend shows unavailable. Configure it only in the backend environment. Model text never changes saved findings or scores.
+New users: [first-run guide and screenshots](docs/quickstart.md). 
