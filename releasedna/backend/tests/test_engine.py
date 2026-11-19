@@ -122,9 +122,10 @@ class EvidenceTests(unittest.TestCase):
     def test_matching_sourcemap_does_not_prove_bundle(self):
         data = json.dumps({'version': 3, 'mappings': '', 'sources': ['a.js'], 'sourcesContent': ['original']}).encode()
         result = compare({'out.js.map': File(data)}, {'a.js': File(b'original')}, True)
-        self.assertEqual(result['status'], 'REVIEW')
-        self.assertIn('MISSING_RUNTIME_FILE', result['risk_reasons'])
-        self.assertEqual(result['files'][-1]['classification'], 'expected')
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertNotIn('MISSING_RUNTIME_FILE', result['risk_reasons'])
+        source_row = next(row for row in result['files'] if row['path'] == 'a.js')
+        self.assertEqual(source_row['classification'], 'unexplained')
 
     def test_new_executable(self):
         result = compare({'helper': File(b'hello', True)}, {'helper': File(b'hello')}, True)

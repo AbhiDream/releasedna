@@ -22,7 +22,7 @@ Registry retrieval dispatches through `connectors/adapters.py` and its `Registry
 
 JavaScript uses bounded Tree-sitter syntax signatures; Python uses AST structure. Comments/locations are excluded while literals and structure remain. This explains syntax-preserving transformations, not arbitrary minification or transpilation. Source-map trailer statements are detected; changes before the trailer may still evade rules.
 
-API jobs and both CLIs use a spawned trusted worker with a 150-second wall deadline. Archive reads remain non-extracting. POSIX requests resource limits; Windows lacks an OS memory cap. The process boundary is not network/filesystem isolation. Docker sandbox testing remains blocked locally.
+API jobs and both CLIs use a spawned trusted worker with a 150-second wall deadline. Archive reads remain non-extracting. POSIX requests resource limits; Windows lacks an OS memory cap. The process boundary is not network/filesystem isolation. The live Render Free deployment was observed running as a non-root Docker service with a Linux address-space limit. The root filesystem was writable, the container marker was absent, and network access was enabled; this is provider-container execution, not a separately attested sandbox per package. Compose-only restrictions are not claimed as active on Render. See [remote verification](remote-deployment.md).
 
 Local artifact/source uploads are bounded SQLite blobs, referenced by ID and checked transactionally when creating a queued job. Reports record hashes, chosen layouts and unverified user-supplied identity. Completed results survive upload deletion and restart. Official scans use the same persisted queue.
 

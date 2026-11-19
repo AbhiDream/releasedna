@@ -46,6 +46,42 @@ class DetectorPriorityTests(unittest.TestCase):
         self.assertNotIn('DYNAMIC_EXECUTION',compare({'a.js':File(b'/pattern/.exec(input);')},{},True)['risk_reasons'])
         self.assertIn('DYNAMIC_EXECUTION',compare({'a.py':File(b'exec("pass")')},{},True)['risk_reasons'])
 
+    def test_specific_obfuscation_patterns_have_precise_findings(self):
+        cases = {
+            'string-built-eval': (b"eval('con' + 'sole.log(1)')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
+            'hex-escaped-require': (b"require('\\x63\\x68ild_process')", 'OBFUSCATED_MODULE_LOAD'),
+            'browser-fetch-hook': (b'window.fetch = function(input) { return original(input); };', 'BROWSER_API_HOOK'),
+            'hex-obfuscator-array': (b'var _0x4f2a = ["alpha", "beta"];', 'OBFUSCATOR_IDENTIFIER'),
+        }
+        for label, (payload, rule) in cases.items():
+            with self.subTest(case=label):
+                report=compare({'dist/index.js':File(payload)},{},True)
+                finding=next((item for item in report['findings'] if item['rule']==rule),None)
+                self.assertIsNotNone(finding,report['risk_reasons'])
+                self.assertEqual(finding['artifact_path'],'dist/index.js')
+                self.assertIn('static heuristic',finding['message'])
+
+    def test_obfuscator_rule_does_not_flag_plain_hex_or_local_binding(self):
+        for text in (b'const _0x = 1;', b'const _0xabc = ordinaryData;', b"require('child_process');"):
+            with self.subTest(text=text):
+                rules={item['rule'] for item in compare({'dist/index.js':File(text)},{},True)['findings']}
+                if text == b"require('child_process');":
+                    self.assertNotIn('OBFUSCATED_MODULE_LOAD',rules)
+                else:
+                    self.assertNotIn('OBFUSCATOR_IDENTIFIER',rules)
+
+    def test_development_and_sandbox_omissions_need_a_runtime_reference(self):
+        for path in ('karma.conf.cjs','sandbox/fixture.js','sandbox/data.json','config/dev.json','configs/build.json'):
+            with self.subTest(path=path):
+                source={path:File(b'fixture')}
+                row=next(item for item in compare({},source,True)['files'] if item['path']==path)
+                self.assertEqual(row['classification'],'expected')
+                self.assertNotEqual(row['omission_rule'],'MISSING_RUNTIME_FILE')
+        source={'package.json':File(b'{"main":"karma.conf.cjs"}'),'karma.conf.cjs':File(b'module.exports={}')}
+        row=next(item for item in compare({},source,True)['files'] if item['path']=='karma.conf.cjs')
+        self.assertEqual(row['omission_rule'],'MISSING_ENTRYPOINT')
+        self.assertEqual(row['classification'],'suspicious')
+
     def test_dev_omissions_preserve_entrypoints_and_imports(self):
         for path in ('.eslintrc.cjs','eslint.config.js','bin/dev.js','tasks/check.py'):
             source={path:File(b'void 0;')}

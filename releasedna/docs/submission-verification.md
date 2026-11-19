@@ -9,7 +9,7 @@ Verified 19 November 2026 on Windows / Python 3.13. This prototype demonstrates 
 - JavaScript syntax signatures and Python AST comparison preserve literals and structure while explaining comment/location-only changes. Source-map trailer statements are scored. The former quiet-append fixture is now detected.
 - Removal-only development metadata is explained when repository declarations support it. Runtime fields/lifecycle hooks remain protected. Documentation changes still undergo capability/entropy checks, and declared runtime paths are not exempted.
 - Explicit missing-tag finding and trusted registry/build adapter interfaces. Build explanation providers cannot disable capability rules or assert verified equivalence.
-- Responsive inspection desk, clear artifact/source trust separation, local archive form, searchable/filterable file table, exact diffs, persisted history, model-unavailable state and ivory anomaly badge.
+- Responsive inspection desk, clear artifact/source trust separation, local archive form, searchable/filterable file table, exact diffs, persisted history, model-unavailable state and findings badge.
 - Two genuine contribution scopes reserved for Sanskriti6Singh and kirtisihag-1808 in CONTRIBUTING.md. Their work and PRs have not been fabricated or completed on their behalf.
 
 ## Measured detector results
@@ -41,7 +41,7 @@ PASS means the stated demonstrated scope was exercised. FAIL means the full crit
 | Add ecosystem/build styles without rewriting comparison | PASS | Trusted adapter protocols and substitution tests; new ecosystem still requires endpoint validation and API/CLI exposure. No arbitrary plugin code from packages. |
 | Test real releases and publish transparent metrics | PASS | 8 reused and 6 newly selected public cases, errors retained, dated captured metadata and separate holdout report. |
 | Detect every organizer-provided tampered copy | BLOCKED | Organizer archives have not been supplied. Local archive input is ready. Synthetic cases cannot substitute for these. |
-| Eburnean “anomaly spotted” highlight | PASS | Actual local xz-style comparison shows ivory badge, SHELL_PIPELINE at m4/build.m4 line 2 and unified diff. |
+| Findings highlight | PASS | Actual local xz-style comparison shows the badge, SHELL_PIPELINE at m4/build.m4 line 2 and unified diff. |
 | Safe artifact inspection inside verified OS isolation | BLOCKED | Non-execution, archive limits and process timeout tested. Docker is absent; process separation alone is not a security sandbox. Windows OS memory cap is absent. |
 | Advanced diffing / arbitrary semantic build equivalence | FAIL | Syntax-preserving comparison and source-map context are implemented; arbitrary generated-code modifications can still escape, especially before the trailer. |
 | Previously unseen tampered packages with minimal false positives | BLOCKED | Independent contributor corpus is reserved; organizer corpus absent. Current development recall is not unseen recall. Hard-control false positives remain high. |

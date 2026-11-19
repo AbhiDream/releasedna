@@ -4,7 +4,8 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from app.contributor_evaluation import MANIFEST, load_manifest, detection_evidence, run, summarize, write_report
+from app.contributor_evaluation import MANIFEST, PINNED_DETECTOR, load_manifest, detection_evidence, run, summarize, write_report
+from app.diff_engine.fingerprint import detector_fingerprint
 
 
 class ContributorEvaluationTests(unittest.TestCase):
@@ -47,17 +48,21 @@ class ContributorEvaluationTests(unittest.TestCase):
                     load_manifest(path)
 
     def test_results_repeat_and_detector_change_is_rejected(self):
-        first, second = run(), run()
+        current = detector_fingerprint()
+        with patch('app.contributor_evaluation.PINNED_DETECTOR', current):
+            first, second = run(), run()
         self.assertEqual(first['cases'], second['cases'])
         self.assertEqual(first['metrics'], second['metrics'])
-        with patch('app.contributor_evaluation.detector_fingerprint', return_value='changed'):
+        with patch('app.contributor_evaluation.detector_fingerprint', return_value='changed'), \
+             patch('app.contributor_evaluation.PINNED_DETECTOR', current):
             with self.assertRaisesRegex(ValueError, 'Detector changed'):
                 run()
 
     def test_inspection_failures_never_become_correct_classifications(self):
         def broken(*args):
             raise RuntimeError('controlled analysis failure')
-        result = run(comparator=broken)
+        with patch('app.contributor_evaluation.PINNED_DETECTOR', detector_fingerprint()):
+            result = run(comparator=broken)
         self.assertEqual(result['metrics']['errors'], 12)
         self.assertEqual(result['metrics']['evaluated'], 0)
         self.assertIsNone(result['metrics']['TPR'])
