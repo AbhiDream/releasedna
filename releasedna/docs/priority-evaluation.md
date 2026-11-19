@@ -1,6 +1,6 @@
 # ReleaseDNA detector evaluation
 
-Generated: 2026-11-19T04:29:53.580576+00:00 | Engine: 0.1.3
+Generated: 2026-11-19T04:35:09.579330+00:00 | Engine: 0.1.3
 
 Small convenience sample; public releases are presumed benign, not malware-free ground truth. No package code was executed.
 

@@ -23,7 +23,7 @@ Both original development and holdout releases informed this iteration. Their la
 
 ## False-alarm changes and remaining boundaries
 
-- Dev configuration and unreferenced `bin/`, `tasks/`, and `scripts/` omissions are explained. Declared entrypoints, explicit files inclusion, and detected JS/Python imports take precedence. Dynamic imports and all packaging semantics are not resolved.
+- Dev configuration and unreferenced `bin/`, `tasks/`, and `scripts/` omissions are explained. Declared entrypoints (including literal install-hook file arguments), explicit files inclusion, and detected JS/Python imports take precedence. Python syntax parsing is bounded to 256 KB per file. Dynamic imports and all packaging semantics are not resolved.
 - `.exec(` property calls no longer trigger the dynamic-execution rule. Changed executable code can still legitimately receive UNEXPLAINED_CODE; the hard-negative corpus deliberately exposes that distinction.
 - Declared compiled output is paired with source-map `sourcesContent`; adjacent maps work without a sourceMappingURL comment. Exact embedded bytes are checked against repository files. No mapping or emitted-code equivalence is claimed.
 - `.d.ts` outputs expose unique `src/*.ts` basename candidates; collisions remain ambiguous. This is pairing evidence, **not a TypeScript type-equivalence verifier**.

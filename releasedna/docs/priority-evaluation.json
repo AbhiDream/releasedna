@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "engine_version": "0.1.3",
-  "generated_at": "2026-11-19T04:29:53.580576+00:00",
+  "generated_at": "2026-11-19T04:35:09.579330+00:00",
   "corpus_sha256": "81c34bc7fc41033b37050b521c4e288537870aad21928a2c09f846d839258058",
   "metrics": {
     "public_total": 8,
@@ -62,7 +62,7 @@
       "errors": "Retrieval/inspection failures reported separately, never counted as correct classifications."
     }
   },
-  "detector_sha256": "f75cc7e1acb09a4a0dcaf0a9432a22fe07e64c5cd22b7cb55169aa8042b01757",
+  "detector_sha256": "bbb5136843ac583203601214795a21975e944713f473746b6d9055f58daa7f55",
   "evaluation_design": "Original development/holdout labels retained for historical comparison. Both sets informed version 0.1.3; this is now a reused development corpus, not a fresh holdout.",
   "public_releases": [
     {

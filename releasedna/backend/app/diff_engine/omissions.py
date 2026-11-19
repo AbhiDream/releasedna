@@ -49,6 +49,19 @@ class Omissions:
         self.entrypoints = {}
         self.entry_patterns = []
         for origin, meta in [('source', self.metadata), ('artifact', manifest(artifact))]:
+            scripts = meta.get('scripts', {})
+            if isinstance(scripts, dict):
+                import shlex
+                for hook in ('preinstall', 'install', 'postinstall', 'prepare'):
+                    command = scripts.get(hook)
+                    if not isinstance(command,str): continue
+                    try:
+                        for token in shlex.split(command):
+                            target = literal_path(token)
+                            if target and target in source:
+                                self.entrypoints[target] = f'{origin}/package.json:scripts.{hook}'
+                    except ValueError:
+                        pass
             for field in ('main', 'module', 'bin', 'browser', 'exports', 'types', 'typings'):
                 for value in strings(meta.get(field)):
                     path = literal_path(value)
@@ -62,7 +75,7 @@ class Omissions:
         # Static local references from shipped JS are stronger evidence than ignore rules.
         # No dynamic resolution or package code execution is performed.
         for path, item in artifact.items():
-            if PurePosixPath(path).suffix == '.py':
+            if PurePosixPath(path).suffix == '.py' and len(item.data) <= 256000:
                 # Parse syntax only; never import/execute package modules.
                 import ast
                 try:

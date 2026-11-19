@@ -46,6 +46,9 @@ class DetectorPriorityTests(unittest.TestCase):
         self.assertIn('MISSING_RUNTIME_FILE',compare({'index.js':File(b"require('./bin/dev.js')")},source,True)['risk_reasons'])
         source={'tasks/check.py':File(b'pass')}
         self.assertIn('MISSING_RUNTIME_FILE',compare({'app.py':File(b'from tasks import check')},source,True)['risk_reasons'])
+        meta=File(b'{"scripts":{"install":"node ./bin/setup.js"}}')
+        source={'package.json':meta,'bin/setup.js':File(b'void 0;')}
+        self.assertIn('MISSING_ENTRYPOINT',compare({'package.json':meta},source,True)['risk_reasons'])
 
     def test_declaration_pair_and_rooted_files(self):
         meta=File(b'{"files":["/dist"],"scripts":{"build":"tsc"}}')
