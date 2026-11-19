@@ -1,5 +1,6 @@
 """Offline, harmless structural analogues. Not an actual xz/debug exploit corpus."""
 import hashlib
+import gzip
 import json
 from pathlib import Path
 from html import escape
@@ -34,8 +35,11 @@ def cases():
     add('debug-hook','debug-style','package.json',b'{"name":"fixture","version":"1.0.0","main":"index.js","scripts":{"postinstall":"node -e \\\"void 0\\\""}}', 'INSTALL_SCRIPT_CHANGED')
     # Known benign changed blobs/docs are deliberately included to expose heuristic false alarms.
     add('benign-release-note','control','CHANGELOG.md',b'Release notes for this version.\n',None,False)
-    add('benign-compressed-data','control','assets/sample.bin',noise,None,False)
-    add('benign-regexp-exec','control','index.js',b'const match = /ok/.exec("ok");\n',None,False)
+    add('benign-compressed-data','control','assets/sample.bin',gzip.compress(b'legitimate compressed fixture data '*200,mtime=0),None,False)
+    regex_artifact=dict(source)
+    regex_artifact['index.js']=File(source['index.js'].data+b'const match = /ok/.exec("ok");\n')
+    rows.append(dict(id='benign-regexp-exec',family='control',target='index.js',expected_rule=None,tampered=False,
+                     artifact=regex_artifact,source=source))
     rows.append(dict(id='unchanged-build-macro',family='control',target='m4/build.m4',expected_rule=None,tampered=False,artifact=source,source=source))
     return rows
 

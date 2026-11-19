@@ -8,7 +8,8 @@ from pathlib import PurePosixPath
 from app.diff_engine.omissions import Omissions
 from app.diff_engine.build_adapters import BuildContext
 from app.diff_engine.metadata import explain_metadata, manifest_cleanup
-from app.diff_engine.syntax import equivalent, code_after_map
+from app.diff_engine.syntax import (ESCAPES_PER_KB, MIN_ESCAPES, equivalent, code_after_map,
+                                   escape_density, regex_exec_only_addition)
 from app.diff_engine.javascript_patterns import OBFUSCATION_RULES
 
 CLEAN_MEANING = 'No suspicious differences detected within the available analysis scope.'
@@ -24,13 +25,19 @@ OBFUSCATION = {
     # Heuristics describe observable source patterns, not intent or maliciousness.
     'OBFUSCATED_DYNAMIC_EXECUTION': (40, r'''(?ix)(?:(?<![\w.$])(?:eval|Function)\s*\(\s*(?:[\w$]+\s*\+\s*|["'][^"']{1,120}["']\s*\+\s*){1,6}|[\w$.]+\s*\[\s*["'](?:ev|Fun)["']\s*\+\s*["'](?:al|ction)["']\s*\]\s*\(|\bthis\s*\[\s*[\w$]+\s*\]\s*\()'''),
     'OBFUSCATED_MODULE_LOAD': (30, r'''(?ix)(?:\b(?:require|import)\s*\(\s*(?:["']\\x[0-9a-f]{2}|["']\\u00[0-9a-f]{2})|[\w$.]+\s*\[\s*["']req["']\s*\+\s*["']uire["']\s*\]\s*\()'''),
-    'ESCAPE_DENSITY': (20, r'''(?ix)(?:(?:\\x[0-9a-f]{2}|\\u[0-9a-f]{4})["'\s+(),]{0,6}){3,}(?:\\x[0-9a-f]{2}|\\u[0-9a-f]{4})'''),
     'BROWSER_API_HOOK': (25, r'''(?ix)\b(?:window|globalThis|self)\s*\.\s*(?:fetch|XMLHttpRequest|WebSocket)\s*=\s*(?:async\s*)?(?:function\b|\([^;]{0,300}=>)'''),
     'OBFUSCATOR_IDENTIFIER': (15, r'''(?ix)(?<![\w$])(?:var|let|const)\s+_0x[0-9a-f]+\b(?=\s*=\s*(?:\[|function\b))|(?<![\w$])_0x[0-9a-f]+\s*=\s*(?:\[|function\b)'''),
 }
-if set(OBFUSCATION) != set(OBFUSCATION_RULES):
+if set(OBFUSCATION) | {'ESCAPE_DENSITY'} != set(OBFUSCATION_RULES):
     raise RuntimeError('Obfuscation rule registry and detectors disagree')
 CODE = {'.js', '.mjs', '.cjs', '.ts', '.mts', '.cts', '.py', '.sh', '.ps1', '.bat', '.cmd'}
+COMPRESSED_SUFFIXES = {'.gz','.br','.wasm','.woff','.woff2','.ttf','.otf','.eot'}
+COMPRESSED_MAGICS = (b'\x1f\x8b',b'\x00asm',b'wOFF',b'wOF2',b'OTTO',b'\x00\x01\x00\x00',
+                     b'PK\x03\x04',b'BZh',b'\xfd7zXZ\x00',b'Rar!\x1a\x07',b'7z\xbc\xaf\x27\x1c')
+
+
+def known_compressed_asset(path,data):
+    return PurePosixPath(path.lower()).suffix in COMPRESSED_SUFFIXES or data.startswith(COMPRESSED_MAGICS)
 
 
 def text(data):
@@ -121,13 +128,30 @@ def compare(artifact, source, source_corroborated, source_context=None):
             if at is not None and s and re.sub(r'\s+', '', at) == re.sub(r'\s+', '', st or ''):
                 # Whitespace can be semantic in Python and inside strings; do not claim equivalence.
                 row['explanation'] = 'Text differs only in whitespace; semantic equivalence is not assumed.'
+        if at is not None and suffix in {'.js','.mjs','.cjs','.jsx','.ts','.tsx'} and not path.lower().endswith('.d.ts'):
+            current_density=escape_density(a.data,path,suffix)
+            previous_density=escape_density(s.data,path,suffix) if s else {'eligible':True,'count':0,'per_kb':0.0,'evidence':[]}
+            if current_density is None or previous_density is None:
+                limitations.append(f'{path}: JavaScript escape-density analysis skipped because syntax could not be parsed within budget')
+            elif current_density['eligible'] and previous_density['eligible']:
+                row['escape_density']={'artifact_escapes':current_density['count'],'source_escapes':previous_density['count'],
+                                       'artifact_per_kb':round(current_density['per_kb'],3),'threshold_per_kb':ESCAPES_PER_KB,
+                                       'minimum_escapes':MIN_ESCAPES,'scope':'parsed string literals and template string fragments'}
+                if (current_density['count']>previous_density['count'] and current_density['count']>=MIN_ESCAPES
+                        and current_density['per_kb']>=ESCAPES_PER_KB):
+                    finding(row,'ESCAPE_DENSITY',20,'Dense new hex/unicode escapes in parsed JavaScript strings; static obfuscation heuristic, not proof of malicious intent.',
+                            current_density['evidence'])
+        if s and is_code and suffix in {'.js','.mjs','.cjs'} and not row['finding_ids'] and regex_exec_only_addition(a.data,s.data,suffix):
+            row.update(classification='expected',explanation='Only isolated RegExp.prototype.exec calls with string-literal arguments were added; this is not dynamic code execution.')
         if len(a.data) >= 1024:
             def entropy(data):
                 return -sum((n / len(data)) * math.log2(n / len(data)) for n in Counter(data).values()) if data else 0
             current_entropy = entropy(a.data)
             previous_entropy = entropy(s.data) if s else 0
             row['entropy'] = {'artifact_bits_per_byte': round(current_entropy, 4), 'source_bits_per_byte': round(previous_entropy, 4)}
-            if current_entropy >= 7.5 and (not s or current_entropy - previous_entropy >= .5):
+            if known_compressed_asset(path,a.data):
+                row['entropy_rule_skipped']='Recognized compressed, WebAssembly, or font format by extension/magic; entropy alone is not scored.'
+            elif current_entropy >= 7.5 and (not s or current_entropy - previous_entropy >= .5):
                 finding(row, 'HIGH_ENTROPY_CHANGE', 15, 'New high-entropy content; compression/encryption may be legitimate. Inspect the source difference.', [row['entropy']])
         if path == 'package.json' and at is not None:
             try:
@@ -150,6 +174,8 @@ def compare(artifact, source, source_corroborated, source_context=None):
                     row.update(classification='expected',explanation=cleanup)
             except (ValueError, TypeError, AttributeError):
                 finding(row, 'INVALID_MANIFEST', 20, 'Package manifest cannot be compared as a JSON object')
+        if row['classification']=='unexplained' and known_compressed_asset(path,a.data):
+            row.update(classification='generated_unverified',explanation='Recognized compressed, WebAssembly, or font asset; entropy is not scored alone, and binary contents/provenance remain unverified.')
         if a.executable and (not s or not s.executable):
             finding(row, 'EXECUTABLE_ADDED', 25, 'Executable permission is new relative to source', added_lines[:5])
         if a.data.startswith((b'\x7fELF', b'MZ', b'\xcf\xfa\xed\xfe')):
