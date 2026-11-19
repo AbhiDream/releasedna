@@ -125,5 +125,5 @@ Capture retrieves archives without installing them. Subsequent `run` commands re
 
 The structural corpus command also writes `data/demo-xz-artifact.tgz` and `data/demo-xz-source.tgz` (plus a debug-style pair). Select these in **Local archives** to demonstrate an actual queued comparison, the findings badge, exact changed line, diff and evidence download. They are harmless synthetic analogues, not historical malware or organizer test data.
 
-`GROQ_API_KEY` enables optional narration through `openai/gpt-oss-20b`. Without a key the frontend shows unavailable. Configure it only in the backend environment. Model text never changes saved findings or scores.
+`GROQ_API_KEY` enables optional narration through `openai/gpt-oss-20b`. For the hosted Render service, add it under **Service → Environment** and deploy; the existing Blueprint cannot prompt for a newly added `sync: false` secret. The frontend reports whether it is configured. Without a key it stays unavailable. Never commit or share the value in chat. Model text never changes saved findings or scores. See [Render key setup and verification](docs/remote-deployment.md#optional-groq-explanations).
 New users: [first-run guide and screenshots](docs/quickstart.md). 

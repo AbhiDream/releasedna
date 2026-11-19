@@ -32,6 +32,12 @@ Before merge, a maintainer can explicitly select the feature branch for a previe
 
 The shared access key protects history, uploads, mutation APIs, model requests and evidence pages. It is a small-team prototype access gate, not individual-user authorization or a complete public multi-tenant security design. Protected report links download HTML/JSON with authenticated requests; the API reference link downloads the OpenAPI schema in an unlocked hosted session.
 
+## Optional Groq explanations
+
+The backend already supports Groq `openai/gpt-oss-20b`. The root Blueprint declares `GROQ_API_KEY` with `sync: false`, so its value is never stored in Git. For a **new** Blueprint, Render asks for the value during setup. For the existing `releasedna` service, Render does not prompt for newly added `sync: false` variables during Blueprint sync: open **Service → Environment**, add `GROQ_API_KEY` with the value from your Groq console, save and deploy. Keep the key out of chat, the repository, frontend settings and build logs.
+
+After deploy, unlock the workspace in the frontend and open a completed scan. The **Explain findings** button becomes available when `/api/explanation/config` reports configured. A live explanation call is the verification; the model receives at most 30 saved finding IDs, paths and detector-authored messages, not archive contents or diffs. It cannot write to scan results or alter score/verdict. Without the key, the button stays unavailable and no Groq request is made.
+
 ## One package at a time
 
 The persisted worker has concurrency **1**. Registry scans, monitor-created jobs, archive comparisons and direct text comparisons share that worker. The process lock forbids a second worker on the same database. Keep one replica and one Uvicorn worker.

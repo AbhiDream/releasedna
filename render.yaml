@@ -21,3 +21,5 @@ services:
         value: render-free-docker
       - key: RELEASEDNA_STORAGE
         value: ephemeral
+      - key: GROQ_API_KEY
+        sync: false
