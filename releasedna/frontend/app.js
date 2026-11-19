@@ -48,6 +48,11 @@ function render(report) {
     row.append(node('td', file.path), node('td', file.state), node('td', `${file.classification}${file.omission_kind ? ' / ' + file.omission_kind : ''}`));
     const detail = node('td', file.explanation || (file.state === 'identical' ? 'Bytes and executable permissions match.' : 'See findings.'));
     if (file.diff) { const disclosure = node('details'); disclosure.append(node('summary', 'View diff'), node('pre', file.diff)); detail.append(disclosure); }
+    if (file.build_evidence || file.source_map_evidence) {
+      const evidence = node('details');
+      evidence.append(node('summary', 'Build / source-map evidence'), node('pre', JSON.stringify(file.build_evidence || file.source_map_evidence, null, 2)));
+      detail.append(evidence);
+    }
     row.append(detail); el('files').append(row);
   }
   el('limitations').replaceChildren(...[...(report.limitations || []), ...(report.source?.reasons || [])].map(text => node('li', text)));

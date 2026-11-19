@@ -25,7 +25,7 @@ def tampered_cases(base, mapped):
     changed = dict(base)
     manifest = json.loads(changed['package.json'].data)
     manifest.setdefault('scripts', {})['postinstall'] = 'node -e "void 0"'
-    changed['package.json'] = File(json.dumps(manifest, indent=2).encode())
+    changed['package.json'] = File(json.dumps(manifest, indent=2, ensure_ascii=False).encode())
     add('added-install-hook', 'is-number', changed, 'package.json', 'INSTALL_SCRIPT_CHANGED', 'Add harmless postinstall command; never run it.')
     changed = dict(base)
     changed['index.js'] = File(changed['index.js'].data + b'\nmodule.exports = function () { return true; };\n')
@@ -44,7 +44,7 @@ def tampered_cases(base, mapped):
     changed = dict(base)
     manifest = json.loads(changed['package.json'].data)
     manifest.setdefault('dependencies', {})['releasedna-fixture-placeholder'] = '0.0.0'
-    changed['package.json'] = File(json.dumps(manifest, indent=2).encode())
+    changed['package.json'] = File(json.dumps(manifest, indent=2, ensure_ascii=False).encode())
     add('dependency-change', 'is-number', changed, 'package.json', 'DEPENDENCIES_CHANGED', 'Add a dependency declaration; do not resolve or install it.')
     changed = dict(base)
     del changed['index.js']
