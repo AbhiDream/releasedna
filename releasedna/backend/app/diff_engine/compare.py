@@ -9,6 +9,7 @@ from app.diff_engine.omissions import Omissions
 from app.diff_engine.build_adapters import BuildContext
 from app.diff_engine.metadata import explain_metadata, manifest_cleanup
 from app.diff_engine.syntax import equivalent, code_after_map
+from app.diff_engine.javascript_patterns import OBFUSCATION_RULES
 
 CLEAN_MEANING = 'No suspicious differences detected within the available analysis scope.'
 
@@ -19,6 +20,15 @@ CAPABILITIES = {
     'ENCODED_PAYLOAD': (25, r'(?:fromCharCode|atob\s*\(|b64decode|[A-Za-z0-9+/]{300,}={0,2})'),
     'SHELL_PIPELINE': (30, r'(?m)(?:\b(?:curl|wget|base64|xz|gzip|sed|tr)\b[^\n]{0,180}\|\s*(?:sh|bash|eval)\b|\b(?:m4_esyscmd|m4_syscmd)\s*\(|\b(?:sh|bash)\s+-c\b)'),
 }
+OBFUSCATION = {
+    # Heuristics describe observable source patterns, not intent or maliciousness.
+    'OBFUSCATED_DYNAMIC_EXECUTION': (40, r'''(?ix)(?<![\w.$])eval\s*\(\s*(?:[\w$]+\s*\+\s*|["'][^"']{1,120}["']\s*\+\s*){1,6}'''),
+    'OBFUSCATED_MODULE_LOAD': (30, r'''(?ix)\b(?:require|import)\s*\(\s*(?:["']\\x[0-9a-f]{2}|["']\\u00[0-9a-f]{2})'''),
+    'BROWSER_API_HOOK': (25, r'''(?ix)\b(?:window|globalThis|self)\s*\.\s*(?:fetch|XMLHttpRequest|WebSocket)\s*=\s*(?:async\s*)?(?:function\b|\([^;]{0,300}=>)'''),
+    'OBFUSCATOR_IDENTIFIER': (15, r'''(?ix)(?<![\w$])(?:var|let|const)\s+_0x[0-9a-f]{3,}\b(?=\s*=\s*(?:\[|function\b))|(?<![\w$])_0x[0-9a-f]{3,}\s*=\s*(?:\[|function\b)'''),
+}
+if set(OBFUSCATION) != set(OBFUSCATION_RULES):
+    raise RuntimeError('Obfuscation rule registry and detectors disagree')
 CODE = {'.js', '.mjs', '.cjs', '.ts', '.mts', '.cts', '.py', '.sh', '.ps1', '.bat', '.cmd'}
 
 
@@ -95,14 +105,18 @@ def compare(artifact, source, source_corroborated, source_context=None):
         scan_text = at if at is not None else a.data.decode('latin-1')
         old_text = st if st is not None else (s.data.decode('latin-1') if s else '')
         if scan_text and not syntax_match:
-            for rule, (points, pattern) in CAPABILITIES.items():
+            rules = list(CAPABILITIES.items()) + list(OBFUSCATION.items())
+            for rule, (points, pattern) in rules:
                 old_count = len(re.findall(pattern, old_text or ''))
                 new_matches = list(re.finditer(pattern, scan_text))
                 if len(new_matches) > old_count:
                     evidence = [{'line': scan_text.count('\n', 0, m.start()) + 1,
                                  'byte_offset': len(scan_text[:m.start()].encode('utf-8')) if at is not None else m.start(),
                                  'text': scan_text[max(0,m.start()-60):m.end()+160]} for m in new_matches[:8]]
-                    finding(row, rule, points, 'New or increased capability indicator; static heuristic, not proof of malicious intent.', evidence)
+                    message = ('Specific obfuscation or browser-hook pattern; static heuristic, not proof of malicious intent.'
+                               if rule in OBFUSCATION else
+                               'New or increased capability indicator; static heuristic, not proof of malicious intent.')
+                    finding(row, rule, points, message, evidence)
             if at is not None and s and re.sub(r'\s+', '', at) == re.sub(r'\s+', '', st or ''):
                 # Whitespace can be semantic in Python and inside strings; do not claim equivalence.
                 row['explanation'] = 'Text differs only in whitespace; semantic equivalence is not assumed.'

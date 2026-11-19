@@ -44,7 +44,7 @@ From `releasedna/backend`:
 
 Two offline public/fixture replays matched after excluding the generation timestamp. Reports include detector hashes using named files and normalized LF line endings, stable across Windows/Linux Git checkouts. The corpus generator is deterministic and traverses the same bounded archive reader and comparator as production scans.
 
-Open `/corpus` for the judge demo, expand `xz-script-m4-build.m4`, and inspect SHELL_PIPELINE at line 2 / byte 31 plus the exact diff. `/evaluation` shows the separate public-release and original fixture results. The ivory anomaly badge signifies a finding, not proven malware.
+Open `/corpus` for the judge demo, expand `xz-script-m4-build.m4`, and inspect SHELL_PIPELINE at line 2 / byte 31 plus the exact diff. `/evaluation` shows the separate public-release and original fixture results. The findings badge signifies a detector finding, not proven malware.
 
 ## Monitor
 

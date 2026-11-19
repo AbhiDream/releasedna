@@ -4,13 +4,13 @@ Latest: **0.2 prototype** — bounded local archive jobs, syntax evidence, stati
 
 Package supply-chain forensics for Catalyst Problem Statement 2.
 
-Remote Docker demo: the root `render.yaml` targets **Render Free**, with authenticated access, a sequential batch queue and standalone UTF-8 text comparison. See [deployment steps and verification limits](docs/remote-deployment.md). Free storage is ephemeral and monitoring pauses during idle sleep; this is not durable production hosting. The remote service has not yet been deployed or verified. The original PDF also contained white-text instructions; see the [visible-content and injection audit](docs/pdf-injection-audit.md).
+Remote Docker demo: [open ReleaseDNA on Render](https://releasedna.onrender.com). The live service uses authenticated access, a sequential batch queue and standalone UTF-8 text comparison. See [deployment steps and verification limits](docs/remote-deployment.md) and [recorded remote smoke evidence](docs/render-smoke-evidence.json). Render Free storage is ephemeral and monitoring pauses during idle sleep; this is not durable production hosting. The original PDF also contained white-text instructions; see the [visible-content and injection audit](docs/pdf-injection-audit.md).
 
 **Phase 1, hardened: inspection engine, CLI, durable job API and verification frontend.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.
 
 This is a static analyzer, not a malware-free certification. Deterministic inspection needs no AI key. Release monitoring and optional Groq narration are implemented; local wheel/ZIP comparison is supported, while official PyPI retrieval uses source distributions. Two independent contributor PRs are reserved in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Open `/evaluation`, `/corpus` and `/fresh-evaluation` for generated evidence reports. Reused fixture recall is 12/12; reused public alerts are 1/8. Fresh public alerts are 2/5 with one additional source-resolution error. These small samples do not establish ecosystem-wide accuracy. False-positive reduction is not complete.
+Open `/evaluation`, `/corpus` and `/fresh-evaluation` for recorded evidence reports. Reused fixture recall is 12/12; reused public alerts are 1/8. Fresh public alerts are 2/5 with one additional source-resolution error. These small samples do not establish ecosystem-wide accuracy. False-positive reduction is not complete. Organizer-provided tampered archives have not been received or evaluated; do not treat synthetic fixtures as organizer results.
 
 ## Run locally
 
@@ -59,6 +59,8 @@ No finding or verdict is hardcoded in the demo. The fixtures contain inert code 
 Rule weights are in `backend/app/diff_engine/compare.py`. Each rule contributes once per scan, capped at 100. Scores rank review urgency and are not probabilities. Every finding includes artifact/source paths, a rule, changed-line evidence where applicable, and a bounded unified diff. Binary and permission rules use file hashes/metadata rather than invented text lines.
 
 `artifact.verified` means only that the downloaded bytes match the official registry digest. `source.confidence` and `source.identity_corroborated` describe revision matching; `source.build_provenance_verified` remains false. The former ambiguous `source.verified` field was removed.
+
+Changed/added JavaScript is checked for string-concatenated `eval`, hex/Unicode-escaped `require`/`import`, assignments replacing `window`/`globalThis`/`self` fetch or socket APIs, and `_0x...` array/function declarations. Findings name the specific heuristic and carry the changed path plus bounded evidence. These patterns are scored evidence, not proof of malicious intent; aliases, computed property names and other obfuscation styles may be missed. `.exec(...)` method calls are not treated as dynamic execution. Existing evaluation snapshots are fingerprint-bound historical results and must not be regenerated in place after detector changes; this change adds focused regressions but does not establish new TPR/FPR on public releases.
 
 `metrics` contains artifact_file_count, source_file_count, unique_comparison_paths, identical_files, added_files, removed_files and changed_files. The legacy total_files_inspected counts artifact plus source file instances, so shared paths count twice. For is-number: 4 + 15 = 19 file instances, but 15 unique comparison paths. The four difference counters sum to unique paths.
 
@@ -121,7 +123,7 @@ From `releasedna/backend`:
 
 Capture retrieves archives without installing them. Subsequent `run` commands replay digest-checked caches. Failures remain explicit errors. Committed evidence is under `docs/`; downloaded archives, database and generated dashboards stay under ignored `data/`.
 
-The structural corpus command also writes `data/demo-xz-artifact.tgz` and `data/demo-xz-source.tgz` (plus a debug-style pair). Select these in **Local archives** to demonstrate an actual queued comparison, the ivory anomaly badge, exact changed line, diff and evidence download. They are harmless synthetic analogues, not historical malware or organizer test data.
+The structural corpus command also writes `data/demo-xz-artifact.tgz` and `data/demo-xz-source.tgz` (plus a debug-style pair). Select these in **Local archives** to demonstrate an actual queued comparison, the findings badge, exact changed line, diff and evidence download. They are harmless synthetic analogues, not historical malware or organizer test data.
 
 `GROQ_API_KEY` enables optional narration through `openai/gpt-oss-20b`. Without a key the frontend shows unavailable. Configure it only in the backend environment. Model text never changes saved findings or scores.
 New users: [first-run guide and screenshots](docs/quickstart.md). 

@@ -8,6 +8,10 @@ CODE = {'.js', '.mjs', '.cjs', '.ts', '.mts', '.cts', '.py', '.sh', '.ps1', '.ba
 DEVELOPMENT = {'.gitignore', '.npmignore', '.gitattributes', '.editorconfig', '.eslintrc',
                '.eslintrc.json', '.travis.yml', '.jshintrc', '.npmrc', 'package-lock.json',
                'yarn.lock', 'pnpm-lock.yaml', 'Makefile', 'Gruntfile.js', 'gulpfile.js'}
+DEVELOPMENT_DIRS = {'sandbox', 'sandboxes', 'config', 'configs', 'scripts', 'tasks',
+                    'benchmark', 'benchmarks', 'bench', 'test', 'tests', '__tests__',
+                    'fixtures', '.github', '.circleci'}
+CONFIG_NAMES = re.compile(r'^(?:karma\.conf\.[^.]+|(?:eslint|rollup|webpack|vite|vitest|jest|babel|tsup|prettier)\.config\.[^.]+|(?:tsconfig|jsconfig)(?:\.[^.]+)?\.json)$', re.I)
 
 
 def manifest(files):
@@ -145,10 +149,12 @@ class Omissions:
             return result('tests', 'expected', 'OMITTED_TEST', 'Test/benchmark convention; no detected shipped-code reference or declared inclusion.')
         if any(p.lower() in {'docs', 'doc', 'examples'} for p in parts) or name.lower().endswith(('.md', '.rst')):
             return result('documentation', 'expected', 'OMITTED_DOCUMENTATION', 'Documentation/example convention; no detected runtime reference or declared inclusion.')
-        config = (re.match(r'^(?:\..*rc(?:\..+)?|(?:eslint|rollup|webpack|vite|vitest|jest|babel|tsup|prettier)\.config\..+|(?:tsconfig|jsconfig)(?:\.[^.]+)?\.json|noxfile\.py|tox\.ini)$', name)
-                  or parts[0] in {'bin', 'scripts', 'tasks', '.github', '.git', '.circleci'})
-        if path in DEVELOPMENT or config:
-            return result('development', 'expected', 'OMITTED_DEVELOPMENT', 'Development/CI configuration normally omitted from publishing.')
+        config = (re.match(r'^\..*rc(?:\..+)?$', name) or CONFIG_NAMES.fullmatch(name)
+                  or name in {'noxfile.py', 'tox.ini', 'Gruntfile.js', 'gulpfile.js'})
+        development_path = any(p.lower() in DEVELOPMENT_DIRS for p in parts)
+        if path in DEVELOPMENT or config or development_path:
+            return result('development', 'expected', 'OMITTED_DEVELOPMENT',
+                          'Development, test, sandbox or configuration file with no detected shipped-code reference, entrypoint, or declared inclusion.')
         # Fully understood literal files lists can explain omitted build inputs, but not entrypoints/references.
         if self.file_patterns is not None and all(self.file_patterns):
             return result('packaging_exclusion', 'expected', 'NPM_FILES_EXCLUSION',
@@ -159,7 +165,10 @@ class Omissions:
             if matched:
                 return result('packaging_exclusion', 'expected', 'NPM_IGNORE_EXCLUSION',
                               f'{self.ignore_path}:{line} explicitly excludes {pattern!r}; no detected runtime reference.')
-        if PurePosixPath(path).suffix in CODE or parts[0] in {'lib', 'runtime', 'dist'}:
+        # A basename that looks like source is insufficient by itself: vendor
+        # metadata/configuration is common. Escalate only when it is a recognized
+        # shipped output area or explicitly declared above.
+        if PurePosixPath(path).suffix in CODE and parts[0].lower() in {'lib', 'runtime', 'dist', 'src', 'pkg'}:
             return result('runtime', 'suspicious', 'MISSING_RUNTIME_FILE',
                           'Potential runtime/build code is absent without a supported packaging explanation.', 20)
         return result('unexplained', 'unexplained', 'UNEXPLAINED_OMISSION',
