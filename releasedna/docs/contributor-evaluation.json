@@ -1,0 +1,2358 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-19T05:59:21.274806+00:00",
+  "design": "AI-assisted synthetic extension designed with knowledge of current rules; not independent blind validation, public release sampling or organizer data. Expectations and complete input bytes committed before first comparison. No detector tuning in this branch.",
+  "preregistration_commit": "8d114b5",
+  "detector_commit": "3a93ae3d5b0cd7ee6fe51f5f248ac1981d142a80",
+  "detector_sha256": "593bf2033947f0d0cbdb26c0fd99229643586c27a058d16df19b019f14e827ad",
+  "manifest_sha256": "d7b55c699f763f6aaec7db10794c061dc569fc68044d1b1c5a81aaeafc8b3d30",
+  "manifest_hash_format": "sha256-utf8-lf",
+  "environment": {
+    "os": "Windows",
+    "python": "3.13.1"
+  },
+  "scope": "Synthetic fixtures; controlled source identity, no registry verification. No fixture code executed.",
+  "metrics": {
+    "total": 12,
+    "evaluated": 12,
+    "errors": 0,
+    "TP": 5,
+    "FN": 1,
+    "FP": 2,
+    "TN": 4,
+    "TPR": 0.8333333333333334,
+    "FPR": 0.3333333333333333,
+    "inconclusive": 2,
+    "errors_by_label": {
+      "tampered": 0,
+      "benign": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "npm-export-subpath-removed",
+      "label": "tampered",
+      "ecosystem": "npm",
+      "description": "Remove a declared exported subpath while main stays identical.",
+      "expected_rule": "MISSING_ENTRYPOINT",
+      "expected_path": "lib/feature.mjs",
+      "detected": true,
+      "alerted": true,
+      "supporting_finding_ids": [
+        "F0001"
+      ],
+      "archive_sha256": {
+        "source": "c365b67d70e528154338f293e0aadd40cf009a0eab18b7ad6a6e9197dd214a42",
+        "baseline": "c365b67d70e528154338f293e0aadd40cf009a0eab18b7ad6a6e9197dd214a42",
+        "artifact": "1b6d2024ee6e7635005efc954b05367e6f9056cfd1f67f7050b3aa445f727852"
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "68ba8f56e7491dc5f00b2003446d0a5963683246e014963b9b1eb104afe8b2e5"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "lib/feature.mjs",
+            "artifact_path": "lib/feature.mjs",
+            "source_path": "lib/feature.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "source_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "lib/main.mjs",
+            "artifact_path": "lib/main.mjs",
+            "source_path": "lib/main.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "source_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "source_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 40,
+        "risk_reasons": {
+          "MISSING_ENTRYPOINT": 40
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 5,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 2,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 2,
+          "added_files": 0,
+          "removed_files": 1,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 2,
+          "added": 0,
+          "removed": 1,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "MISSING_ENTRYPOINT",
+            "points": 40,
+            "artifact_path": null,
+            "source_path": "lib/feature.mjs",
+            "message": "Package entrypoint/manifest absent from artifact; declaration: artifact/package.json:exports",
+            "evidence": [],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": "lib/feature.mjs",
+            "artifact_path": null,
+            "source_path": "lib/feature.mjs",
+            "state": "removed",
+            "classification": "suspicious",
+            "artifact_sha256": null,
+            "source_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "Package entrypoint/manifest absent from artifact; declaration: artifact/package.json:exports",
+            "diff": "",
+            "omission_kind": "package_entrypoint",
+            "omission_rule": "MISSING_ENTRYPOINT"
+          },
+          {
+            "path": "lib/main.mjs",
+            "artifact_path": "lib/main.mjs",
+            "source_path": "lib/main.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "source_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "source_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "npm-configure-macro-added",
+      "label": "tampered",
+      "ecosystem": "npm",
+      "description": "Add inert build macro text outside .m4 extension.",
+      "expected_rule": "SHELL_PIPELINE",
+      "expected_path": "config/build.ac",
+      "detected": true,
+      "alerted": true,
+      "supporting_finding_ids": [
+        "F0001"
+      ],
+      "archive_sha256": {
+        "source": "c365b67d70e528154338f293e0aadd40cf009a0eab18b7ad6a6e9197dd214a42",
+        "baseline": "c365b67d70e528154338f293e0aadd40cf009a0eab18b7ad6a6e9197dd214a42",
+        "artifact": "2b968f54319f1e85b610cf5187e5e9b6b82d0789bdcd1b487162cc431b323e6b"
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "7cf1374b44d6f9761bdf7a61933c70bf83e5169419121fae2a13cabbca0a80fe"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "lib/feature.mjs",
+            "artifact_path": "lib/feature.mjs",
+            "source_path": "lib/feature.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "source_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "lib/main.mjs",
+            "artifact_path": "lib/main.mjs",
+            "source_path": "lib/main.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "source_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "source_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 30,
+        "risk_reasons": {
+          "SHELL_PIPELINE": 30
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 7,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 3,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "SHELL_PIPELINE",
+            "points": 30,
+            "artifact_path": "config/build.ac",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 26,
+                "text": "dnl inert synthetic input\nm4_syscmd([printf contributor])\n"
+              }
+            ],
+            "diff": "--- source/config/build.ac\n+++ artifact/config/build.ac\n@@ -0,0 +1,2 @@\n+dnl inert synthetic input\n+m4_syscmd([printf contributor])"
+          }
+        ],
+        "files": [
+          {
+            "path": "config/build.ac",
+            "artifact_path": "config/build.ac",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "9508b871bc30e2898026ad12d4ff381da4523d49cc61edfad32e3f47f1f27fbe",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/config/build.ac\n+++ artifact/config/build.ac\n@@ -0,0 +1,2 @@\n+dnl inert synthetic input\n+m4_syscmd([printf contributor])",
+            "diff_truncated": false
+          },
+          {
+            "path": "lib/feature.mjs",
+            "artifact_path": "lib/feature.mjs",
+            "source_path": "lib/feature.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "source_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "lib/main.mjs",
+            "artifact_path": "lib/main.mjs",
+            "source_path": "lib/main.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "source_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "source_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "npm-quiet-change-before-map",
+      "label": "tampered",
+      "ecosystem": "npm",
+      "description": "Change emitted constant before source-map trailer; keep map untouched. Coverage challenge retained even if missed.",
+      "expected_rule": "UNEXPLAINED_CODE",
+      "expected_path": "out/answer.js",
+      "detected": false,
+      "alerted": false,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "e7b8fe02125e03e0b42ec3d9dbe1dfb740a9e7f30a74444ff67688a88608a3dc",
+        "baseline": "e28c7a29261fefdee8364ab079f1dd953524f2cfd17585d33d87a4d869b6b0a5",
+        "artifact": "9de3f1bab5d0158624839568eaec324725f83388fbb798ebff74a9fb9208f295"
+      },
+      "input_sha256": {
+        "source": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "baseline": "cfddef96864d39d2d6160d27ee58f1e55c4aeb361c2b431368a76fb0e208f816",
+        "artifact": "be7374c87f05d6431e65eb3fdcfd1c49aa43d584f1aad95ae8b23cbadc9a20b4"
+      },
+      "baseline_report": {
+        "status": "INCONCLUSIVE",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 2,
+          "unique_comparison_paths": 5,
+          "identical_files": 1,
+          "added_files": 3,
+          "removed_files": 1,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 1,
+          "added": 3,
+          "removed": 1,
+          "changed": 0
+        },
+        "expected_generated_differences": [
+          "out/answer.js.map"
+        ],
+        "unverified_generated_outputs": [
+          "out/answer.d.ts",
+          "out/answer.js"
+        ],
+        "findings": [],
+        "files": [
+          {
+            "path": "out/answer.d.ts",
+            "artifact_path": "out/answer.d.ts",
+            "source_path": null,
+            "state": "added",
+            "classification": "generated_unverified",
+            "artifact_sha256": "63bb4a03eb743ad765c803c040b0bed44ec984abb91764f9dc89d4db4a884b5b",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
+            "diff": "--- source/out/answer.d.ts\n+++ artifact/out/answer.d.ts\n@@ -0,0 +1 @@\n+export declare const answer: number;",
+            "diff_truncated": false,
+            "build_evidence": {
+              "manifest_path": "package.json",
+              "build_scripts": {
+                "build": "tsc"
+              },
+              "output_declaration": "package.json:types",
+              "matching_files_patterns": [
+                "out"
+              ],
+              "equivalence_verified": false,
+              "declaration_sources": [
+                "src/answer.ts"
+              ],
+              "declaration_pairing": "unique basename candidate; type equivalence is unverified",
+              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
+            }
+          },
+          {
+            "path": "out/answer.js",
+            "artifact_path": "out/answer.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "generated_unverified",
+            "artifact_sha256": "b93cd15824f5c98045147a646badf4d19ce17ec0f73bb5d02aa6ced140a472d0",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
+            "diff": "--- source/out/answer.js\n+++ artifact/out/answer.js\n@@ -0,0 +1,2 @@\n+export const answer = 7;\n+//# sourceMappingURL=answer.js.map",
+            "diff_truncated": false,
+            "build_evidence": {
+              "manifest_path": "package.json",
+              "build_scripts": {
+                "build": "tsc"
+              },
+              "output_declaration": "package.json:main",
+              "matching_files_patterns": [
+                "out"
+              ],
+              "equivalence_verified": false,
+              "source_map": {
+                "map_path": "out/answer.js.map",
+                "matching_sources": [
+                  {
+                    "source_index": 0,
+                    "declared_path": "../src/answer.ts",
+                    "source_path": "src/answer.ts"
+                  }
+                ],
+                "mismatched_sources": [],
+                "unresolved_sources": [],
+                "all_embedded_sources_match": true,
+                "valid_structure": true,
+                "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
+              },
+              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
+            }
+          },
+          {
+            "path": "out/answer.js.map",
+            "artifact_path": "out/answer.js.map",
+            "source_path": null,
+            "state": "added",
+            "classification": "expected",
+            "artifact_sha256": "53ff661678517b5b41cb3fb0846643df8ad180b07c791632dd8a74c785eba6c0",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Source-map metadata inspected without fetching references. 1 embedded sources match; 0 differ; 0 unresolved. Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source.",
+            "diff": "--- source/out/answer.js.map\n+++ artifact/out/answer.js.map\n@@ -0,0 +1 @@\n+{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+            "diff_truncated": false,
+            "source_map_evidence": {
+              "map_path": "out/answer.js.map",
+              "matching_sources": [
+                {
+                  "source_index": 0,
+                  "declared_path": "../src/answer.ts",
+                  "source_path": "src/answer.ts"
+                }
+              ],
+              "mismatched_sources": [],
+              "unresolved_sources": [],
+              "all_embedded_sources_match": true,
+              "valid_structure": true,
+              "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
+            }
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "source_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "src/answer.ts",
+            "artifact_path": null,
+            "source_path": "src/answer.ts",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "306949d7706f37f9b702bb275d52b7b7e76e8ed25db6125396bf4fd07cfabac9",
+            "finding_ids": [],
+            "explanation": "Outside the supported source package.json files allowlist; no detected runtime reference. Supported patterns: literals, *, ** and ?.",
+            "diff": "",
+            "omission_kind": "packaging_exclusion",
+            "omission_rule": "NPM_FILES_EXCLUSION"
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "INCONCLUSIVE",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 2,
+          "unique_comparison_paths": 5,
+          "identical_files": 1,
+          "added_files": 3,
+          "removed_files": 1,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 1,
+          "added": 3,
+          "removed": 1,
+          "changed": 0
+        },
+        "expected_generated_differences": [
+          "out/answer.js.map"
+        ],
+        "unverified_generated_outputs": [
+          "out/answer.d.ts",
+          "out/answer.js"
+        ],
+        "findings": [],
+        "files": [
+          {
+            "path": "out/answer.d.ts",
+            "artifact_path": "out/answer.d.ts",
+            "source_path": null,
+            "state": "added",
+            "classification": "generated_unverified",
+            "artifact_sha256": "63bb4a03eb743ad765c803c040b0bed44ec984abb91764f9dc89d4db4a884b5b",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
+            "diff": "--- source/out/answer.d.ts\n+++ artifact/out/answer.d.ts\n@@ -0,0 +1 @@\n+export declare const answer: number;",
+            "diff_truncated": false,
+            "build_evidence": {
+              "manifest_path": "package.json",
+              "build_scripts": {
+                "build": "tsc"
+              },
+              "output_declaration": "package.json:types",
+              "matching_files_patterns": [
+                "out"
+              ],
+              "equivalence_verified": false,
+              "declaration_sources": [
+                "src/answer.ts"
+              ],
+              "declaration_pairing": "unique basename candidate; type equivalence is unverified",
+              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
+            }
+          },
+          {
+            "path": "out/answer.js",
+            "artifact_path": "out/answer.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "generated_unverified",
+            "artifact_sha256": "f21d1038eca72ab0ef6538d2ebba55405258d6f346424d1335e7170ab82f13e3",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
+            "diff": "--- source/out/answer.js\n+++ artifact/out/answer.js\n@@ -0,0 +1,2 @@\n+export const answer = 8;\n+//# sourceMappingURL=answer.js.map",
+            "diff_truncated": false,
+            "build_evidence": {
+              "manifest_path": "package.json",
+              "build_scripts": {
+                "build": "tsc"
+              },
+              "output_declaration": "package.json:main",
+              "matching_files_patterns": [
+                "out"
+              ],
+              "equivalence_verified": false,
+              "source_map": {
+                "map_path": "out/answer.js.map",
+                "matching_sources": [
+                  {
+                    "source_index": 0,
+                    "declared_path": "../src/answer.ts",
+                    "source_path": "src/answer.ts"
+                  }
+                ],
+                "mismatched_sources": [],
+                "unresolved_sources": [],
+                "all_embedded_sources_match": true,
+                "valid_structure": true,
+                "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
+              },
+              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
+            }
+          },
+          {
+            "path": "out/answer.js.map",
+            "artifact_path": "out/answer.js.map",
+            "source_path": null,
+            "state": "added",
+            "classification": "expected",
+            "artifact_sha256": "53ff661678517b5b41cb3fb0846643df8ad180b07c791632dd8a74c785eba6c0",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Source-map metadata inspected without fetching references. 1 embedded sources match; 0 differ; 0 unresolved. Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source.",
+            "diff": "--- source/out/answer.js.map\n+++ artifact/out/answer.js.map\n@@ -0,0 +1 @@\n+{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+            "diff_truncated": false,
+            "source_map_evidence": {
+              "map_path": "out/answer.js.map",
+              "matching_sources": [
+                {
+                  "source_index": 0,
+                  "declared_path": "../src/answer.ts",
+                  "source_path": "src/answer.ts"
+                }
+              ],
+              "mismatched_sources": [],
+              "unresolved_sources": [],
+              "all_embedded_sources_match": true,
+              "valid_structure": true,
+              "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
+            }
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "source_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "src/answer.ts",
+            "artifact_path": null,
+            "source_path": "src/answer.ts",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "306949d7706f37f9b702bb275d52b7b7e76e8ed25db6125396bf4fd07cfabac9",
+            "finding_ids": [],
+            "explanation": "Outside the supported source package.json files allowlist; no detected runtime reference. Supported patterns: literals, *, ** and ?.",
+            "diff": "",
+            "omission_kind": "packaging_exclusion",
+            "omission_rule": "NPM_FILES_EXCLUSION"
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "python-relative-module-removed",
+      "label": "tampered",
+      "ecosystem": "pypi",
+      "description": "Remove a module statically imported by shipped package.",
+      "expected_rule": "MISSING_RUNTIME_FILE",
+      "expected_path": "sample/worker.py",
+      "detected": true,
+      "alerted": true,
+      "supporting_finding_ids": [
+        "F0001"
+      ],
+      "archive_sha256": {
+        "source": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "baseline": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "artifact": "ac7d9b7de9022315863f17dd5b2fcac423d82653eef1a496054bf02dd82dd1e7"
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "f82bc5a6ab2eea3b51e481acfa11d2b2dc3c5aa68834af6bc2450f2f01b0ef30"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 30,
+        "risk_reasons": {
+          "MISSING_RUNTIME_FILE": 30
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 5,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 2,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 2,
+          "added_files": 0,
+          "removed_files": 1,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 2,
+          "added": 0,
+          "removed": 1,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "MISSING_RUNTIME_FILE",
+            "points": 30,
+            "artifact_path": null,
+            "source_path": "sample/worker.py",
+            "message": "sample/__init__.py:1 statically imports sample/worker",
+            "evidence": [],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": null,
+            "source_path": "sample/worker.py",
+            "state": "removed",
+            "classification": "suspicious",
+            "artifact_sha256": null,
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "sample/__init__.py:1 statically imports sample/worker",
+            "diff": "",
+            "omission_kind": "runtime",
+            "omission_rule": "MISSING_RUNTIME_FILE"
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "python-process-in-config",
+      "label": "tampered",
+      "ecosystem": "pypi",
+      "description": "Add inert process-capability text in a non-code configuration file.",
+      "expected_rule": "PROCESS_EXECUTION",
+      "expected_path": "settings/runtime.cfg",
+      "detected": true,
+      "alerted": true,
+      "supporting_finding_ids": [
+        "F0001"
+      ],
+      "archive_sha256": {
+        "source": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "baseline": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "artifact": "1cb3d75ccfab05b8c7aa73d473619a3db3ff3d46b8db5232cbbf4e721627b16b"
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "1f705369c93f00e1b6006d87ffc1cc05f9c315b7182b0d8146316b67adad8080"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 35,
+        "risk_reasons": {
+          "PROCESS_EXECUTION": 35
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 7,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 3,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "PROCESS_EXECUTION",
+            "points": 35,
+            "artifact_path": "settings/runtime.cfg",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 20,
+                "text": "[fixture]\ncommand = subprocess.Popen([\"echo\", \"inert\"] )\n"
+              },
+              {
+                "line": 2,
+                "byte_offset": 31,
+                "text": "[fixture]\ncommand = subprocess.Popen([\"echo\", \"inert\"] )\n"
+              }
+            ],
+            "diff": "--- source/settings/runtime.cfg\n+++ artifact/settings/runtime.cfg\n@@ -0,0 +1,2 @@\n+[fixture]\n+command = subprocess.Popen([\"echo\", \"inert\"] )"
+          }
+        ],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "settings/runtime.cfg",
+            "artifact_path": "settings/runtime.cfg",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "7fb5e443d5c51815d4b0db97177f4e03f02b0fc9212d390ac518d07eb03d6e5e",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/settings/runtime.cfg\n+++ artifact/settings/runtime.cfg\n@@ -0,0 +1,2 @@\n+[fixture]\n+command = subprocess.Popen([\"echo\", \"inert\"] )",
+            "diff_truncated": false
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "python-decoder-in-data",
+      "label": "tampered",
+      "ecosystem": "pypi",
+      "description": "Add a decoder indicator inside a data extension; never evaluate it.",
+      "expected_rule": "ENCODED_PAYLOAD",
+      "expected_path": "resources/template.dat",
+      "detected": true,
+      "alerted": true,
+      "supporting_finding_ids": [
+        "F0001"
+      ],
+      "archive_sha256": {
+        "source": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "baseline": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "artifact": "6c437837e3c9246f13f8cdd15565aa68a4d0349fb0f132036c7c491b0519f9e6"
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "56398bbb9c70a407fb3e5c095a6dd58973ed42e5d2038806054a009910229389"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 25,
+        "risk_reasons": {
+          "ENCODED_PAYLOAD": 25
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 7,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 3,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "ENCODED_PAYLOAD",
+            "points": 25,
+            "artifact_path": "resources/template.dat",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 1,
+                "byte_offset": 20,
+                "text": "inert fixture only: b64decode(\"dm9pZCAw\")\n"
+              }
+            ],
+            "diff": "--- source/resources/template.dat\n+++ artifact/resources/template.dat\n@@ -0,0 +1 @@\n+inert fixture only: b64decode(\"dm9pZCAw\")"
+          }
+        ],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "resources/template.dat",
+            "artifact_path": "resources/template.dat",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "a903f6258be429eee47a8bb7ccaa1f0578a0be775fba7438d8edb2a1d453c061",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/resources/template.dat\n+++ artifact/resources/template.dat\n@@ -0,0 +1 @@\n+inert fixture only: b64decode(\"dm9pZCAw\")",
+            "diff_truncated": false
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "npm-comment-only-export",
+      "label": "benign",
+      "ecosystem": "npm",
+      "description": "Add comment without changing syntax tokens.",
+      "expected_rule": null,
+      "expected_path": null,
+      "detected": false,
+      "alerted": false,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "c365b67d70e528154338f293e0aadd40cf009a0eab18b7ad6a6e9197dd214a42",
+        "baseline": "c365b67d70e528154338f293e0aadd40cf009a0eab18b7ad6a6e9197dd214a42",
+        "artifact": "8b345c150be66fecafa2262d2d3819526b067730f8dccd4904bd4b1551436d68"
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "0f7f66e1222f24238bf59106355bc3b70d62be065c6f4c8386e7ba3bfcfcc929"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "lib/feature.mjs",
+            "artifact_path": "lib/feature.mjs",
+            "source_path": "lib/feature.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "source_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "lib/main.mjs",
+            "artifact_path": "lib/main.mjs",
+            "source_path": "lib/main.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "source_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "source_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 2,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 2,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [
+          "lib/feature.mjs"
+        ],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "lib/feature.mjs",
+            "artifact_path": "lib/feature.mjs",
+            "source_path": "lib/feature.mjs",
+            "state": "changed",
+            "classification": "expected",
+            "artifact_sha256": "d2f932008e72d558b8d3cd2fb024862e574ebb3cdeaee8301aa55d375ce744c9",
+            "source_sha256": "e45a2d5b8331299cf9959dc8ff07b87ecec86d8aafab683fc066b2474748f9c9",
+            "finding_ids": [],
+            "explanation": "Parsed syntax matches after excluding comments and source locations; literal values and program structure are retained.",
+            "diff": "--- source/lib/feature.mjs\n+++ artifact/lib/feature.mjs\n@@ -1 +1,2 @@\n+// release comment\n export const feature = 2;",
+            "diff_truncated": false,
+            "syntax_evidence": {
+              "parser": "tree-sitter-javascript",
+              "same_structure": true,
+              "limitation": "Syntax comparison is not build provenance verification."
+            }
+          },
+          {
+            "path": "lib/main.mjs",
+            "artifact_path": "lib/main.mjs",
+            "source_path": "lib/main.mjs",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "source_sha256": "4c9a2a851c102d1e1fe2ebb20defb6a0332b9b5c431a0fd644fe21712c412c6a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "source_sha256": "f5b62ad3162cc95d5508fc6d554195bd01839badedaf1f3c89ecd1fbd721d7b6",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "npm-regex-layout-only",
+      "label": "benign",
+      "ecosystem": "npm",
+      "description": "Only layout changes around an existing regex exec call.",
+      "expected_rule": null,
+      "expected_path": null,
+      "detected": false,
+      "alerted": false,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "77abc9aab20590cd7f977a222a2500324ad36aea7ca08c0f370822689a54fa03",
+        "baseline": "77abc9aab20590cd7f977a222a2500324ad36aea7ca08c0f370822689a54fa03",
+        "artifact": "871199285037918dbb6604243d0857f54c2239ac28490acabd1ab4b6663538dd"
+      },
+      "input_sha256": {
+        "source": "0ab28395f97645f1a3941db2147873eda4c26b09f4e24df52b049b0c186dda9f",
+        "baseline": "0ab28395f97645f1a3941db2147873eda4c26b09f4e24df52b049b0c186dda9f",
+        "artifact": "0d6809e61792d47238ef00ea81cb9d6a6279b4ee3b5fe6e4f3b3736a77eeba3b"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 4,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 2,
+          "source_file_count": 2,
+          "unique_comparison_paths": 2,
+          "identical_files": 2,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 2,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "dade79432ec43718df8e2abd185c3430620b5179763a13cc9f5570324e30b3b0",
+            "source_sha256": "dade79432ec43718df8e2abd185c3430620b5179763a13cc9f5570324e30b3b0",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6c5e6f42a5da91d0dee218d065fadd4e62d7c08833e97ef0347e9de8f5ce471b",
+            "source_sha256": "6c5e6f42a5da91d0dee218d065fadd4e62d7c08833e97ef0347e9de8f5ce471b",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 4,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 2,
+          "source_file_count": 2,
+          "unique_comparison_paths": 2,
+          "identical_files": 1,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 1,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [
+          "index.js"
+        ],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "changed",
+            "classification": "expected",
+            "artifact_sha256": "cb8bb0545cf8e5bbd030eba988fa7983b474a008d73381c760eb41f56c7a4797",
+            "source_sha256": "dade79432ec43718df8e2abd185c3430620b5179763a13cc9f5570324e30b3b0",
+            "finding_ids": [],
+            "explanation": "Parsed syntax matches after excluding comments and source locations; literal values and program structure are retained.",
+            "diff": "--- source/index.js\n+++ artifact/index.js\n@@ -1 +1,3 @@\n-export function match(x) { return /safe/.exec(x); }\n+export function match(x) {\n+  return /safe/.exec(x);\n+}",
+            "diff_truncated": false,
+            "syntax_evidence": {
+              "parser": "tree-sitter-javascript",
+              "same_structure": true,
+              "limitation": "Syntax comparison is not build provenance verification."
+            }
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6c5e6f42a5da91d0dee218d065fadd4e62d7c08833e97ef0347e9de8f5ce471b",
+            "source_sha256": "6c5e6f42a5da91d0dee218d065fadd4e62d7c08833e97ef0347e9de8f5ce471b",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "npm-declared-map-and-types",
+      "label": "benign",
+      "ecosystem": "npm",
+      "description": "Declared compiled output, exact embedded source and a paired declaration; no equivalence claim.",
+      "expected_rule": null,
+      "expected_path": null,
+      "detected": false,
+      "alerted": false,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "e7b8fe02125e03e0b42ec3d9dbe1dfb740a9e7f30a74444ff67688a88608a3dc",
+        "baseline": "e7b8fe02125e03e0b42ec3d9dbe1dfb740a9e7f30a74444ff67688a88608a3dc",
+        "artifact": "e28c7a29261fefdee8364ab079f1dd953524f2cfd17585d33d87a4d869b6b0a5"
+      },
+      "input_sha256": {
+        "source": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "baseline": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "artifact": "cfddef96864d39d2d6160d27ee58f1e55c4aeb361c2b431368a76fb0e208f816"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 4,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 2,
+          "source_file_count": 2,
+          "unique_comparison_paths": 2,
+          "identical_files": 2,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 2,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "source_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "src/answer.ts",
+            "artifact_path": "src/answer.ts",
+            "source_path": "src/answer.ts",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "306949d7706f37f9b702bb275d52b7b7e76e8ed25db6125396bf4fd07cfabac9",
+            "source_sha256": "306949d7706f37f9b702bb275d52b7b7e76e8ed25db6125396bf4fd07cfabac9",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "INCONCLUSIVE",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 2,
+          "unique_comparison_paths": 5,
+          "identical_files": 1,
+          "added_files": 3,
+          "removed_files": 1,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 1,
+          "added": 3,
+          "removed": 1,
+          "changed": 0
+        },
+        "expected_generated_differences": [
+          "out/answer.js.map"
+        ],
+        "unverified_generated_outputs": [
+          "out/answer.d.ts",
+          "out/answer.js"
+        ],
+        "findings": [],
+        "files": [
+          {
+            "path": "out/answer.d.ts",
+            "artifact_path": "out/answer.d.ts",
+            "source_path": null,
+            "state": "added",
+            "classification": "generated_unverified",
+            "artifact_sha256": "63bb4a03eb743ad765c803c040b0bed44ec984abb91764f9dc89d4db4a884b5b",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
+            "diff": "--- source/out/answer.d.ts\n+++ artifact/out/answer.d.ts\n@@ -0,0 +1 @@\n+export declare const answer: number;",
+            "diff_truncated": false,
+            "build_evidence": {
+              "manifest_path": "package.json",
+              "build_scripts": {
+                "build": "tsc"
+              },
+              "output_declaration": "package.json:types",
+              "matching_files_patterns": [
+                "out"
+              ],
+              "equivalence_verified": false,
+              "declaration_sources": [
+                "src/answer.ts"
+              ],
+              "declaration_pairing": "unique basename candidate; type equivalence is unverified",
+              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
+            }
+          },
+          {
+            "path": "out/answer.js",
+            "artifact_path": "out/answer.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "generated_unverified",
+            "artifact_sha256": "b93cd15824f5c98045147a646badf4d19ce17ec0f73bb5d02aa6ced140a472d0",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
+            "diff": "--- source/out/answer.js\n+++ artifact/out/answer.js\n@@ -0,0 +1,2 @@\n+export const answer = 7;\n+//# sourceMappingURL=answer.js.map",
+            "diff_truncated": false,
+            "build_evidence": {
+              "manifest_path": "package.json",
+              "build_scripts": {
+                "build": "tsc"
+              },
+              "output_declaration": "package.json:main",
+              "matching_files_patterns": [
+                "out"
+              ],
+              "equivalence_verified": false,
+              "source_map": {
+                "map_path": "out/answer.js.map",
+                "matching_sources": [
+                  {
+                    "source_index": 0,
+                    "declared_path": "../src/answer.ts",
+                    "source_path": "src/answer.ts"
+                  }
+                ],
+                "mismatched_sources": [],
+                "unresolved_sources": [],
+                "all_embedded_sources_match": true,
+                "valid_structure": true,
+                "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
+              },
+              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
+            }
+          },
+          {
+            "path": "out/answer.js.map",
+            "artifact_path": "out/answer.js.map",
+            "source_path": null,
+            "state": "added",
+            "classification": "expected",
+            "artifact_sha256": "53ff661678517b5b41cb3fb0846643df8ad180b07c791632dd8a74c785eba6c0",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Source-map metadata inspected without fetching references. 1 embedded sources match; 0 differ; 0 unresolved. Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source.",
+            "diff": "--- source/out/answer.js.map\n+++ artifact/out/answer.js.map\n@@ -0,0 +1 @@\n+{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+            "diff_truncated": false,
+            "source_map_evidence": {
+              "map_path": "out/answer.js.map",
+              "matching_sources": [
+                {
+                  "source_index": 0,
+                  "declared_path": "../src/answer.ts",
+                  "source_path": "src/answer.ts"
+                }
+              ],
+              "mismatched_sources": [],
+              "unresolved_sources": [],
+              "all_embedded_sources_match": true,
+              "valid_structure": true,
+              "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
+            }
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "source_sha256": "1330098b695de6b2ed81e8654543373a20bdeacf641c4b32dc73c1a137a7d823",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "src/answer.ts",
+            "artifact_path": null,
+            "source_path": "src/answer.ts",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "306949d7706f37f9b702bb275d52b7b7e76e8ed25db6125396bf4fd07cfabac9",
+            "finding_ids": [],
+            "explanation": "Outside the supported source package.json files allowlist; no detected runtime reference. Supported patterns: literals, *, ** and ?.",
+            "diff": "",
+            "omission_kind": "packaging_exclusion",
+            "omission_rule": "NPM_FILES_EXCLUSION"
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "python-comment-only-function",
+      "label": "benign",
+      "ecosystem": "pypi",
+      "description": "Python comments/formatting change but function AST stays equal.",
+      "expected_rule": null,
+      "expected_path": null,
+      "detected": false,
+      "alerted": false,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "baseline": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "artifact": "7470951ed963e9bcd2f3fd846ed69afba577344f74d8204ba0831d2b786f7267"
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "a6180ed70fbdce073240b76edb18deeff607b979764c1b08c12f47a9765df60d"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 2,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 2,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [
+          "sample/worker.py"
+        ],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "changed",
+            "classification": "expected",
+            "artifact_sha256": "98a3824760b2957ceb6090ac0bd23a9f2a43df11cca5f7364303267c667b6ce5",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "Parsed syntax matches after excluding comments and source locations; literal values and program structure are retained.",
+            "diff": "--- source/sample/worker.py\n+++ artifact/sample/worker.py\n@@ -1,2 +1,4 @@\n-def compute():\n+# formatting control\n+def compute( ):\n+    # same return value\n     return 7",
+            "diff_truncated": false,
+            "syntax_evidence": {
+              "parser": "python-ast",
+              "same_structure": true,
+              "limitation": "Syntax comparison is not build provenance verification."
+            }
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "python-wheel-metadata-control",
+      "label": "benign",
+      "ecosystem": "pypi",
+      "description": "Add ordinary wheel metadata; detector may lack a packaging explanation.",
+      "expected_rule": null,
+      "expected_path": null,
+      "detected": false,
+      "alerted": true,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "baseline": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "artifact": "5e6dc39c5b0b4752c528d4c874c045df1de47e803782e8cbee1ca89495c8e3ed"
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "6b9bd66ff0c4d7fc2bb13b07e665018206833644522d1ac3d583c19bae9eda0a"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 10,
+        "risk_reasons": {
+          "UNEXPLAINED_NONCODE": 10
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 7,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 3,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "UNEXPLAINED_NONCODE",
+            "points": 10,
+            "artifact_path": "synthetic_contributor-0.0.0.dist-info/METADATA",
+            "source_path": null,
+            "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "Metadata-Version: 2.1"
+              },
+              {
+                "line": 2,
+                "text": "Name: synthetic-contributor"
+              },
+              {
+                "line": 3,
+                "text": "Version: 0.0.0"
+              }
+            ],
+            "diff": "--- source/synthetic_contributor-0.0.0.dist-info/METADATA\n+++ artifact/synthetic_contributor-0.0.0.dist-info/METADATA\n@@ -0,0 +1,3 @@\n+Metadata-Version: 2.1\n+Name: synthetic-contributor\n+Version: 0.0.0"
+          }
+        ],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "synthetic_contributor-0.0.0.dist-info/METADATA",
+            "artifact_path": "synthetic_contributor-0.0.0.dist-info/METADATA",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "e1de2065be02af1a41315c744d430a600847eadb7d4b869e2b2434644413b512",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/synthetic_contributor-0.0.0.dist-info/METADATA\n+++ artifact/synthetic_contributor-0.0.0.dist-info/METADATA\n@@ -0,0 +1,3 @@\n+Metadata-Version: 2.1\n+Name: synthetic-contributor\n+Version: 0.0.0",
+            "diff_truncated": false
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "python-version-stamp-control",
+      "label": "benign",
+      "ecosystem": "pypi",
+      "description": "Add a harmless generated version stamp; detector may conservatively alert.",
+      "expected_rule": null,
+      "expected_path": null,
+      "detected": false,
+      "alerted": true,
+      "supporting_finding_ids": [],
+      "archive_sha256": {
+        "source": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "baseline": "fc797f9ca89586305f6a40ccbf6855000c7aca9a2791d70e74285345a172fd4d",
+        "artifact": "8e346d43f4ab7094028d22cb9e45490909da90cc26c4a72fae2119bd931eb3a0"
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "9c19df25d15861d58d288481fabcf80f3f253f3da46c8146cfd1cc301957d183"
+      },
+      "baseline_report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 6,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 3,
+          "source_file_count": 3,
+          "unique_comparison_paths": 3,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      },
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 15,
+        "risk_reasons": {
+          "UNEXPLAINED_CODE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 7,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 3,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "sample/_version.py",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "__version__ = \"0.0.0\""
+              }
+            ],
+            "diff": "--- source/sample/_version.py\n+++ artifact/sample/_version.py\n@@ -0,0 +1 @@\n+__version__ = \"0.0.0\""
+          }
+        ],
+        "files": [
+          {
+            "path": "pyproject.toml",
+            "artifact_path": "pyproject.toml",
+            "source_path": "pyproject.toml",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "source_sha256": "2435107dac9186217acd680987a38994d034d26867197cb5a6d0be191d976a4d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/__init__.py",
+            "artifact_path": "sample/__init__.py",
+            "source_path": "sample/__init__.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "source_sha256": "366df9ca90c0147b12329c276f6ccc4774015501b68cbd6006d2c225e9ef31e5",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "sample/_version.py",
+            "artifact_path": "sample/_version.py",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "4a15d00558f2892387c684094b606f346dfde56e0a65fa8cc59581011d0c66b1",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/sample/_version.py\n+++ artifact/sample/_version.py\n@@ -0,0 +1 @@\n+__version__ = \"0.0.0\"",
+            "diff_truncated": false
+          },
+          {
+            "path": "sample/worker.py",
+            "artifact_path": "sample/worker.py",
+            "source_path": "sample/worker.py",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "source_sha256": "b152c3cdb364af153140fef77247c20767ce9a865dbc8bbf8655e06d78930c5e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    }
+  ]
+}
