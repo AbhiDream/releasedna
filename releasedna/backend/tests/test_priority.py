@@ -235,6 +235,8 @@ class ExplanationTests(unittest.TestCase):
         before=self.store.get(self.job['id'])['result']; calls=[]
         def model(payload):
             calls.append(payload)
+            self.assertIn('plain English only',payload['messages'][0]['content'])
+            self.assertIn('Do not use Hindi or Hinglish',payload['messages'][0]['content'])
             return json.dumps({'explanations':[{'finding_id':f['id'],'text':'Static indicator, review needed.'} for f in before['findings']]})
         result=explain(self.store,self.job['id'],model)
         self.assertEqual(result['report_sha256'],fingerprint(before))
