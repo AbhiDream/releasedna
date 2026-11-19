@@ -7,6 +7,7 @@ They intentionally avoid generic minification and ordinary _0x substring matches
 OBFUSCATION_RULES = (
     'OBFUSCATED_DYNAMIC_EXECUTION',
     'OBFUSCATED_MODULE_LOAD',
+    'ESCAPE_DENSITY',
     'BROWSER_API_HOOK',
     'OBFUSCATOR_IDENTIFIER',
 )

@@ -49,9 +49,18 @@ class DetectorPriorityTests(unittest.TestCase):
     def test_specific_obfuscation_patterns_have_precise_findings(self):
         cases = {
             'string-built-eval': (b"eval('con' + 'sole.log(1)')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
+            'bracket-concat-eval': (b"x['ev'+'al']('1')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
+            'string-built-function': (b"Function('ret'+'urn 1')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
+            'bracket-concat-function': (b"obj['Fun'+'ction']('return 1')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
+            'computed-this-call': (b"this[var]('value')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
             'hex-escaped-require': (b"require('\\x63\\x68ild_process')", 'OBFUSCATED_MODULE_LOAD'),
+            'bracket-concat-require': (b"pkg['req'+'uire']('child_process')", 'OBFUSCATED_MODULE_LOAD'),
+            'dense-hex-escapes': (b'const text="\\x61\\x62\\x63\\x64";', 'ESCAPE_DENSITY'),
+            'dense-unicode-escapes': (b'const text="\\u0061\\u0062\\u0063\\u0064";', 'ESCAPE_DENSITY'),
+            'dense-concatenated-escapes': (b'const text="\\x61" + "\\x62" + "\\x63" + "\\x64";', 'ESCAPE_DENSITY'),
             'browser-fetch-hook': (b'window.fetch = function(input) { return original(input); };', 'BROWSER_API_HOOK'),
             'hex-obfuscator-array': (b'var _0x4f2a = ["alpha", "beta"];', 'OBFUSCATOR_IDENTIFIER'),
+            'short-obfuscator-array': (b'const _0x1 = ["alpha", "beta"];', 'OBFUSCATOR_IDENTIFIER'),
         }
         for label, (payload, rule) in cases.items():
             with self.subTest(case=label):
@@ -63,13 +72,14 @@ class DetectorPriorityTests(unittest.TestCase):
                 self.assertNotIn('UNEXPLAINED_CODE',report['risk_reasons'])
 
     def test_obfuscator_rule_does_not_flag_plain_hex_or_local_binding(self):
-        for text in (b'const _0x = 1;', b'const _0xabc = ordinaryData;', b"require('child_process');"):
+        for text in (b'const _0x = 1;', b'const _0xabc = ordinaryData;', b"require('child_process');", b'const path="C:\\x";'):
             with self.subTest(text=text):
                 rules={item['rule'] for item in compare({'dist/index.js':File(text)},{},True)['findings']}
                 if text == b"require('child_process');":
                     self.assertNotIn('OBFUSCATED_MODULE_LOAD',rules)
                 else:
                     self.assertNotIn('OBFUSCATOR_IDENTIFIER',rules)
+                self.assertNotIn('ESCAPE_DENSITY',rules)
 
     def test_development_and_sandbox_omissions_need_a_runtime_reference(self):
         for path in ('karma.conf.cjs','sandbox/fixture.js','sandbox/data.json','config/dev.json','configs/build.json'):
