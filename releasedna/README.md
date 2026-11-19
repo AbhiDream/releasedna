@@ -1,10 +1,14 @@
 # ReleaseDNA
 
+Latest: [0.1.3 priority verification](docs/priority-verification.md) — non-code tampering demo, ETag release monitor, ivory anomaly badge, and optional immutable-findings explanation via Groq. Public alert proxy: 2/8 on the reused corpus; structural hard-negative FPR: 3/4. Open `/corpus` and `/evaluation` on the local server. Earlier metrics below describe the previous milestone.
+
 Package supply-chain forensics for Catalyst Problem Statement 2.
 
 **Phase 1, hardened: inspection engine, CLI, durable job API and verification frontend.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.
 
 This is an early static analyzer, not a malware-free certification. There is no AI dependency. The local frontend exists to verify real scans and persisted history. Release monitoring, wheel support and the optional open-weight explanation layer remain future work. Phase 2 has not started.
+
+The subsequent detector-evaluation milestone is now implemented: [evaluation guide and measured limitations](docs/evaluation.md). Open `/evaluation` on the local server to inspect public releases, harmless tampering cases, exact findings and known misses. Current measured fixture recall is 11/12; public-release alert rate is 3/8 on a small presumed-benign sample. False-positive reduction is not complete.
 
 ## Run locally
 
@@ -74,7 +78,7 @@ docker compose up --build
 
 - GitHub only; repository claims can themselves be attacker controlled. Tags may move. Reports record the observed immutable commit and archive digest.
 - PyPI source distributions only. Dynamic versions, setuptools configuration, monorepo mapping beyond npm `repository.directory`, and generated bundles are conservative/partial.
-- Source maps supply corroborating evidence only: a matching `sourcesContent` cannot prove the emitted bundle is authentic.
+- Source maps supply corroborating evidence only: a matching `sourcesContent` cannot prove the emitted bundle is authentic. Declared compiled output is `generated_unverified`, with zero points solely for being generated; it prevents a CLEAN verdict until equivalence is established. Strong capability rules still apply.
 - Regex capability rules can miss aliases or advanced obfuscation and can flag benign code. No claim of complete semantic analysis.
 - Missing-file classifications use supported declarations, limited static imports and conventions; they do not prove complete runtime dependency coverage.
 - npm publication time is read from the official full packument's exact `time[version]` entry. Missing/malformed/unavailable metadata remains null with a reason, never substituted with package `created` or `modified` timestamps.

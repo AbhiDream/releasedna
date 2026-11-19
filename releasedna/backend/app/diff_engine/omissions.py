@@ -4,7 +4,7 @@ import posixpath
 import re
 from pathlib import PurePosixPath
 
-CODE = {'.js', '.mjs', '.cjs', '.ts', '.py', '.sh', '.ps1', '.bat', '.cmd', '.node', '.wasm'}
+CODE = {'.js', '.mjs', '.cjs', '.ts', '.mts', '.cts', '.py', '.sh', '.ps1', '.bat', '.cmd', '.node', '.wasm'}
 DEVELOPMENT = {'.gitignore', '.npmignore', '.gitattributes', '.editorconfig', '.eslintrc',
                '.eslintrc.json', '.travis.yml', '.jshintrc', '.npmrc', 'package-lock.json',
                'yarn.lock', 'pnpm-lock.yaml', 'Makefile', 'Gruntfile.js', 'gulpfile.js'}
@@ -49,6 +49,19 @@ class Omissions:
         self.entrypoints = {}
         self.entry_patterns = []
         for origin, meta in [('source', self.metadata), ('artifact', manifest(artifact))]:
+            scripts = meta.get('scripts', {})
+            if isinstance(scripts, dict):
+                import shlex
+                for hook in ('preinstall', 'install', 'postinstall', 'prepare'):
+                    command = scripts.get(hook)
+                    if not isinstance(command,str): continue
+                    try:
+                        for token in shlex.split(command):
+                            target = literal_path(token)
+                            if target and target in source:
+                                self.entrypoints[target] = f'{origin}/package.json:scripts.{hook}'
+                    except ValueError:
+                        pass
             for field in ('main', 'module', 'bin', 'browser', 'exports', 'types', 'typings'):
                 for value in strings(meta.get(field)):
                     path = literal_path(value)
@@ -62,6 +75,26 @@ class Omissions:
         # Static local references from shipped JS are stronger evidence than ignore rules.
         # No dynamic resolution or package code execution is performed.
         for path, item in artifact.items():
+            if PurePosixPath(path).suffix == '.py' and len(item.data) <= 256000:
+                # Parse syntax only; never import/execute package modules.
+                import ast
+                try:
+                    tree = ast.parse(item.data.decode('utf-8'))
+                    for node in ast.walk(tree):
+                        candidates = []
+                        if isinstance(node, ast.Import):
+                            candidates = [alias.name.replace('.', '/') for alias in node.names]
+                        elif isinstance(node, ast.ImportFrom):
+                            base = posixpath.dirname(path) if node.level else ''
+                            for _ in range(max(0, node.level - 1)): base = posixpath.dirname(base)
+                            module = posixpath.join(base, (node.module or '').replace('.', '/'))
+                            candidates = [module] + [posixpath.join(module, alias.name) for alias in node.names]
+                        for target in candidates:
+                            for candidate in (target + '.py', target + '/__init__.py'):
+                                if candidate in source:
+                                    self.runtime[candidate] = f'{path}:{node.lineno} statically imports {target}'
+                except (SyntaxError, UnicodeError, ValueError, RecursionError):
+                    pass
             if PurePosixPath(path).suffix not in {'.js', '.cjs', '.mjs', '.ts'}:
                 continue
             content = item.data.decode('utf-8', errors='replace')
@@ -76,6 +109,9 @@ class Omissions:
                         break
         declared = self.metadata.get('files')
         self.files = [literal_path(x) for x in declared] if isinstance(declared, list) else None
+        # Import here to avoid a module initialization cycle with generated.manifest.
+        from app.diff_engine.generated import package_pattern
+        self.file_patterns = [package_pattern(x) for x in declared] if isinstance(declared, list) else None
         self.ignore_path = '.npmignore' if '.npmignore' in source else '.gitignore'
         self.ignored = []
         if self.metadata and self.ignore_path in source:
@@ -100,21 +136,23 @@ class Omissions:
                           f'Package entrypoint/manifest absent from artifact; declaration: {reference or path}', 40)
         if path in self.runtime:
             return result('runtime', 'suspicious', 'MISSING_RUNTIME_FILE', self.runtime[path], 30)
-        if self.files is not None and any(x and contains(path, x) for x in self.files):
+        if self.file_patterns is not None and any(x and x.fullmatch(path) for x in self.file_patterns):
             return result('runtime', 'suspicious', 'MISSING_DECLARED_FILE',
                           'Source package.json files explicitly includes this path, but it is absent.', 25)
         parts = PurePosixPath(path).parts
         name = parts[-1]
-        if any(p.lower() in {'test', 'tests', '__tests__', 'fixtures', 'benchmark', 'benchmarks'} for p in parts) or re.search(r'(?:^test\.|\.(?:test|spec)\.)', name):
+        if any(p.lower() in {'test', 'tests', '__tests__', 'fixtures', 'bench', 'benchmark', 'benchmarks'} for p in parts) or re.search(r'(?:^test\.|\.(?:test|spec)\.)', name):
             return result('tests', 'expected', 'OMITTED_TEST', 'Test/benchmark convention; no detected shipped-code reference or declared inclusion.')
         if any(p.lower() in {'docs', 'doc', 'examples'} for p in parts) or name.lower().endswith(('.md', '.rst')):
             return result('documentation', 'expected', 'OMITTED_DOCUMENTATION', 'Documentation/example convention; no detected runtime reference or declared inclusion.')
-        if path in DEVELOPMENT or parts[0] in {'.github', '.git', '.circleci'}:
+        config = (re.match(r'^(?:\..*rc(?:\..+)?|(?:eslint|rollup|webpack|vite|vitest|jest|babel|tsup|prettier)\.config\..+|(?:tsconfig|jsconfig)(?:\.[^.]+)?\.json|noxfile\.py|tox\.ini)$', name)
+                  or parts[0] in {'bin', 'scripts', 'tasks', '.github', '.git', '.circleci'})
+        if path in DEVELOPMENT or config:
             return result('development', 'expected', 'OMITTED_DEVELOPMENT', 'Development/CI configuration normally omitted from publishing.')
         # Fully understood literal files lists can explain omitted build inputs, but not entrypoints/references.
-        if self.files is not None and all(self.files):
+        if self.file_patterns is not None and all(self.file_patterns):
             return result('packaging_exclusion', 'expected', 'NPM_FILES_EXCLUSION',
-                          'Outside the literal source package.json files allowlist; no detected runtime reference.')
+                          'Outside the supported source package.json files allowlist; no detected runtime reference. Supported patterns: literals, *, ** and ?.')
         for pattern, line in self.ignored:
             normalized = pattern.lstrip('/').rstrip('/')
             matched = contains(path, normalized) if '/' in normalized or pattern.startswith('/') else normalized in parts

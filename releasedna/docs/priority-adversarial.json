@@ -1,0 +1,1778 @@
+{
+  "engine_version": "0.1.3",
+  "detector_sha256": "bbb5136843ac583203601214795a21975e944713f473746b6d9055f58daa7f55",
+  "artifact_integrity": "Local synthetic fixture digests; not verified official registry artifacts.",
+  "scope": "Synthetic structural analogues, not historical exploit detection. No fixture code executed. Shared controls for each family. Exact expected rule and path required for TP.",
+  "table": [
+    {
+      "family": "xz-style",
+      "TP": 7,
+      "FN": 0,
+      "FP": 3,
+      "TN": 1,
+      "TPR": 1.0,
+      "FPR": 0.75
+    },
+    {
+      "family": "debug-style",
+      "TP": 4,
+      "FN": 0,
+      "FP": 3,
+      "TN": 1,
+      "TPR": 1.0,
+      "FPR": 0.75
+    },
+    {
+      "family": "all",
+      "TP": 11,
+      "FN": 0,
+      "FP": 3,
+      "TN": 1,
+      "TPR": 1.0,
+      "FPR": 0.75
+    }
+  ],
+  "cases": [
+    {
+      "id": "xz-script-m4-build.m4",
+      "family": "xz-style",
+      "target": "m4/build.m4",
+      "expected_rule": "SHELL_PIPELINE",
+      "tampered": true,
+      "artifact_sha256": "ca49fa5a9b2f83c48f8e11ae6ca943996fe9df6cffa99235acbd83da018c80e0",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 30,
+        "risk_reasons": {
+          "SHELL_PIPELINE": 30
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "SHELL_PIPELINE",
+            "points": 30,
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 31,
+                "text": "# inert fixture: never execute\nm4_esyscmd([printf fixture])\n"
+              }
+            ],
+            "diff": "--- source/m4/build.m4\n+++ artifact/m4/build.m4\n@@ -1 +1,2 @@\n-dnl harmless build macro\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])"
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "changed",
+            "classification": "suspicious",
+            "artifact_sha256": "5b1ecbb5ab90845747accbd8ee4926e318825ac5cd5de43fde30a6055b4c8089",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/m4/build.m4\n+++ artifact/m4/build.m4\n@@ -1 +1,2 @@\n-dnl harmless build macro\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])",
+            "diff_truncated": false
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "xz-script-m4-release-only.m4",
+      "family": "xz-style",
+      "target": "m4/release-only.m4",
+      "expected_rule": "SHELL_PIPELINE",
+      "tampered": true,
+      "artifact_sha256": "978a78b26a68611f4fd73d4cca11a6f4129a66443db49ef1338d7474b867b591",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 30,
+        "risk_reasons": {
+          "SHELL_PIPELINE": 30
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "SHELL_PIPELINE",
+            "points": 30,
+            "artifact_path": "m4/release-only.m4",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 31,
+                "text": "# inert fixture: never execute\nm4_esyscmd([printf fixture])\n"
+              }
+            ],
+            "diff": "--- source/m4/release-only.m4\n+++ artifact/m4/release-only.m4\n@@ -0,0 +1,2 @@\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])"
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/release-only.m4",
+            "artifact_path": "m4/release-only.m4",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "5b1ecbb5ab90845747accbd8ee4926e318825ac5cd5de43fde30a6055b4c8089",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/m4/release-only.m4\n+++ artifact/m4/release-only.m4\n@@ -0,0 +1,2 @@\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])",
+            "diff_truncated": false
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "xz-script-build-setup.sh",
+      "family": "xz-style",
+      "target": "build/setup.sh",
+      "expected_rule": "SHELL_PIPELINE",
+      "tampered": true,
+      "artifact_sha256": "98a078460ba514d45fc09910c553944ba961012015f6d1f55374d056a9ca4c1b",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 30,
+        "risk_reasons": {
+          "SHELL_PIPELINE": 30
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "SHELL_PIPELINE",
+            "points": 30,
+            "artifact_path": "build/setup.sh",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 31,
+                "text": "# inert fixture: never execute\nm4_esyscmd([printf fixture])\n"
+              }
+            ],
+            "diff": "--- source/build/setup.sh\n+++ artifact/build/setup.sh\n@@ -0,0 +1,2 @@\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])"
+          }
+        ],
+        "files": [
+          {
+            "path": "build/setup.sh",
+            "artifact_path": "build/setup.sh",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "5b1ecbb5ab90845747accbd8ee4926e318825ac5cd5de43fde30a6055b4c8089",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/build/setup.sh\n+++ artifact/build/setup.sh\n@@ -0,0 +1,2 @@\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])",
+            "diff_truncated": false
+          },
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "xz-script-tests-disguised.dat",
+      "family": "xz-style",
+      "target": "tests/disguised.dat",
+      "expected_rule": "SHELL_PIPELINE",
+      "tampered": true,
+      "artifact_sha256": "2dc8cfafbd441813de83f8ad322faf76024bc6cacd6d03c5fd8fb91f423e188f",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 30,
+        "risk_reasons": {
+          "SHELL_PIPELINE": 30
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "SHELL_PIPELINE",
+            "points": 30,
+            "artifact_path": "tests/disguised.dat",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 31,
+                "text": "# inert fixture: never execute\nm4_esyscmd([printf fixture])\n"
+              }
+            ],
+            "diff": "--- source/tests/disguised.dat\n+++ artifact/tests/disguised.dat\n@@ -0,0 +1,2 @@\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])"
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/disguised.dat",
+            "artifact_path": "tests/disguised.dat",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "5b1ecbb5ab90845747accbd8ee4926e318825ac5cd5de43fde30a6055b4c8089",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/tests/disguised.dat\n+++ artifact/tests/disguised.dat\n@@ -0,0 +1,2 @@\n+# inert fixture: never execute\n+m4_esyscmd([printf fixture])",
+            "diff_truncated": false
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "xz-entropy-tests-data.bin",
+      "family": "xz-style",
+      "target": "tests/data.bin",
+      "expected_rule": "HIGH_ENTROPY_CHANGE",
+      "tampered": true,
+      "artifact_sha256": "06a2e0df5ad5709154e6326ce54b2d64128481eafe99081938c7f3a97e3ae5a3",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 15,
+        "risk_reasons": {
+          "HIGH_ENTROPY_CHANGE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "HIGH_ENTROPY_CHANGE",
+            "points": 15,
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "message": "New high-entropy content; compression/encryption may be legitimate. Inspect the source difference.",
+            "evidence": [
+              {
+                "artifact_bits_per_byte": 7.9527,
+                "source_bits_per_byte": 3.2866
+              }
+            ],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "changed",
+            "classification": "suspicious",
+            "artifact_sha256": "5dc1543dbfe5092bcbc79557a70b8082b366050e2cc350c6af3738dcf3b38f51",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "",
+            "entropy": {
+              "artifact_bits_per_byte": 7.9527,
+              "source_bits_per_byte": 3.2866
+            }
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "xz-entropy-tests-release-only.blob",
+      "family": "xz-style",
+      "target": "tests/release-only.blob",
+      "expected_rule": "HIGH_ENTROPY_CHANGE",
+      "tampered": true,
+      "artifact_sha256": "7cc633771bb96ba21e55366d431d2a10eee28e6e7f9e948fcef081f1cd86d349",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 15,
+        "risk_reasons": {
+          "HIGH_ENTROPY_CHANGE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "HIGH_ENTROPY_CHANGE",
+            "points": 15,
+            "artifact_path": "tests/release-only.blob",
+            "source_path": null,
+            "message": "New high-entropy content; compression/encryption may be legitimate. Inspect the source difference.",
+            "evidence": [
+              {
+                "artifact_bits_per_byte": 7.9527,
+                "source_bits_per_byte": 0
+              }
+            ],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/release-only.blob",
+            "artifact_path": "tests/release-only.blob",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "5dc1543dbfe5092bcbc79557a70b8082b366050e2cc350c6af3738dcf3b38f51",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "",
+            "entropy": {
+              "artifact_bits_per_byte": 7.9527,
+              "source_bits_per_byte": 0
+            }
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "xz-low-entropy-blob",
+      "family": "xz-style",
+      "target": "tests/data.bin",
+      "expected_rule": "UNEXPLAINED_NONCODE",
+      "tampered": true,
+      "artifact_sha256": "620ae7f9e0e0e5f0b4a2204d5ec181c187d8fadf5f2bb9b728113a924ec095ac",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 10,
+        "risk_reasons": {
+          "UNEXPLAINED_NONCODE": 10
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "UNEXPLAINED_NONCODE",
+            "points": 10,
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
+            "evidence": [
+              {
+                "artifact_sha256": "03b18bd52088d11d53bbec26d97c8b155a0bc9203e42cc802f5f0fc3c5803a42",
+                "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+                "size_bytes": 23
+              }
+            ],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "changed",
+            "classification": "suspicious",
+            "artifact_sha256": "03b18bd52088d11d53bbec26d97c8b155a0bc9203e42cc802f5f0fc3c5803a42",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "debug-process-index.js",
+      "family": "debug-style",
+      "target": "index.js",
+      "expected_rule": "PROCESS_EXECUTION",
+      "tampered": true,
+      "artifact_sha256": "8327d5bc2bd5a4be59aba07ea18e3908c410629e19dc5eca0a88274f9750a69e",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 35,
+        "risk_reasons": {
+          "PROCESS_EXECUTION": 35
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "PROCESS_EXECUTION",
+            "points": 35,
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 28,
+                "text": "// inert text only\nrequire('child_process').execSync('echo fixture');\n"
+              },
+              {
+                "line": 2,
+                "byte_offset": 44,
+                "text": "// inert text only\nrequire('child_process').execSync('echo fixture');\n"
+              }
+            ],
+            "diff": "--- source/index.js\n+++ artifact/index.js\n@@ -1 +1,2 @@\n-module.exports = 1;\n+// inert text only\n+require('child_process').execSync('echo fixture');"
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "changed",
+            "classification": "suspicious",
+            "artifact_sha256": "3c7748bcaa12ba55ed61af753a0f6a3290b096d861e0707b364c626cf778f061",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/index.js\n+++ artifact/index.js\n@@ -1 +1,2 @@\n-module.exports = 1;\n+// inert text only\n+require('child_process').execSync('echo fixture');",
+            "diff_truncated": false
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "debug-process-debug-helper.js",
+      "family": "debug-style",
+      "target": "debug/helper.js",
+      "expected_rule": "PROCESS_EXECUTION",
+      "tampered": true,
+      "artifact_sha256": "52fb4d1922e2964d3c54e99a6131ffd9f1a808ee5a3c8c536f234e983f63ebe3",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 35,
+        "risk_reasons": {
+          "PROCESS_EXECUTION": 35
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "PROCESS_EXECUTION",
+            "points": 35,
+            "artifact_path": "debug/helper.js",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 28,
+                "text": "// inert text only\nrequire('child_process').execSync('echo fixture');\n"
+              },
+              {
+                "line": 2,
+                "byte_offset": 44,
+                "text": "// inert text only\nrequire('child_process').execSync('echo fixture');\n"
+              }
+            ],
+            "diff": "--- source/debug/helper.js\n+++ artifact/debug/helper.js\n@@ -0,0 +1,2 @@\n+// inert text only\n+require('child_process').execSync('echo fixture');"
+          }
+        ],
+        "files": [
+          {
+            "path": "debug/helper.js",
+            "artifact_path": "debug/helper.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "3c7748bcaa12ba55ed61af753a0f6a3290b096d861e0707b364c626cf778f061",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/debug/helper.js\n+++ artifact/debug/helper.js\n@@ -0,0 +1,2 @@\n+// inert text only\n+require('child_process').execSync('echo fixture');",
+            "diff_truncated": false
+          },
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "debug-process-debug-notes.txt",
+      "family": "debug-style",
+      "target": "debug/notes.txt",
+      "expected_rule": "PROCESS_EXECUTION",
+      "tampered": true,
+      "artifact_sha256": "c02cd5d0ec772653e14c93b68bfd27526f56aa16fbf9ad53d3d65f89e6ba883f",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 35,
+        "risk_reasons": {
+          "PROCESS_EXECUTION": 35
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "PROCESS_EXECUTION",
+            "points": 35,
+            "artifact_path": "debug/notes.txt",
+            "source_path": null,
+            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
+            "evidence": [
+              {
+                "line": 2,
+                "byte_offset": 28,
+                "text": "// inert text only\nrequire('child_process').execSync('echo fixture');\n"
+              },
+              {
+                "line": 2,
+                "byte_offset": 44,
+                "text": "// inert text only\nrequire('child_process').execSync('echo fixture');\n"
+              }
+            ],
+            "diff": "--- source/debug/notes.txt\n+++ artifact/debug/notes.txt\n@@ -0,0 +1,2 @@\n+// inert text only\n+require('child_process').execSync('echo fixture');"
+          }
+        ],
+        "files": [
+          {
+            "path": "debug/notes.txt",
+            "artifact_path": "debug/notes.txt",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "3c7748bcaa12ba55ed61af753a0f6a3290b096d861e0707b364c626cf778f061",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/debug/notes.txt\n+++ artifact/debug/notes.txt\n@@ -0,0 +1,2 @@\n+// inert text only\n+require('child_process').execSync('echo fixture');",
+            "diff_truncated": false
+          },
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "debug-hook",
+      "family": "debug-style",
+      "target": "package.json",
+      "expected_rule": "INSTALL_SCRIPT_CHANGED",
+      "tampered": true,
+      "artifact_sha256": "9b76a5eb8a9887712066b0b05d442007388c6a99826a21cb4a84b668ff056ff6",
+      "detected": true,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 45,
+        "risk_reasons": {
+          "INSTALL_SCRIPT_CHANGED": 45
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "INSTALL_SCRIPT_CHANGED",
+            "points": 45,
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "message": "postinstall changed from None to 'node -e \"void 0\"'",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "{\"name\":\"fixture\",\"version\":\"1.0.0\",\"main\":\"index.js\",\"scripts\":{\"postinstall\":\"node -e \\\"void 0\\\"\"}}"
+              }
+            ],
+            "diff": "--- source/package.json\n+++ artifact/package.json\n@@ -1 +1 @@\n-{\"name\":\"fixture\",\"version\":\"1.0.0\",\"main\":\"index.js\"}\n+{\"name\":\"fixture\",\"version\":\"1.0.0\",\"main\":\"index.js\",\"scripts\":{\"postinstall\":\"node -e \\\"void 0\\\"\"}}"
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "changed",
+            "classification": "suspicious",
+            "artifact_sha256": "1e1e0b29440a4d642b19f9b77a5e3a2af36b47a627bcdbac0c879eddb53737a2",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/package.json\n+++ artifact/package.json\n@@ -1 +1 @@\n-{\"name\":\"fixture\",\"version\":\"1.0.0\",\"main\":\"index.js\"}\n+{\"name\":\"fixture\",\"version\":\"1.0.0\",\"main\":\"index.js\",\"scripts\":{\"postinstall\":\"node -e \\\"void 0\\\"\"}}",
+            "diff_truncated": false
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "benign-release-note",
+      "family": "control",
+      "target": "CHANGELOG.md",
+      "expected_rule": null,
+      "tampered": false,
+      "artifact_sha256": "d4d1e1666b108d48ba90bba8b6ed4c786f0f0db4bbc40064535ab0d9f4ad970c",
+      "detected": false,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 10,
+        "risk_reasons": {
+          "UNEXPLAINED_NONCODE": 10
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "UNEXPLAINED_NONCODE",
+            "points": 10,
+            "artifact_path": "CHANGELOG.md",
+            "source_path": null,
+            "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "Release notes for this version."
+              }
+            ],
+            "diff": "--- source/CHANGELOG.md\n+++ artifact/CHANGELOG.md\n@@ -0,0 +1 @@\n+Release notes for this version."
+          }
+        ],
+        "files": [
+          {
+            "path": "CHANGELOG.md",
+            "artifact_path": "CHANGELOG.md",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "7572c1accf97471fc262df21d346f040043e212c3310941c6a4e18f20284b38f",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/CHANGELOG.md\n+++ artifact/CHANGELOG.md\n@@ -0,0 +1 @@\n+Release notes for this version.",
+            "diff_truncated": false
+          },
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "benign-compressed-data",
+      "family": "control",
+      "target": "assets/sample.bin",
+      "expected_rule": null,
+      "tampered": false,
+      "artifact_sha256": "8368df50e3384527236fa783c8e1bcaf8a8020ac54bde3a3a7edf1981b6b57ea",
+      "detected": false,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 15,
+        "risk_reasons": {
+          "HIGH_ENTROPY_CHANGE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 9,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 5,
+          "source_file_count": 4,
+          "unique_comparison_paths": 5,
+          "identical_files": 4,
+          "added_files": 1,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 1,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "HIGH_ENTROPY_CHANGE",
+            "points": 15,
+            "artifact_path": "assets/sample.bin",
+            "source_path": null,
+            "message": "New high-entropy content; compression/encryption may be legitimate. Inspect the source difference.",
+            "evidence": [
+              {
+                "artifact_bits_per_byte": 7.9527,
+                "source_bits_per_byte": 0
+              }
+            ],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": "assets/sample.bin",
+            "artifact_path": "assets/sample.bin",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "5dc1543dbfe5092bcbc79557a70b8082b366050e2cc350c6af3738dcf3b38f51",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "",
+            "entropy": {
+              "artifact_bits_per_byte": 7.9527,
+              "source_bits_per_byte": 0
+            }
+          },
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "benign-regexp-exec",
+      "family": "control",
+      "target": "index.js",
+      "expected_rule": null,
+      "tampered": false,
+      "artifact_sha256": "c78e9474174dfe32d5293777750235cb11cf8e99fa9c1026151cf1e4898ed1bd",
+      "detected": false,
+      "alerted": true,
+      "report": {
+        "status": "REVIEW",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 15,
+        "risk_reasons": {
+          "UNEXPLAINED_CODE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 3,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "counts": {
+          "identical": 3,
+          "added": 0,
+          "removed": 0,
+          "changed": 1
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "const match = /ok/.exec(\"ok\");"
+              }
+            ],
+            "diff": "--- source/index.js\n+++ artifact/index.js\n@@ -1 +1 @@\n-module.exports = 1;\n+const match = /ok/.exec(\"ok\");"
+          }
+        ],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "changed",
+            "classification": "suspicious",
+            "artifact_sha256": "f3ba640167989d3baa4b59f38f29d8f49d0817551ffb1d94824850d28224b907",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/index.js\n+++ artifact/index.js\n@@ -1 +1 @@\n-module.exports = 1;\n+const match = /ok/.exec(\"ok\");",
+            "diff_truncated": false
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "id": "unchanged-build-macro",
+      "family": "control",
+      "target": "m4/build.m4",
+      "expected_rule": null,
+      "tampered": false,
+      "artifact_sha256": "e3b703a779c7c1595850bf714c1cf413cb91200516ded1e72290ddda9a51ab23",
+      "detected": false,
+      "alerted": false,
+      "report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 8,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 4,
+          "unique_comparison_paths": 4,
+          "identical_files": 4,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 0,
+          "removed": 0,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "unverified_generated_outputs": [],
+        "findings": [],
+        "files": [
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "source_sha256": "6e66e366f0aefb84ad8110afcd9b2245702c643c831edf8316ff048fec739d2e",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "m4/build.m4",
+            "artifact_path": "m4/build.m4",
+            "source_path": "m4/build.m4",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "source_sha256": "0a6b0218640efdd17248b5ceb028ad5814dc7db65916c5e9ca8aecd965b69e76",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "source_sha256": "109d45d78ca9b3d9c6b0c3c1d7f5c859d60ba62a2cb14bfea4ca22f78f0f7464",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/data.bin",
+            "artifact_path": "tests/data.bin",
+            "source_path": "tests/data.bin",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "source_sha256": "bb8aa46ae4363ce26cb35f776e2b12c260d09cdce03e7aad5ce852daa1915cf7",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    }
+  ]
+}

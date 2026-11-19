@@ -115,14 +115,16 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(compare({'x.dat': File(b'unknown')}, {'a': File(b'a')}, True)['status'], 'INCONCLUSIVE')
 
     def test_sourcemap_mismatch(self):
-        data = json.dumps({'sources': ['src/a.js'], 'sourcesContent': ['tampered']}).encode()
+        data = json.dumps({'version': 3, 'mappings': '', 'sources': ['src/a.js'], 'sourcesContent': ['tampered']}).encode()
         result = compare({'out.js.map': File(data)}, {'src/a.js': File(b'original')}, True)
         self.assertIn('SOURCEMAP_SOURCE_MISMATCH', result['risk_reasons'])
 
     def test_matching_sourcemap_does_not_prove_bundle(self):
-        data = json.dumps({'sources': ['a.js'], 'sourcesContent': ['original']}).encode()
+        data = json.dumps({'version': 3, 'mappings': '', 'sources': ['a.js'], 'sourcesContent': ['original']}).encode()
         result = compare({'out.js.map': File(data)}, {'a.js': File(b'original')}, True)
-        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertEqual(result['status'], 'REVIEW')
+        self.assertIn('MISSING_RUNTIME_FILE', result['risk_reasons'])
+        self.assertEqual(result['files'][-1]['classification'], 'expected')
 
     def test_new_executable(self):
         result = compare({'helper': File(b'hello', True)}, {'helper': File(b'hello')}, True)

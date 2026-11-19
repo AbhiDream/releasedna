@@ -1,0 +1,1675 @@
+{
+  "cases": [
+    {
+      "case": {
+        "ecosystem": "npm",
+        "name": "is-number",
+        "version": "7.0.0",
+        "split": "development",
+        "style": "plain JavaScript"
+      },
+      "provenance": {
+        "release": {
+          "ecosystem": "npm",
+          "name": "is-number",
+          "version": "7.0.0",
+          "publication": {
+            "maintainers": [
+              {
+                "name": "doowb",
+                "email": "brian.woodward@gmail.com"
+              },
+              {
+                "name": "jonschlinkert",
+                "email": "github@sellside.com"
+              },
+              {
+                "name": "realityking",
+                "email": "me@rouvenwessling.de"
+              }
+            ],
+            "deprecated": null,
+            "registry": "https://registry.npmjs.org",
+            "publication_time": "2018-07-04T15:08:58.238Z",
+            "publication_time_source": "https://registry.npmjs.org/is-number#time.7.0.0",
+            "publication_time_limitation": null
+          },
+          "artifact": {
+            "url": "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz",
+            "digest": "sha512:e350a27e483a7bc4f2952a5db53a5e2d532abd20445734edb47bc4443ef8d7ea6767c00dbf4d34e0c44be3740a3c394af5c1af369e8d6566540656c65d8c719e",
+            "verified": true
+          },
+          "repository": "https://github.com/jonschlinkert/is-number",
+          "repo_slug": "jonschlinkert/is-number",
+          "directory": "",
+          "git_head": "98e8ff1da1a89f93d1397a24d7413ed15421c139"
+        },
+        "source": {
+          "commit": "98e8ff1da1a89f93d1397a24d7413ed15421c139",
+          "tag": "7.0.0",
+          "confidence": "corroborated",
+          "identity_corroborated": true,
+          "build_provenance_verified": false,
+          "reasons": [
+            "Tag/manifest matching is not a cryptographic build provenance verification"
+          ],
+          "archive_url": "https://codeload.github.com/jonschlinkert/is-number/tar.gz/98e8ff1da1a89f93d1397a24d7413ed15421c139",
+          "archive_sha256": "4e169d1ea361d1b92907a6ab2dd6bcd781c85027858d99df1596a712aab49506"
+        },
+        "captured_at": "2026-11-19T03:33:53.188520+00:00",
+        "artifact_sha256": "7b75c1057198cf97696909a9bee176c9c5e9bcb5b03bf3ecef2f484defadd51e",
+        "source_sha256": "4e169d1ea361d1b92907a6ab2dd6bcd781c85027858d99df1596a712aab49506"
+      },
+      "report": {
+        "status": "CLEAN",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 19,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 15,
+          "unique_comparison_paths": 15,
+          "identical_files": 4,
+          "added_files": 0,
+          "removed_files": 11,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 4,
+          "added": 0,
+          "removed": 11,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "findings": [],
+        "files": [
+          {
+            "path": ".editorconfig",
+            "artifact_path": null,
+            "source_path": ".editorconfig",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "3d21b96431d6ac4a323107527468f8419150c7692f52c408012cee59190cbff4",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".eslintrc.json",
+            "artifact_path": null,
+            "source_path": ".eslintrc.json",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "da0ae7f8c82ae996ad8e1e4172ed41ee9a6ec237e4f524dcd4e97a07b9f67629",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".gitattributes",
+            "artifact_path": null,
+            "source_path": ".gitattributes",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "90f8990df23c9bbe01bf2203bb8548bb2daa568916caab135f955cfb7cb87742",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".gitignore",
+            "artifact_path": null,
+            "source_path": ".gitignore",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "f32334cdd977602b3cce99461242d9a2dc1208ec94b071e43ae61218a0dcdc7a",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".npmrc",
+            "artifact_path": null,
+            "source_path": ".npmrc",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "f3fc23758ab91be5f94a8c5eaff433d1ccd6a206cf1d381d332eb63716009337",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".travis.yml",
+            "artifact_path": null,
+            "source_path": ".travis.yml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "99f2c647bb977fb006c9f607cb93d158abcd3cc4942809935ec2b58d56ae980b",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".verb.md",
+            "artifact_path": null,
+            "source_path": ".verb.md",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "51b88e0eac5f986869cbaec3f6654afa3727f776d55df67531444f70faf551d1",
+            "finding_ids": [],
+            "explanation": "Documentation/example convention; no detected runtime reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "documentation",
+            "omission_rule": "OMITTED_DOCUMENTATION"
+          },
+          {
+            "path": "LICENSE",
+            "artifact_path": "LICENSE",
+            "source_path": "LICENSE",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "35bdd8a44339719441900fb50fbefc5e2dca1ca662cbaed7a687de842c8b70f2",
+            "source_sha256": "35bdd8a44339719441900fb50fbefc5e2dca1ca662cbaed7a687de842c8b70f2",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "README.md",
+            "artifact_path": "README.md",
+            "source_path": "README.md",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "8e676a0587ba350889df0a5fb883aeab26609ee36432e29441f55af3a0cb16ba",
+            "source_sha256": "8e676a0587ba350889df0a5fb883aeab26609ee36432e29441f55af3a0cb16ba",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "benchmark/fixtures.js",
+            "artifact_path": null,
+            "source_path": "benchmark/fixtures.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "6299e4e2e1cfc00a2c37a16d87d6f3e08dd6fcbbdade9d41f3bf0b4022bbafdc",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "benchmark/index.js",
+            "artifact_path": null,
+            "source_path": "benchmark/index.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "43b43ab11a861cc3e3fd5d2d9eba58d292fa354de6d6f4f51c75862dd9b35454",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "benchmark/last.md",
+            "artifact_path": null,
+            "source_path": "benchmark/last.md",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "8a034e1f824a8d8d68a01292ec4791a9b6198dba9bbf822aa382425f393f15c9",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "index.js",
+            "artifact_path": "index.js",
+            "source_path": "index.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "04255e482e181687823a95b207802ddd32e746c65dce4c95a5176fc192735960",
+            "source_sha256": "04255e482e181687823a95b207802ddd32e746c65dce4c95a5176fc192735960",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "51c133f4e41df982aef69027249ff9d7262645029f437d079adc7c83328fb620",
+            "source_sha256": "51c133f4e41df982aef69027249ff9d7262645029f437d079adc7c83328fb620",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "test.js",
+            "artifact_path": null,
+            "source_path": "test.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "242b26bb2b9203945c6e869460a8a8289ddac859ed710b9e103f19a4a39829b6",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "case": {
+        "ecosystem": "npm",
+        "name": "picocolors",
+        "version": "1.1.1",
+        "split": "development",
+        "style": "plain JavaScript"
+      },
+      "provenance": {
+        "release": {
+          "ecosystem": "npm",
+          "name": "picocolors",
+          "version": "1.1.1",
+          "publication": {
+            "maintainers": [
+              {
+                "name": "alexeyraspopov",
+                "email": "oleksii.raspopov@gmail.com"
+              }
+            ],
+            "deprecated": null,
+            "registry": "https://registry.npmjs.org",
+            "publication_time": "2024-10-16T18:20:03.921Z",
+            "publication_time_source": "https://registry.npmjs.org/picocolors#time.1.1.1",
+            "publication_time_limitation": null
+          },
+          "artifact": {
+            "url": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+            "digest": "sha512:c5c787dac9e1b5be4cf658aa0ec984c39ea57b7efa993664117fe311bfd1c4d1727a036e97b78db250973fd1438ff2dcbb45fc284c8c71e3f69eda5a1eb0c454",
+            "verified": true
+          },
+          "repository": "https://github.com/alexeyraspopov/picocolors",
+          "repo_slug": "alexeyraspopov/picocolors",
+          "directory": "",
+          "git_head": "6f0a4638348ed20633d623ee973f9c9a96f65104"
+        },
+        "source": {
+          "commit": "7249f8c5d4825550f70bc1ea98652639933d3bbd",
+          "tag": "v1.1.1",
+          "confidence": "candidate",
+          "identity_corroborated": false,
+          "build_provenance_verified": false,
+          "reasons": [
+            "npm gitHead disagrees with release tag",
+            "Tag/manifest matching is not a cryptographic build provenance verification"
+          ],
+          "archive_url": "https://codeload.github.com/alexeyraspopov/picocolors/tar.gz/7249f8c5d4825550f70bc1ea98652639933d3bbd",
+          "archive_sha256": "c1053a4131e05d3e62088b3988f4cefe16e05b1a90db59115bf7706f7350e7de"
+        },
+        "captured_at": "2026-11-19T03:33:57.148526+00:00",
+        "artifact_sha256": "d3aedb2807967b7eb37fd11b03b7e3701e725af79c650d0812ff7213f8f882d9",
+        "source_sha256": "c1053a4131e05d3e62088b3988f4cefe16e05b1a90db59115bf7706f7350e7de"
+      },
+      "report": {
+        "status": "INCONCLUSIVE",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 0,
+        "risk_reasons": {},
+        "suspicion_level": "NONE",
+        "total_files_inspected": 26,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 7,
+          "source_file_count": 19,
+          "unique_comparison_paths": 19,
+          "identical_files": 5,
+          "added_files": 0,
+          "removed_files": 12,
+          "changed_files": 2
+        },
+        "counts": {
+          "identical": 5,
+          "added": 0,
+          "removed": 12,
+          "changed": 2
+        },
+        "expected_generated_differences": [],
+        "findings": [],
+        "files": [
+          {
+            "path": ".editorconfig",
+            "artifact_path": null,
+            "source_path": ".editorconfig",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "58546f33e3d8d110d1cc9dd1b6a5097066bd6c475ab0fea4498b4d2f67a00436",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".github/workflows/benchmarks.yaml",
+            "artifact_path": null,
+            "source_path": ".github/workflows/benchmarks.yaml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "55aab7ebb689858284e3f939d67699472a9ee0c06efeac7ed5df46ecfa36cb27",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".github/workflows/testing.yaml",
+            "artifact_path": null,
+            "source_path": ".github/workflows/testing.yaml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "92520d502ee386364282130d2fa2e55ad189cf08e4ea707a3fcf301e55fe88c1",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".gitignore",
+            "artifact_path": null,
+            "source_path": ".gitignore",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": "CHANGELOG.md",
+            "artifact_path": null,
+            "source_path": "CHANGELOG.md",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "d59ab3fe39c726144df936bf4ab36c6c560811c918af904918e1ca9e8a05373b",
+            "finding_ids": [],
+            "explanation": "Documentation/example convention; no detected runtime reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "documentation",
+            "omission_rule": "OMITTED_DOCUMENTATION"
+          },
+          {
+            "path": "LICENSE",
+            "artifact_path": "LICENSE",
+            "source_path": "LICENSE",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750",
+            "source_sha256": "6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "README.md",
+            "artifact_path": "README.md",
+            "source_path": "README.md",
+            "state": "changed",
+            "classification": "unexplained",
+            "artifact_sha256": "5027b2836551ea0f91fa27b97335de905e24e1459d590eacfa45c0156962b70c",
+            "source_sha256": "34367841182335f5b8029c9dbbe45c092e172f1f226be34343540aaf0e2bd034",
+            "finding_ids": [],
+            "explanation": "No validated packaging transformation explains this difference.",
+            "diff": "--- source/README.md\n+++ artifact/README.md\n@@ -17,161 +17,5 @@\n - TypeScript type declarations included.\n - [`NO_COLOR`](https://no-color.org/) friendly.\n \n-## Motivation\n-\n-With `picocolors` we are trying to draw attention to the `node_modules` size\n-problem and promote performance-first culture.\n-\n-## Prior Art\n-\n-Credits go to the following projects:\n-\n-- [Nanocolors](https://github.com/ai/nanocolors) by [@ai](https://github.com/ai)\n-- [Colorette](https://github.com/jorgebucaran/colorette) by [@jorgebucaran](https://github.com/jorgebucaran)\n-- [Kleur](https://github.com/lukeed/kleur) by [@lukeed](https://github.com/lukeed)\n-- [Colors.js](https://github.com/Marak/colors.js) by [@Marak](https://github.com/Marak)\n-- [Chalk](https://github.com/chalk/chalk) by [@sindresorhus](https://github.com/sindresorhus)\n-\n-## Benchmarks\n-\n-The space in node_modules including sub-dependencies:\n-\n-```diff\n-$ node ./benchmarks/size.js\n-Data from packagephobia.com\n-  chalk       101 kB\n-  cli-color  1249 kB\n-  ansi-colors  25 kB\n-  kleur        21 kB\n-  colorette    17 kB\n-  nanocolors   16 kB\n-+ picocolors    7 kB\n-```\n-\n-Library loading time:\n-\n-```diff\n-$ node ./benchmarks/loading.js\n-  chalk          6.167 ms\n-  cli-color     31.431 ms\n-  ansi-colors    1.585 ms\n-  kleur          2.008 ms\n-  kleur/colors   0.773 ms\n-  colorette      2.476 ms\n-  nanocolors     0.833 ms\n-+ picocolors     0.466 ms\n-```\n-\n-Benchmark for simple use case:\n-\n-```diff\n-$ node ./benchmarks/simple.js\n-  chalk         24,066,342 ops/sec\n-  cli-color        938,700 ops/sec\n-  ansi-colors    4,532,542 ops/sec\n-  kleur         20,343,122 ops/sec\n-  kleur/colors  35,415,770 ops/sec\n-  colorette     34,244,834 ops/sec\n-  nanocolors    33,443,265 ops/sec\n-+ picocolors    33,271,645 ops/sec\n-```\n-\n-Benchmark for complex use cases:\n-\n-```diff\n-$ node ./benchmarks/complex.js\n-  chalk            969,915 ops/sec\n-  cli-color        131,639 ops/sec\n-  ansi-colors      342,250 ops/sec\n-  kleur            611,880 ops/sec\n-  kleur/colors   1,129,526 ops/sec\n-  colorette      1,747,277 ops/sec\n-  nanocolors     1,251,312 ops/sec\n-+ picocolors     2,024,086 ops/sec\n-```\n-\n-## Usage\n-\n-Picocolors provides an object which includes a variety of text coloring and formatting functions\n-\n-```javascript\n-import pc from \"picocolors\"\n-```\n-\n-The object includes following coloring functions: `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `gray`.\n-\n-```javascript\n-console.log(`I see a ${pc.red(\"red door\")} and I want it painted ${pc.black(\"black\")}`)\n-```\n-\n-The object also includes following background color modifier functions: `bgBlack`, `bgRed`, `bgGreen`, `bgYellow`, `bgBlue`, `bgMagenta`, `bgCyan`, `bgWhite` and bright variants `bgBlackBright`, `bgRedBright`, `bgGreenBright`, `bgYellowBright`, `bgBlueBright`, `bgMagentaBright`, `bgCyanBright`, `bgWhiteBright`.\n-\n-```javascript\n-console.log(\n-  pc.bgBlack(\n-    pc.white(`Tom appeared on the sidewalk with a bucket of whitewash and a long-handled brush.`)\n-  )\n-)\n-```\n-\n-Besides colors, the object includes following formatting functions: `dim`, `bold`, `hidden`, `italic`, `underline`, `strikethrough`, `reset`, `inverse` and bright variants `blackBright`, `redBright`, `greenBright`, `yellowBright`, `blueBright`, `magentaBright`, `cyanBright`, `whiteBright`.\n-\n-```javascript\n-for (let task of tasks) {\n-  console.log(`${pc.bold(task.name)} ${pc.dim(task.durationMs + \"ms\")}`)\n-}\n-```\n-\n-The library provides additional utilities to ensure the best results for the task:\n-\n-- `isColorSupported` \u2014 boolean, explicitly tells whether or not the colors or formatting appear on the screen\n-\n-  ```javascript\n-  import pc from \"picocolors\"\n-\n-  if (pc.isColorSupported) {\n-    console.log(\"Yay! This script can use colors and formatters\")\n-  }\n-  ```\n-\n-- `createColors(enabled)` \u2014 a function that returns a new API object with manually defined color support configuration\n-\n-  ```javascript\n-  import pc from \"picocolors\"\n-\n-  let { red, bgWhite } = pc.createColors(options.enableColors)\n-  ```\n-\n-## Replacing `chalk`\n-\n-1. Replace package name in import:\n-\n-   ```diff\n-   - import chalk from 'chalk'\n-   + import pico from 'picocolors'\n-   ```\n-\n-2. Replace variable:\n-\n-   ```diff\n-   - chalk.red(text)\n-   + pico.red(text)\n-   ```\n-\n-3. Replace chains to nested calls:\n-\n-   ```diff\n-   - chalk.red.bold(text)\n-   + pico.red(pico.bold(text))\n-   ```\n-\n-4. You can use [`colorize-template`](https://github.com/usmanyunusov/colorize-template)\n-   to replace chalk\u2019s tagged template literal.\n-\n-   ```diff\n-   + import { createColorize } from 'colorize-template'\n-\n-   + let colorize = createColorize(pico)\n-   - chalk.red.bold`full {yellow ${\"text\"}}`\n-   + colorize`{red.bold full {yellow ${\"text\"}}}`\n-   ```\n+## Docs\n+Read **[full docs](https://github.com/alexeyraspopov/picocolors#readme)** on GitHub.",
+            "diff_truncated": false
+          },
+          {
+            "path": "benchmarks/complex.mjs",
+            "artifact_path": null,
+            "source_path": "benchmarks/complex.mjs",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "7797a2d96e31fd3d1da7462b661e36a2f06b5aa7f5b871e5986203e91f373aad",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "benchmarks/loading.mjs",
+            "artifact_path": null,
+            "source_path": "benchmarks/loading.mjs",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "8486b68a2a04c756654b9d2979c68555cd958043d1bdc5d18559b23590828e4d",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "benchmarks/recursion.mjs",
+            "artifact_path": null,
+            "source_path": "benchmarks/recursion.mjs",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "a25a6582b1e0dc73cd0a9147e247ccd3ef97def5186e05f8a12c89e2147f1b57",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "benchmarks/simple.mjs",
+            "artifact_path": null,
+            "source_path": "benchmarks/simple.mjs",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "320883948ebc210b0c8e057b68f502c37963f633ba989119f01420554445e8be",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "benchmarks/size.mjs",
+            "artifact_path": null,
+            "source_path": "benchmarks/size.mjs",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "64a4d1c9ac4f2218d96afbcd64bb8a64b3d767e01bbb546e714b1fdc2e4d213c",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "changed",
+            "classification": "unexplained",
+            "artifact_sha256": "ef2ac226c4811d312e12c64214c453878653e834482125ae475f27cea60de737",
+            "source_sha256": "cc90329588edc5d4ab6fc56a62fbc7caef17144881dc5e8afbe6f5a94f322432",
+            "finding_ids": [],
+            "explanation": "No validated packaging transformation explains this difference.",
+            "diff": "--- source/package.json\n+++ artifact/package.json\n@@ -8,9 +8,6 @@\n   },\n   \"sideEffects\": false,\n   \"description\": \"The tiniest and the fastest library for terminal output formatting with ANSI colors\",\n-  \"scripts\": {\n-    \"test\": \"node tests/test.js\"\n-  },\n   \"files\": [\n     \"picocolors.*\",\n     \"types.d.ts\"\n@@ -24,28 +21,5 @@\n   ],\n   \"author\": \"Alexey Raspopov\",\n   \"repository\": \"alexeyraspopov/picocolors\",\n-  \"license\": \"ISC\",\n-  \"devDependencies\": {\n-    \"ansi-colors\": \"^4.1.1\",\n-    \"chalk\": \"^4.1.2\",\n-    \"clean-publish\": \"^3.0.3\",\n-    \"cli-color\": \"^2.0.0\",\n-    \"colorette\": \"^2.0.12\",\n-    \"kleur\": \"^4.1.4\",\n-    \"mitata\": \"^1.0.10\",\n-    \"nanocolors\": \"^0.2.12\",\n-    \"prettier\": \"^3.3.3\",\n-    \"yoctocolors\": \"^2.1.1\"\n-  },\n-  \"prettier\": {\n-    \"printWidth\": 100,\n-    \"useTabs\": true,\n-    \"tabWidth\": 2,\n-    \"semi\": false,\n-    \"arrowParens\": \"avoid\",\n-    \"requirePragma\": true\n-  },\n-  \"clean-publish\": {\n-    \"cleanDocs\": true\n-  }\n+  \"license\": \"ISC\"\n }",
+            "diff_truncated": false
+          },
+          {
+            "path": "picocolors.browser.js",
+            "artifact_path": "picocolors.browser.js",
+            "source_path": "picocolors.browser.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "a2e045ba16013e35c7045797ae940e3ea1c0e0ada13467bc73f7538690ea091a",
+            "source_sha256": "a2e045ba16013e35c7045797ae940e3ea1c0e0ada13467bc73f7538690ea091a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "picocolors.d.ts",
+            "artifact_path": "picocolors.d.ts",
+            "source_path": "picocolors.d.ts",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "8c5f0739f00f89f89b03a1fe6658c6d78000d7ebd7f556f0f8d6908fa679de35",
+            "source_sha256": "8c5f0739f00f89f89b03a1fe6658c6d78000d7ebd7f556f0f8d6908fa679de35",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "picocolors.js",
+            "artifact_path": "picocolors.js",
+            "source_path": "picocolors.js",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "213bb870fcaad4def0215fe34fbb0f529836cc4d2462e02f14f1a49d09781625",
+            "source_sha256": "213bb870fcaad4def0215fe34fbb0f529836cc4d2462e02f14f1a49d09781625",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "tests/environments.js",
+            "artifact_path": null,
+            "source_path": "tests/environments.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "317317f13c6359005db870fb8e22b6569272a26566382021e65853532a338484",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "tests/test.js",
+            "artifact_path": null,
+            "source_path": "tests/test.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "1b8af32564e5ff8b8cb0f7704f809b423186646d38245295c47310f2ef7a3fc1",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "types.d.ts",
+            "artifact_path": "types.d.ts",
+            "source_path": "types.d.ts",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "590595c1230ebb7c43ebac51b2b2da956a719b213355b4358e2a6b16a8b5936c",
+            "source_sha256": "590595c1230ebb7c43ebac51b2b2da956a719b213355b4358e2a6b16a8b5936c",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "case": {
+        "ecosystem": "npm",
+        "name": "clsx",
+        "version": "2.1.1",
+        "split": "development",
+        "style": "compiled/minified JavaScript"
+      },
+      "provenance": {
+        "release": {
+          "ecosystem": "npm",
+          "name": "clsx",
+          "version": "2.1.1",
+          "publication": {
+            "maintainers": [
+              {
+                "name": "lukeed",
+                "email": "luke@lukeed.com"
+              }
+            ],
+            "deprecated": null,
+            "registry": "https://registry.npmjs.org",
+            "publication_time": "2024-04-23T05:26:04.645Z",
+            "publication_time_source": "https://registry.npmjs.org/clsx#time.2.1.1",
+            "publication_time_limitation": null
+          },
+          "artifact": {
+            "url": "https://registry.npmjs.org/clsx/-/clsx-2.1.1.tgz",
+            "digest": "sha512:7989b441606d52b0566561b4777f3a386030d7a67df793e2395a3607b6e35926c779d1a5e5ed1959aabae6438681448d7ac1080e407d2126d383f24af5d84264",
+            "verified": true
+          },
+          "repository": "https://github.com/lukeed/clsx",
+          "repo_slug": "lukeed/clsx",
+          "directory": "",
+          "git_head": "925494cf31bcd97d3337aacd34e659e80cae7fe2"
+        },
+        "source": {
+          "commit": "925494cf31bcd97d3337aacd34e659e80cae7fe2",
+          "tag": "v2.1.1",
+          "confidence": "corroborated",
+          "identity_corroborated": true,
+          "build_provenance_verified": false,
+          "reasons": [
+            "Tag/manifest matching is not a cryptographic build provenance verification"
+          ],
+          "archive_url": "https://codeload.github.com/lukeed/clsx/tar.gz/925494cf31bcd97d3337aacd34e659e80cae7fe2",
+          "archive_sha256": "90b01de6b585bd1f2a86edee60a0142e2d4ac3347ae9dc297a76033eb4b77e73"
+        },
+        "captured_at": "2026-11-19T03:34:01.047936+00:00",
+        "artifact_sha256": "6320104b491ca645120e8f99589ce663ff1fb337ba80066719a011bd95320303",
+        "source_sha256": "90b01de6b585bd1f2a86edee60a0142e2d4ac3347ae9dc297a76033eb4b77e73"
+      },
+      "report": {
+        "status": "INCONCLUSIVE",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 35,
+        "risk_reasons": {
+          "MISSING_RUNTIME_FILE": 20,
+          "UNEXPLAINED_CODE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 31,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 10,
+          "source_file_count": 21,
+          "unique_comparison_paths": 26,
+          "identical_files": 5,
+          "added_files": 5,
+          "removed_files": 16,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 5,
+          "added": 5,
+          "removed": 16,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "MISSING_RUNTIME_FILE",
+            "points": 20,
+            "artifact_path": null,
+            "source_path": "bench/index.js",
+            "message": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "evidence": [],
+            "diff": ""
+          },
+          {
+            "id": "F0002",
+            "rule": "MISSING_RUNTIME_FILE",
+            "points": 20,
+            "artifact_path": null,
+            "source_path": "bin/index.js",
+            "message": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "evidence": [],
+            "diff": ""
+          },
+          {
+            "id": "F0003",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/clsx.js",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "function r(e){var o,t,f=\"\";if(\"string\"==typeof e||\"number\"==typeof e)f+=e;else if(\"object\"==typeof e)if(Array.isArray(e)){var n=e.length;for(o=0;o<n;o++)e[o]&&(t=r(e[o]))&&(f&&(f+=\" \"),f+=t)}else for(t in e)e[t]&&(f&&(f+=\" \"),f+=t);return f}function e(){for(var e,o,t=0,f=\"\",n=arguments.length;t<n;t++)(e=arguments[t])&&(o=r(e))&&(f&&(f+=\" \"),f+=o);return f}module.exports=e,module.exports.clsx=e;"
+              }
+            ],
+            "diff": "--- source/dist/clsx.js\n+++ artifact/dist/clsx.js\n@@ -0,0 +1 @@\n+function r(e){var o,t,f=\"\";if(\"string\"==typeof e||\"number\"==typeof e)f+=e;else if(\"object\"==typeof e)if(Array.isArray(e)){var n=e.length;for(o=0;o<n;o++)e[o]&&(t=r(e[o]))&&(f&&(f+=\" \"),f+=t)}else for(t in e)e[t]&&(f&&(f+=\" \"),f+=t);return f}function e(){for(var e,o,t=0,f=\"\",n=arguments.length;t<n;t++)(e=arguments[t])&&(o=r(e))&&(f&&(f+=\" \"),f+=o);return f}module.exports=e,module.exports.clsx=e;"
+          },
+          {
+            "id": "F0004",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/clsx.min.js",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "!function(e,n){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=n():\"function\"==typeof define&&define.amd?define(n):e.clsx=n()}(this,(function(){function e(n){var t,f,o=\"\";if(\"string\"==typeof n||\"number\"==typeof n)o+=n;else if(\"object\"==typeof n)if(Array.isArray(n)){var r=n.length;for(t=0;t<r;t++)n[t]&&(f=e(n[t]))&&(o&&(o+=\" \"),o+=f)}else for(f in n)n[f]&&(o&&(o+=\" \"),o+=f);return o}function n(){for(var n,t,f=0,o=\"\",r=arguments.length;f<r;f++)(n=arguments[f])&&(t=e(n))&&(o&&(o+=\" \"),o+=t);return o}return n.clsx=n,n}));"
+              }
+            ],
+            "diff": "--- source/dist/clsx.min.js\n+++ artifact/dist/clsx.min.js\n@@ -0,0 +1 @@\n+!function(e,n){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=n():\"function\"==typeof define&&define.amd?define(n):e.clsx=n()}(this,(function(){function e(n){var t,f,o=\"\";if(\"string\"==typeof n||\"number\"==typeof n)o+=n;else if(\"object\"==typeof n)if(Array.isArray(n)){var r=n.length;for(t=0;t<r;t++)n[t]&&(f=e(n[t]))&&(o&&(o+=\" \"),o+=f)}else for(f in n)n[f]&&(o&&(o+=\" \"),o+=f);return o}function n(){for(var n,t,f=0,o=\"\",r=arguments.length;f<r;f++)(n=arguments[f])&&(t=e(n))&&(o&&(o+=\" \"),o+=t);return o}return n.clsx=n,n}));"
+          },
+          {
+            "id": "F0005",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/clsx.mjs",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "function r(e){var t,f,n=\"\";if(\"string\"==typeof e||\"number\"==typeof e)n+=e;else if(\"object\"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=\" \"),n+=f)}else for(f in e)e[f]&&(n&&(n+=\" \"),n+=f);return n}export function clsx(){for(var e,t,f=0,n=\"\",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=\" \"),n+=t);return n}export default clsx;"
+              }
+            ],
+            "diff": "--- source/dist/clsx.mjs\n+++ artifact/dist/clsx.mjs\n@@ -0,0 +1 @@\n+function r(e){var t,f,n=\"\";if(\"string\"==typeof e||\"number\"==typeof e)n+=e;else if(\"object\"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=\" \"),n+=f)}else for(f in e)e[f]&&(n&&(n+=\" \"),n+=f);return n}export function clsx(){for(var e,t,f=0,n=\"\",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=\" \"),n+=t);return n}export default clsx;"
+          },
+          {
+            "id": "F0006",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/lite.js",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "function e(){for(var e,o=0,r=\"\",t=arguments.length;o<t;o++)(e=arguments[o])&&\"string\"==typeof e&&(r+=(r&&\" \")+e);return r}module.exports=e,module.exports.clsx=e;"
+              }
+            ],
+            "diff": "--- source/dist/lite.js\n+++ artifact/dist/lite.js\n@@ -0,0 +1 @@\n+function e(){for(var e,o=0,r=\"\",t=arguments.length;o<t;o++)(e=arguments[o])&&\"string\"==typeof e&&(r+=(r&&\" \")+e);return r}module.exports=e,module.exports.clsx=e;"
+          },
+          {
+            "id": "F0007",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/lite.mjs",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "export function clsx(){for(var t,r=0,e=\"\",n=arguments.length;r<n;r++)(t=arguments[r])&&\"string\"==typeof t&&(e+=(e&&\" \")+t);return e}export default clsx;"
+              }
+            ],
+            "diff": "--- source/dist/lite.mjs\n+++ artifact/dist/lite.mjs\n@@ -0,0 +1 @@\n+export function clsx(){for(var t,r=0,e=\"\",n=arguments.length;r<n;r++)(t=arguments[r])&&\"string\"==typeof t&&(e+=(e&&\" \")+t);return e}export default clsx;"
+          },
+          {
+            "id": "F0008",
+            "rule": "MISSING_RUNTIME_FILE",
+            "points": 20,
+            "artifact_path": null,
+            "source_path": "src/index.js",
+            "message": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "evidence": [],
+            "diff": ""
+          },
+          {
+            "id": "F0009",
+            "rule": "MISSING_RUNTIME_FILE",
+            "points": 20,
+            "artifact_path": null,
+            "source_path": "src/lite.js",
+            "message": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "evidence": [],
+            "diff": ""
+          }
+        ],
+        "files": [
+          {
+            "path": ".editorconfig",
+            "artifact_path": null,
+            "source_path": ".editorconfig",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "7866d5ec4f83e87f592f987fbc0f4fff4ddb04d19d8924376513fd1f71c17833",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".github/FUNDING.yml",
+            "artifact_path": null,
+            "source_path": ".github/FUNDING.yml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "0a1dbb23eeb42f41af4ddf1e8a8c532108948c681eb1a16f7f517687aa5faa46",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".github/workflows/ci.yml",
+            "artifact_path": null,
+            "source_path": ".github/workflows/ci.yml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "7905ebe2087fc27a82b23c3347f152cd0425c3d0410b18ea713baaf9195e1104",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".gitignore",
+            "artifact_path": null,
+            "source_path": ".gitignore",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "e4dfbebcc47838af0b3cdef564c93383b86550df9c5ff5bca431c8b7c64599b0",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": "bench/chrome.png",
+            "artifact_path": null,
+            "source_path": "bench/chrome.png",
+            "state": "removed",
+            "classification": "unexplained",
+            "artifact_sha256": null,
+            "source_sha256": "80275ab8246796bb953ab918649c633aa0a0dfa1191bf9879d6b15321655798d",
+            "finding_ids": [],
+            "explanation": "No runtime declaration or supported packaging rule explains this missing file.",
+            "diff": "",
+            "omission_kind": "unexplained",
+            "omission_rule": "UNEXPLAINED_OMISSION"
+          },
+          {
+            "path": "bench/firefox.png",
+            "artifact_path": null,
+            "source_path": "bench/firefox.png",
+            "state": "removed",
+            "classification": "unexplained",
+            "artifact_sha256": null,
+            "source_sha256": "2ef3784f9516fe63e5579a85616ddaed0ccabcea75608adc1ea5bc3a85302e9c",
+            "finding_ids": [],
+            "explanation": "No runtime declaration or supported packaging rule explains this missing file.",
+            "diff": "",
+            "omission_kind": "unexplained",
+            "omission_rule": "UNEXPLAINED_OMISSION"
+          },
+          {
+            "path": "bench/index.js",
+            "artifact_path": null,
+            "source_path": "bench/index.js",
+            "state": "removed",
+            "classification": "suspicious",
+            "artifact_sha256": null,
+            "source_sha256": "f4cf1ad6fddf05075966b1be3dbd707c2092c98609058e0dd61f0dda16492691",
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "diff": "",
+            "omission_kind": "runtime",
+            "omission_rule": "MISSING_RUNTIME_FILE"
+          },
+          {
+            "path": "bench/package.json",
+            "artifact_path": null,
+            "source_path": "bench/package.json",
+            "state": "removed",
+            "classification": "unexplained",
+            "artifact_sha256": null,
+            "source_sha256": "e5b29f06af68d9a4e0832468092b27cb41cd723b2c627cd1cedcc4e831ee4b23",
+            "finding_ids": [],
+            "explanation": "No runtime declaration or supported packaging rule explains this missing file.",
+            "diff": "",
+            "omission_kind": "unexplained",
+            "omission_rule": "UNEXPLAINED_OMISSION"
+          },
+          {
+            "path": "bench/readme.md",
+            "artifact_path": null,
+            "source_path": "bench/readme.md",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "f52dfa98c6187628effba5a1454eb01e1241d5b92447c49a6dead98f81f37a03",
+            "finding_ids": [],
+            "explanation": "Documentation/example convention; no detected runtime reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "documentation",
+            "omission_rule": "OMITTED_DOCUMENTATION"
+          },
+          {
+            "path": "bench/safari.png",
+            "artifact_path": null,
+            "source_path": "bench/safari.png",
+            "state": "removed",
+            "classification": "unexplained",
+            "artifact_sha256": null,
+            "source_sha256": "4c83598c8f1bad62a15932a72e56ec4f495dbcb0fcce9badf864a825458ba0d9",
+            "finding_ids": [],
+            "explanation": "No runtime declaration or supported packaging rule explains this missing file.",
+            "diff": "",
+            "omission_kind": "unexplained",
+            "omission_rule": "UNEXPLAINED_OMISSION"
+          },
+          {
+            "path": "bin/index.js",
+            "artifact_path": null,
+            "source_path": "bin/index.js",
+            "state": "removed",
+            "classification": "suspicious",
+            "artifact_sha256": null,
+            "source_sha256": "954d509f45b7d42e46361c1d403353fb7f7403b5d19bd3d44676356ce5607572",
+            "finding_ids": [
+              "F0002"
+            ],
+            "explanation": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "diff": "",
+            "omission_kind": "runtime",
+            "omission_rule": "MISSING_RUNTIME_FILE"
+          },
+          {
+            "path": "clsx.d.mts",
+            "artifact_path": "clsx.d.mts",
+            "source_path": "clsx.d.mts",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "c57b441e0c0a9cbdfa7d850dae1f8a387d6f81cbffbc3cd0465d530084c2417d",
+            "source_sha256": "c57b441e0c0a9cbdfa7d850dae1f8a387d6f81cbffbc3cd0465d530084c2417d",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "clsx.d.ts",
+            "artifact_path": "clsx.d.ts",
+            "source_path": "clsx.d.ts",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "ef73bcfef9907c8b772a30e5a64a6bd86a5669cba3d210fcdcc6b625e3312459",
+            "source_sha256": "ef73bcfef9907c8b772a30e5a64a6bd86a5669cba3d210fcdcc6b625e3312459",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "dist/clsx.js",
+            "artifact_path": "dist/clsx.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "a2ba9f4c5fe36617aa930a5269bd910a2cafc7066398835d63cf3733f5c0651a",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0003"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/clsx.js\n+++ artifact/dist/clsx.js\n@@ -0,0 +1 @@\n+function r(e){var o,t,f=\"\";if(\"string\"==typeof e||\"number\"==typeof e)f+=e;else if(\"object\"==typeof e)if(Array.isArray(e)){var n=e.length;for(o=0;o<n;o++)e[o]&&(t=r(e[o]))&&(f&&(f+=\" \"),f+=t)}else for(t in e)e[t]&&(f&&(f+=\" \"),f+=t);return f}function e(){for(var e,o,t=0,f=\"\",n=arguments.length;t<n;t++)(e=arguments[t])&&(o=r(e))&&(f&&(f+=\" \"),f+=o);return f}module.exports=e,module.exports.clsx=e;",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/clsx.min.js",
+            "artifact_path": "dist/clsx.min.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "232113196916be666253d1565e76e6924d82e4309bb877f0e44c07c73c32e665",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0004"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/clsx.min.js\n+++ artifact/dist/clsx.min.js\n@@ -0,0 +1 @@\n+!function(e,n){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=n():\"function\"==typeof define&&define.amd?define(n):e.clsx=n()}(this,(function(){function e(n){var t,f,o=\"\";if(\"string\"==typeof n||\"number\"==typeof n)o+=n;else if(\"object\"==typeof n)if(Array.isArray(n)){var r=n.length;for(t=0;t<r;t++)n[t]&&(f=e(n[t]))&&(o&&(o+=\" \"),o+=f)}else for(f in n)n[f]&&(o&&(o+=\" \"),o+=f);return o}function n(){for(var n,t,f=0,o=\"\",r=arguments.length;f<r;f++)(n=arguments[f])&&(t=e(n))&&(o&&(o+=\" \"),o+=t);return o}return n.clsx=n,n}));",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/clsx.mjs",
+            "artifact_path": "dist/clsx.mjs",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "d949e5cdbfebc76a6642b1901095e900fc3f2262d8dc0373aa44850a9bc75522",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0005"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/clsx.mjs\n+++ artifact/dist/clsx.mjs\n@@ -0,0 +1 @@\n+function r(e){var t,f,n=\"\";if(\"string\"==typeof e||\"number\"==typeof e)n+=e;else if(\"object\"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=\" \"),n+=f)}else for(f in e)e[f]&&(n&&(n+=\" \"),n+=f);return n}export function clsx(){for(var e,t,f=0,n=\"\",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=\" \"),n+=t);return n}export default clsx;",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/lite.js",
+            "artifact_path": "dist/lite.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "37f4dd277cfc6fb8852e1829c611bf71cfd8f662869d29cabbe87ae72037018b",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0006"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/lite.js\n+++ artifact/dist/lite.js\n@@ -0,0 +1 @@\n+function e(){for(var e,o=0,r=\"\",t=arguments.length;o<t;o++)(e=arguments[o])&&\"string\"==typeof e&&(r+=(r&&\" \")+e);return r}module.exports=e,module.exports.clsx=e;",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/lite.mjs",
+            "artifact_path": "dist/lite.mjs",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "0dfb332606c719dd391e7a197be0707c4ac73ae315b04eeca93a4289fac4faa5",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0007"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/lite.mjs\n+++ artifact/dist/lite.mjs\n@@ -0,0 +1 @@\n+export function clsx(){for(var t,r=0,e=\"\",n=arguments.length;r<n;r++)(t=arguments[r])&&\"string\"==typeof t&&(e+=(e&&\" \")+t);return e}export default clsx;",
+            "diff_truncated": false
+          },
+          {
+            "path": "license",
+            "artifact_path": "license",
+            "source_path": "license",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "9a9edad7baae52622bddf3c15b2ef8a33d2c89f2d25408ad13e8a7481c6b0c97",
+            "source_sha256": "9a9edad7baae52622bddf3c15b2ef8a33d2c89f2d25408ad13e8a7481c6b0c97",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "a5e616b9883177fb47c1fca22b6a4ab42be1c3ed6ffae8595a5c7d88630eeec2",
+            "source_sha256": "a5e616b9883177fb47c1fca22b6a4ab42be1c3ed6ffae8595a5c7d88630eeec2",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "readme.md",
+            "artifact_path": "readme.md",
+            "source_path": "readme.md",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "6c0057ca6bc7cc39a2ba857e114929168ce65daaa5ddb2242b40bc4de6dc573a",
+            "source_sha256": "6c0057ca6bc7cc39a2ba857e114929168ce65daaa5ddb2242b40bc4de6dc573a",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "src/index.js",
+            "artifact_path": null,
+            "source_path": "src/index.js",
+            "state": "removed",
+            "classification": "suspicious",
+            "artifact_sha256": null,
+            "source_sha256": "a577c500f65ed167cea489dd39c149c36880f959fc6ca24e4e1cc545cb7a53e1",
+            "finding_ids": [
+              "F0008"
+            ],
+            "explanation": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "diff": "",
+            "omission_kind": "runtime",
+            "omission_rule": "MISSING_RUNTIME_FILE"
+          },
+          {
+            "path": "src/lite.js",
+            "artifact_path": null,
+            "source_path": "src/lite.js",
+            "state": "removed",
+            "classification": "suspicious",
+            "artifact_sha256": null,
+            "source_sha256": "7f8f001d94d75869817f7a7f390066eb5c958ca4ce4b7de196641e1484562014",
+            "finding_ids": [
+              "F0009"
+            ],
+            "explanation": "Potential runtime/build code is absent without a supported packaging explanation.",
+            "diff": "",
+            "omission_kind": "runtime",
+            "omission_rule": "MISSING_RUNTIME_FILE"
+          },
+          {
+            "path": "test/classnames.js",
+            "artifact_path": null,
+            "source_path": "test/classnames.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "84bcc17b2d896934c24c7e7d6d5fadb68b000ea940a7292f71fcb7f83e10c729",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "test/index.js",
+            "artifact_path": null,
+            "source_path": "test/index.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "ec693edef6d85cc7929c80cf03ab0c6468f89f4e3b608738d3176096fabaec4a",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "test/lite.js",
+            "artifact_path": null,
+            "source_path": "test/lite.js",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "c3bf0d7095228d3138146c73258107686140bc18ffb114fe64adace344e7bc2a",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          }
+        ],
+        "limitations": []
+      }
+    },
+    {
+      "case": {
+        "ecosystem": "npm",
+        "name": "mitt",
+        "version": "3.0.1",
+        "split": "development",
+        "style": "compiled JavaScript and source maps"
+      },
+      "provenance": {
+        "release": {
+          "ecosystem": "npm",
+          "name": "mitt",
+          "version": "3.0.1",
+          "publication": {
+            "maintainers": [
+              {
+                "name": "developit",
+                "email": "jason@developit.ca"
+              }
+            ],
+            "deprecated": null,
+            "registry": "https://registry.npmjs.org",
+            "publication_time": "2023-07-04T17:31:47.638Z",
+            "publication_time_source": "https://registry.npmjs.org/mitt#time.3.0.1",
+            "publication_time_limitation": null
+          },
+          "artifact": {
+            "url": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
+            "digest": "sha512:bca8af0137ebf7b976fd00426009176036eb2163ccd8820a125ed83e18c2bca946de4136826fae068ea71172b7339fc57e1fc52e9284c73390dc926824614a07",
+            "verified": true
+          },
+          "repository": "https://github.com/developit/mitt",
+          "repo_slug": "developit/mitt",
+          "directory": "",
+          "git_head": "b240473b5707857ba2c6a8e6d707c28d1e39da49"
+        },
+        "source": {
+          "commit": "b240473b5707857ba2c6a8e6d707c28d1e39da49",
+          "tag": "3.0.1",
+          "confidence": "corroborated",
+          "identity_corroborated": true,
+          "build_provenance_verified": false,
+          "reasons": [
+            "Tag/manifest matching is not a cryptographic build provenance verification"
+          ],
+          "archive_url": "https://codeload.github.com/developit/mitt/tar.gz/b240473b5707857ba2c6a8e6d707c28d1e39da49",
+          "archive_sha256": "5bfb7ae1c8674759d31684141a37e64914ac024b441dccda76775fc236039ced"
+        },
+        "captured_at": "2026-11-19T03:34:05.743986+00:00",
+        "artifact_sha256": "2ef69c669574ad5b86fdb8b30aed8c8c1705931f19a68bc4b1b234c6d26d7306",
+        "source_sha256": "5bfb7ae1c8674759d31684141a37e64914ac024b441dccda76775fc236039ced"
+      },
+      "report": {
+        "status": "INCONCLUSIVE",
+        "clean_definition": "No suspicious differences detected within the available analysis scope.",
+        "risk_score": 15,
+        "risk_reasons": {
+          "UNEXPLAINED_CODE": 15
+        },
+        "suspicion_level": "REVIEW",
+        "total_files_inspected": 22,
+        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
+        "metrics": {
+          "artifact_file_count": 10,
+          "source_file_count": 12,
+          "unique_comparison_paths": 19,
+          "identical_files": 3,
+          "added_files": 7,
+          "removed_files": 9,
+          "changed_files": 0
+        },
+        "counts": {
+          "identical": 3,
+          "added": 7,
+          "removed": 9,
+          "changed": 0
+        },
+        "expected_generated_differences": [],
+        "findings": [
+          {
+            "id": "F0001",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/mitt.js",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "module.exports=function(n){return{all:n=n||new Map,on:function(e,t){var i=n.get(e);i?i.push(t):n.set(e,[t])},off:function(e,t){var i=n.get(e);i&&(t?i.splice(i.indexOf(t)>>>0,1):n.set(e,[]))},emit:function(e,t){var i=n.get(e);i&&i.slice().map(function(n){n(t)}),(i=n.get(\"*\"))&&i.slice().map(function(n){n(e,t)})}}};"
+              },
+              {
+                "line": 2,
+                "text": "//# sourceMappingURL=mitt.js.map"
+              }
+            ],
+            "diff": "--- source/dist/mitt.js\n+++ artifact/dist/mitt.js\n@@ -0,0 +1,2 @@\n+module.exports=function(n){return{all:n=n||new Map,on:function(e,t){var i=n.get(e);i?i.push(t):n.set(e,[t])},off:function(e,t){var i=n.get(e);i&&(t?i.splice(i.indexOf(t)>>>0,1):n.set(e,[]))},emit:function(e,t){var i=n.get(e);i&&i.slice().map(function(n){n(t)}),(i=n.get(\"*\"))&&i.slice().map(function(n){n(e,t)})}}};\n+//# sourceMappingURL=mitt.js.map"
+          },
+          {
+            "id": "F0002",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/mitt.mjs",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "export default function(n){return{all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e])},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]))},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e)}),(i=n.get(\"*\"))&&i.slice().map(function(n){n(t,e)})}}}"
+              },
+              {
+                "line": 2,
+                "text": "//# sourceMappingURL=mitt.mjs.map"
+              }
+            ],
+            "diff": "--- source/dist/mitt.mjs\n+++ artifact/dist/mitt.mjs\n@@ -0,0 +1,2 @@\n+export default function(n){return{all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e])},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]))},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e)}),(i=n.get(\"*\"))&&i.slice().map(function(n){n(t,e)})}}}\n+//# sourceMappingURL=mitt.mjs.map"
+          },
+          {
+            "id": "F0003",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "dist/mitt.umd.js",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "!function(e,n){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=n():\"function\"==typeof define&&define.amd?define(n):(e=e||self).mitt=n()}(this,function(){return function(e){return{all:e=e||new Map,on:function(n,t){var f=e.get(n);f?f.push(t):e.set(n,[t])},off:function(n,t){var f=e.get(n);f&&(t?f.splice(f.indexOf(t)>>>0,1):e.set(n,[]))},emit:function(n,t){var f=e.get(n);f&&f.slice().map(function(e){e(t)}),(f=e.get(\"*\"))&&f.slice().map(function(e){e(n,t)})}}}});"
+              },
+              {
+                "line": 2,
+                "text": "//# sourceMappingURL=mitt.umd.js.map"
+              }
+            ],
+            "diff": "--- source/dist/mitt.umd.js\n+++ artifact/dist/mitt.umd.js\n@@ -0,0 +1,2 @@\n+!function(e,n){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=n():\"function\"==typeof define&&define.amd?define(n):(e=e||self).mitt=n()}(this,function(){return function(e){return{all:e=e||new Map,on:function(n,t){var f=e.get(n);f?f.push(t):e.set(n,[t])},off:function(n,t){var f=e.get(n);f&&(t?f.splice(f.indexOf(t)>>>0,1):e.set(n,[]))},emit:function(n,t){var f=e.get(n);f&&f.slice().map(function(e){e(t)}),(f=e.get(\"*\"))&&f.slice().map(function(e){e(n,t)})}}}});\n+//# sourceMappingURL=mitt.umd.js.map"
+          },
+          {
+            "id": "F0004",
+            "rule": "UNEXPLAINED_CODE",
+            "points": 15,
+            "artifact_path": "index.d.ts",
+            "source_path": null,
+            "message": "Code has no exact source match; may be build output or a modification requiring review.",
+            "evidence": [
+              {
+                "line": 1,
+                "text": "export declare type EventType = string | symbol;"
+              },
+              {
+                "line": 2,
+                "text": "export declare type Handler<T = unknown> = (event: T) => void;"
+              },
+              {
+                "line": 3,
+                "text": "export declare type WildcardHandler<T = Record<string, unknown>> = (type: keyof T, event: T[keyof T]) => void;"
+              },
+              {
+                "line": 4,
+                "text": "export declare type EventHandlerList<T = unknown> = Array<Handler<T>>;"
+              },
+              {
+                "line": 5,
+                "text": "export declare type WildCardEventHandlerList<T = Record<string, unknown>> = Array<WildcardHandler<T>>;"
+              },
+              {
+                "line": 6,
+                "text": "export declare type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<keyof Events | '*', EventHandlerList<Events[keyof Events]> | WildCardEventHandlerList<Events>>;"
+              },
+              {
+                "line": 7,
+                "text": "export interface Emitter<Events extends Record<EventType, unknown>> {"
+              },
+              {
+                "line": 8,
+                "text": "    all: EventHandlerMap<Events>;"
+              },
+              {
+                "line": 9,
+                "text": "    on<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;"
+              },
+              {
+                "line": 10,
+                "text": "    on(type: '*', handler: WildcardHandler<Events>): void;"
+              },
+              {
+                "line": 11,
+                "text": "    off<Key extends keyof Events>(type: Key, handler?: Handler<Events[Key]>): void;"
+              },
+              {
+                "line": 12,
+                "text": "    off(type: '*', handler: WildcardHandler<Events>): void;"
+              }
+            ],
+            "diff": "--- source/index.d.ts\n+++ artifact/index.d.ts\n@@ -0,0 +1,21 @@\n+export declare type EventType = string | symbol;\n+export declare type Handler<T = unknown> = (event: T) => void;\n+export declare type WildcardHandler<T = Record<string, unknown>> = (type: keyof T, event: T[keyof T]) => void;\n+export declare type EventHandlerList<T = unknown> = Array<Handler<T>>;\n+export declare type WildCardEventHandlerList<T = Record<string, unknown>> = Array<WildcardHandler<T>>;\n+export declare type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<keyof Events | '*', EventHandlerList<Events[keyof Events]> | WildCardEventHandlerList<Events>>;\n+export interface Emitter<Events extends Record<EventType, unknown>> {\n+    all: EventHandlerMap<Events>;\n+    on<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;\n+    on(type: '*', handler: WildcardHandler<Events>): void;\n+    off<Key extends keyof Events>(type: Key, handler?: Handler<Events[Key]>): void;\n+    off(type: '*', handler: WildcardHandler<Events>): void;\n+    emit<Key extends keyof Events>(type: Key, event: Events[Key]): void;\n+    emit<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void;\n+}\n+/**\n+ * Mitt: Tiny (~200b) functional event emitter / pubsub.\n+ * @name mitt\n+ * @returns {Mitt}\n+ */\n+export default function mitt<Events extends Record<EventType, unknown>>(all?: EventHandlerMap<Events>): Emitter<Events>;"
+          }
+        ],
+        "files": [
+          {
+            "path": ".editorconfig",
+            "artifact_path": null,
+            "source_path": ".editorconfig",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "fb8101862d5fa12f273b79bc076f5ef81d13bc10771259a21966c854556f0d49",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".eslintrc",
+            "artifact_path": null,
+            "source_path": ".eslintrc",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "826dd25e7c2ef027c8a970b2266de386a459bfbb766ea96856f6510d26077f1c",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".github/workflows/compressed-size.yml",
+            "artifact_path": null,
+            "source_path": ".github/workflows/compressed-size.yml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "d701cd6ddbbfd3d2b2e1dd0e4ccc966f635f8a1bf628d9683f67705fbf1325d4",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".github/workflows/main.yml",
+            "artifact_path": null,
+            "source_path": ".github/workflows/main.yml",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "76acc915042c58603ac0ccccf10b1243b374caf7ada817ce399c8efc6edc18f1",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": ".gitignore",
+            "artifact_path": null,
+            "source_path": ".gitignore",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "ce170d58a649f6289283725e36d3f174ed2eb4012656b5cc1a3b517510d84887",
+            "finding_ids": [],
+            "explanation": "Development/CI configuration normally omitted from publishing.",
+            "diff": "",
+            "omission_kind": "development",
+            "omission_rule": "OMITTED_DEVELOPMENT"
+          },
+          {
+            "path": "LICENSE",
+            "artifact_path": "LICENSE",
+            "source_path": "LICENSE",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "1cab22f196264195a4caec8ca5630170fdde76ee8f43346e47021d087332d3b0",
+            "source_sha256": "1cab22f196264195a4caec8ca5630170fdde76ee8f43346e47021d087332d3b0",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "README.md",
+            "artifact_path": "README.md",
+            "source_path": "README.md",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "9b90f75f1ec4eba847115aa57b53cf46df90398e65e8ade7e3e51a3cc6c52664",
+            "source_sha256": "9b90f75f1ec4eba847115aa57b53cf46df90398e65e8ade7e3e51a3cc6c52664",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "dist/mitt.js",
+            "artifact_path": "dist/mitt.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "46769f6cae1b1a216842297ea034dba8e872a46b1122b83623105e63b1c9531b",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0001"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/mitt.js\n+++ artifact/dist/mitt.js\n@@ -0,0 +1,2 @@\n+module.exports=function(n){return{all:n=n||new Map,on:function(e,t){var i=n.get(e);i?i.push(t):n.set(e,[t])},off:function(e,t){var i=n.get(e);i&&(t?i.splice(i.indexOf(t)>>>0,1):n.set(e,[]))},emit:function(e,t){var i=n.get(e);i&&i.slice().map(function(n){n(t)}),(i=n.get(\"*\"))&&i.slice().map(function(n){n(e,t)})}}};\n+//# sourceMappingURL=mitt.js.map",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/mitt.js.map",
+            "artifact_path": "dist/mitt.js.map",
+            "source_path": null,
+            "state": "added",
+            "classification": "unexplained",
+            "artifact_sha256": "cc183e77d24903b69a7b436200e001ff6c3e72e503aa5e66552402d61e77adff",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Source map checked as data. Matching embedded source does not prove the generated JavaScript is trustworthy.",
+            "diff": "--- source/dist/mitt.js.map\n+++ artifact/dist/mitt.js.map\n@@ -0,0 +1 @@\n+{\"version\":3,\"file\":\"mitt.js\",\"sources\":[\"../src/index.ts\"],\"sourcesContent\":[\"export type EventType = string | symbol;\\n\\n// An event handler can take an optional event argument\\n// and should not return a value\\nexport type Handler<T = unknown> = (event: T) => void;\\nexport type WildcardHandler<T = Record<string, unknown>> = (\\n\\ttype: keyof T,\\n\\tevent: T[keyof T]\\n) => void;\\n\\n// An array of all currently registered event handlers for a type\\nexport type EventHandlerList<T = unknown> = Array<Handler<T>>;\\nexport type WildCardEventHandlerList<T = Record<string, unknown>> = Array<\\n\\tWildcardHandler<T>\\n>;\\n\\n// A map of event types and their corresponding event handlers.\\nexport type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<\\n\\tkeyof Events | '*',\\n\\tEventHandlerList<Events[keyof Events]> | WildCardEventHandlerList<Events>\\n>;\\n\\nexport interface Emitter<Events extends Record<EventType, unknown>> {\\n\\tall: EventHandlerMap<Events>;\\n\\n\\ton<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;\\n\\ton(type: '*', handler: WildcardHandler<Events>): void;\\n\\n\\toff<Key extends keyof Events>(\\n\\t\\ttype: Key,\\n\\t\\thandler?: Handler<Events[Key]>\\n\\t): void;\\n\\toff(type: '*', handler: WildcardHandler<Events>): void;\\n\\n\\temit<Key extends keyof Events>(type: Key, event: Events[Key]): void;\\n\\temit<Key extends keyof Events>(\\n\\t\\ttype: undefined extends Events[Key] ? Key : never\\n\\t): void;\\n}\\n\\n/**\\n * Mitt: Tiny (~200b) functional event emitter / pubsub.\\n * @name mitt\\n * @returns {Mitt}\\n */\\nexport default function mitt<Events extends Record<EventType, unknown>>(\\n\\tall?: EventHandlerMap<Events>\\n): Emitter<Events> {\\n\\ttype GenericEventHandler =\\n\\t\\t| Handler<Events[keyof Events]>\\n\\t\\t| WildcardHandler<Events>;\\n\\tall = all || new Map();\\n\\n\\treturn {\\n\\t\\t/**\\n\\t\\t * A Map of event names to registered handler functions.\\n\\t\\t */\\n\\t\\tall,\\n\\n\\t\\t/**\\n\\t\\t * Register an event handler for the given type.\\n\\t\\t * @param {string|symbol} type Type of event to listen for, or `'*'` for all events\\n\\t\\t * @param {Function} handler Function to call in response to given event\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\ton<Key extends keyof Events>(type: Key, handler: GenericEventHandler) {\\n\\t\\t\\tconst handlers: Array<GenericEventHandler> | undefined = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\thandlers.push(handler);\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tall!.set(type, [handler] as EventHandlerList<Events[keyof Events]>);\\n\\t\\t\\t}\\n\\t\\t},\\n\\n\\t\\t/**\\n\\t\\t * Remove an event handler for the given type.\\n\\t\\t * If `handler` is omitted, all handlers of the given type are removed.\\n\\t\\t * @param {string|symbol} type Type of event to unregister `handler` from (`'*'` to remove a wildcard handler)\\n\\t\\t * @param {Function} [handler] Handler function to remove\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\toff<Key extends keyof Events>(type: Key, handler?: GenericEventHandler) {\\n\\t\\t\\tconst handlers: Array<GenericEventHandler> | undefined = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\tif (handler) {\\n\\t\\t\\t\\t\\thandlers.splice(handlers.indexOf(handler) >>> 0, 1);\\n\\t\\t\\t\\t} else {\\n\\t\\t\\t\\t\\tall!.set(type, []);\\n\\t\\t\\t\\t}\\n\\t\\t\\t}\\n\\t\\t},\\n\\n\\t\\t/**\\n\\t\\t * Invoke all handlers for the given type.\\n\\t\\t * If present, `'*'` handlers are invoked after type-matched handlers.\\n\\t\\t *\\n\\t\\t * Note: Manually firing '*' handlers is not supported.\\n\\t\\t *\\n\\t\\t * @param {string|symbol} type The event type to invoke\\n\\t\\t * @param {Any} [evt] Any value (object is recommended and powerful), passed to each handler\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\temit<Key extends keyof Events>(type: Key, evt?: Events[Key]) {\\n\\t\\t\\tlet handlers = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\t(handlers as EventHandlerList<Events[keyof Events]>)\\n\\t\\t\\t\\t\\t.slice()\\n\\t\\t\\t\\t\\t.map((handler) => {\\n\\t\\t\\t\\t\\t\\thandler(evt!);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t}\\n\\n\\t\\t\\thandlers = all!.get('*');\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\t(handlers as WildCardEventHandlerList<Events>)\\n\\t\\t\\t\\t\\t.slice()\\n\\t\\t\\t\\t\\t.map((handler) => {\\n\\t\\t\\t\\t\\t\\thandler(type, evt!);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t}\\n\\t\\t}\\n\\t};\\n}\\n\"],\"names\":[\"all\",\"Map\",\"on\",\"type\",\"handler\",\"handlers\",\"get\",\"push\",\"set\",\"off\",\"splice\",\"indexOf\",\"emit\",\"evt\",\"slice\",\"map\"],\"mappings\":\"wBA8CCA,GAOA,MAAO,CAINA,IANDA,EAAMA,GAAO,IAAIC,IAchBC,YAA6BC,EAAWC,GACvC,IAAMC,EAAmDL,EAAKM,IAAIH,GAC9DE,EACHA,EAASE,KAAKH,GAEdJ,EAAKQ,IAAIL,EAAM,CAACC,KAWlBK,aAA8BN,EAAWC,GACxC,IAAMC,EAAmDL,EAAKM,IAAIH,GAC9DE,IACCD,EACHC,EAASK,OAAOL,EAASM,QAAQP,KAAa,EAAG,GAEjDJ,EAAKQ,IAAIL,EAAM,MAelBS,cAA+BT,EAAWU,GACzC,IAAIR,EAAWL,EAAKM,IAAIH,GACpBE,GACFA,EACCS,QACAC,IAAI,SAACX,GACLA,EAAQS,MAIXR,EAAWL,EAAKM,IAAI,OAElBD,EACCS,QACAC,IAAI,SAACX,GACLA,EAAQD,EAAMU\"}",
+            "diff_truncated": false,
+            "source_map_evidence": {
+              "matching_sources": [],
+              "mismatched_sources": []
+            }
+          },
+          {
+            "path": "dist/mitt.mjs",
+            "artifact_path": "dist/mitt.mjs",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "7a0c650bc6798bbe422677ef196d66417510a1c5b51f754c680f67cf1c256c50",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0002"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/mitt.mjs\n+++ artifact/dist/mitt.mjs\n@@ -0,0 +1,2 @@\n+export default function(n){return{all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e])},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]))},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e)}),(i=n.get(\"*\"))&&i.slice().map(function(n){n(t,e)})}}}\n+//# sourceMappingURL=mitt.mjs.map",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/mitt.mjs.map",
+            "artifact_path": "dist/mitt.mjs.map",
+            "source_path": null,
+            "state": "added",
+            "classification": "unexplained",
+            "artifact_sha256": "448c659fd5c092ea2425ebfea79320ca88593a1e1b10e3e8338e8c08ceb3ba3d",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Source map checked as data. Matching embedded source does not prove the generated JavaScript is trustworthy.",
+            "diff": "--- source/dist/mitt.mjs.map\n+++ artifact/dist/mitt.mjs.map\n@@ -0,0 +1 @@\n+{\"version\":3,\"file\":\"mitt.mjs\",\"sources\":[\"../src/index.ts\"],\"sourcesContent\":[\"export type EventType = string | symbol;\\n\\n// An event handler can take an optional event argument\\n// and should not return a value\\nexport type Handler<T = unknown> = (event: T) => void;\\nexport type WildcardHandler<T = Record<string, unknown>> = (\\n\\ttype: keyof T,\\n\\tevent: T[keyof T]\\n) => void;\\n\\n// An array of all currently registered event handlers for a type\\nexport type EventHandlerList<T = unknown> = Array<Handler<T>>;\\nexport type WildCardEventHandlerList<T = Record<string, unknown>> = Array<\\n\\tWildcardHandler<T>\\n>;\\n\\n// A map of event types and their corresponding event handlers.\\nexport type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<\\n\\tkeyof Events | '*',\\n\\tEventHandlerList<Events[keyof Events]> | WildCardEventHandlerList<Events>\\n>;\\n\\nexport interface Emitter<Events extends Record<EventType, unknown>> {\\n\\tall: EventHandlerMap<Events>;\\n\\n\\ton<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;\\n\\ton(type: '*', handler: WildcardHandler<Events>): void;\\n\\n\\toff<Key extends keyof Events>(\\n\\t\\ttype: Key,\\n\\t\\thandler?: Handler<Events[Key]>\\n\\t): void;\\n\\toff(type: '*', handler: WildcardHandler<Events>): void;\\n\\n\\temit<Key extends keyof Events>(type: Key, event: Events[Key]): void;\\n\\temit<Key extends keyof Events>(\\n\\t\\ttype: undefined extends Events[Key] ? Key : never\\n\\t): void;\\n}\\n\\n/**\\n * Mitt: Tiny (~200b) functional event emitter / pubsub.\\n * @name mitt\\n * @returns {Mitt}\\n */\\nexport default function mitt<Events extends Record<EventType, unknown>>(\\n\\tall?: EventHandlerMap<Events>\\n): Emitter<Events> {\\n\\ttype GenericEventHandler =\\n\\t\\t| Handler<Events[keyof Events]>\\n\\t\\t| WildcardHandler<Events>;\\n\\tall = all || new Map();\\n\\n\\treturn {\\n\\t\\t/**\\n\\t\\t * A Map of event names to registered handler functions.\\n\\t\\t */\\n\\t\\tall,\\n\\n\\t\\t/**\\n\\t\\t * Register an event handler for the given type.\\n\\t\\t * @param {string|symbol} type Type of event to listen for, or `'*'` for all events\\n\\t\\t * @param {Function} handler Function to call in response to given event\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\ton<Key extends keyof Events>(type: Key, handler: GenericEventHandler) {\\n\\t\\t\\tconst handlers: Array<GenericEventHandler> | undefined = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\thandlers.push(handler);\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tall!.set(type, [handler] as EventHandlerList<Events[keyof Events]>);\\n\\t\\t\\t}\\n\\t\\t},\\n\\n\\t\\t/**\\n\\t\\t * Remove an event handler for the given type.\\n\\t\\t * If `handler` is omitted, all handlers of the given type are removed.\\n\\t\\t * @param {string|symbol} type Type of event to unregister `handler` from (`'*'` to remove a wildcard handler)\\n\\t\\t * @param {Function} [handler] Handler function to remove\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\toff<Key extends keyof Events>(type: Key, handler?: GenericEventHandler) {\\n\\t\\t\\tconst handlers: Array<GenericEventHandler> | undefined = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\tif (handler) {\\n\\t\\t\\t\\t\\thandlers.splice(handlers.indexOf(handler) >>> 0, 1);\\n\\t\\t\\t\\t} else {\\n\\t\\t\\t\\t\\tall!.set(type, []);\\n\\t\\t\\t\\t}\\n\\t\\t\\t}\\n\\t\\t},\\n\\n\\t\\t/**\\n\\t\\t * Invoke all handlers for the given type.\\n\\t\\t * If present, `'*'` handlers are invoked after type-matched handlers.\\n\\t\\t *\\n\\t\\t * Note: Manually firing '*' handlers is not supported.\\n\\t\\t *\\n\\t\\t * @param {string|symbol} type The event type to invoke\\n\\t\\t * @param {Any} [evt] Any value (object is recommended and powerful), passed to each handler\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\temit<Key extends keyof Events>(type: Key, evt?: Events[Key]) {\\n\\t\\t\\tlet handlers = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\t(handlers as EventHandlerList<Events[keyof Events]>)\\n\\t\\t\\t\\t\\t.slice()\\n\\t\\t\\t\\t\\t.map((handler) => {\\n\\t\\t\\t\\t\\t\\thandler(evt!);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t}\\n\\n\\t\\t\\thandlers = all!.get('*');\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\t(handlers as WildCardEventHandlerList<Events>)\\n\\t\\t\\t\\t\\t.slice()\\n\\t\\t\\t\\t\\t.map((handler) => {\\n\\t\\t\\t\\t\\t\\thandler(type, evt!);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t}\\n\\t\\t}\\n\\t};\\n}\\n\"],\"names\":[\"all\",\"Map\",\"on\",\"type\",\"handler\",\"handlers\",\"get\",\"push\",\"set\",\"off\",\"splice\",\"indexOf\",\"emit\",\"evt\",\"slice\",\"map\"],\"mappings\":\"wBA8CCA,GAOA,MAAO,CAINA,IANDA,EAAMA,GAAO,IAAIC,IAchBC,YAA6BC,EAAWC,GACvC,IAAMC,EAAmDL,EAAKM,IAAIH,GAC9DE,EACHA,EAASE,KAAKH,GAEdJ,EAAKQ,IAAIL,EAAM,CAACC,KAWlBK,aAA8BN,EAAWC,GACxC,IAAMC,EAAmDL,EAAKM,IAAIH,GAC9DE,IACCD,EACHC,EAASK,OAAOL,EAASM,QAAQP,KAAa,EAAG,GAEjDJ,EAAKQ,IAAIL,EAAM,MAelBS,cAA+BT,EAAWU,GACzC,IAAIR,EAAWL,EAAKM,IAAIH,GACpBE,GACFA,EACCS,QACAC,IAAI,SAACX,GACLA,EAAQS,MAIXR,EAAWL,EAAKM,IAAI,OAElBD,EACCS,QACAC,IAAI,SAACX,GACLA,EAAQD,EAAMU\"}",
+            "diff_truncated": false,
+            "source_map_evidence": {
+              "matching_sources": [],
+              "mismatched_sources": []
+            }
+          },
+          {
+            "path": "dist/mitt.umd.js",
+            "artifact_path": "dist/mitt.umd.js",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "1b48d419d5c66d6c39a8a2e2cb69e797989c8cd934f17122abc35d766650a82f",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0003"
+            ],
+            "explanation": "",
+            "diff": "--- source/dist/mitt.umd.js\n+++ artifact/dist/mitt.umd.js\n@@ -0,0 +1,2 @@\n+!function(e,n){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=n():\"function\"==typeof define&&define.amd?define(n):(e=e||self).mitt=n()}(this,function(){return function(e){return{all:e=e||new Map,on:function(n,t){var f=e.get(n);f?f.push(t):e.set(n,[t])},off:function(n,t){var f=e.get(n);f&&(t?f.splice(f.indexOf(t)>>>0,1):e.set(n,[]))},emit:function(n,t){var f=e.get(n);f&&f.slice().map(function(e){e(t)}),(f=e.get(\"*\"))&&f.slice().map(function(e){e(n,t)})}}}});\n+//# sourceMappingURL=mitt.umd.js.map",
+            "diff_truncated": false
+          },
+          {
+            "path": "dist/mitt.umd.js.map",
+            "artifact_path": "dist/mitt.umd.js.map",
+            "source_path": null,
+            "state": "added",
+            "classification": "unexplained",
+            "artifact_sha256": "366b8ca7c83fcc1c7b20fdb7828593317fbc3376859dc439a2c5fb3bdf4e4740",
+            "source_sha256": null,
+            "finding_ids": [],
+            "explanation": "Source map checked as data. Matching embedded source does not prove the generated JavaScript is trustworthy.",
+            "diff": "--- source/dist/mitt.umd.js.map\n+++ artifact/dist/mitt.umd.js.map\n@@ -0,0 +1 @@\n+{\"version\":3,\"file\":\"mitt.umd.js\",\"sources\":[\"../src/index.ts\"],\"sourcesContent\":[\"export type EventType = string | symbol;\\n\\n// An event handler can take an optional event argument\\n// and should not return a value\\nexport type Handler<T = unknown> = (event: T) => void;\\nexport type WildcardHandler<T = Record<string, unknown>> = (\\n\\ttype: keyof T,\\n\\tevent: T[keyof T]\\n) => void;\\n\\n// An array of all currently registered event handlers for a type\\nexport type EventHandlerList<T = unknown> = Array<Handler<T>>;\\nexport type WildCardEventHandlerList<T = Record<string, unknown>> = Array<\\n\\tWildcardHandler<T>\\n>;\\n\\n// A map of event types and their corresponding event handlers.\\nexport type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<\\n\\tkeyof Events | '*',\\n\\tEventHandlerList<Events[keyof Events]> | WildCardEventHandlerList<Events>\\n>;\\n\\nexport interface Emitter<Events extends Record<EventType, unknown>> {\\n\\tall: EventHandlerMap<Events>;\\n\\n\\ton<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;\\n\\ton(type: '*', handler: WildcardHandler<Events>): void;\\n\\n\\toff<Key extends keyof Events>(\\n\\t\\ttype: Key,\\n\\t\\thandler?: Handler<Events[Key]>\\n\\t): void;\\n\\toff(type: '*', handler: WildcardHandler<Events>): void;\\n\\n\\temit<Key extends keyof Events>(type: Key, event: Events[Key]): void;\\n\\temit<Key extends keyof Events>(\\n\\t\\ttype: undefined extends Events[Key] ? Key : never\\n\\t): void;\\n}\\n\\n/**\\n * Mitt: Tiny (~200b) functional event emitter / pubsub.\\n * @name mitt\\n * @returns {Mitt}\\n */\\nexport default function mitt<Events extends Record<EventType, unknown>>(\\n\\tall?: EventHandlerMap<Events>\\n): Emitter<Events> {\\n\\ttype GenericEventHandler =\\n\\t\\t| Handler<Events[keyof Events]>\\n\\t\\t| WildcardHandler<Events>;\\n\\tall = all || new Map();\\n\\n\\treturn {\\n\\t\\t/**\\n\\t\\t * A Map of event names to registered handler functions.\\n\\t\\t */\\n\\t\\tall,\\n\\n\\t\\t/**\\n\\t\\t * Register an event handler for the given type.\\n\\t\\t * @param {string|symbol} type Type of event to listen for, or `'*'` for all events\\n\\t\\t * @param {Function} handler Function to call in response to given event\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\ton<Key extends keyof Events>(type: Key, handler: GenericEventHandler) {\\n\\t\\t\\tconst handlers: Array<GenericEventHandler> | undefined = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\thandlers.push(handler);\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tall!.set(type, [handler] as EventHandlerList<Events[keyof Events]>);\\n\\t\\t\\t}\\n\\t\\t},\\n\\n\\t\\t/**\\n\\t\\t * Remove an event handler for the given type.\\n\\t\\t * If `handler` is omitted, all handlers of the given type are removed.\\n\\t\\t * @param {string|symbol} type Type of event to unregister `handler` from (`'*'` to remove a wildcard handler)\\n\\t\\t * @param {Function} [handler] Handler function to remove\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\toff<Key extends keyof Events>(type: Key, handler?: GenericEventHandler) {\\n\\t\\t\\tconst handlers: Array<GenericEventHandler> | undefined = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\tif (handler) {\\n\\t\\t\\t\\t\\thandlers.splice(handlers.indexOf(handler) >>> 0, 1);\\n\\t\\t\\t\\t} else {\\n\\t\\t\\t\\t\\tall!.set(type, []);\\n\\t\\t\\t\\t}\\n\\t\\t\\t}\\n\\t\\t},\\n\\n\\t\\t/**\\n\\t\\t * Invoke all handlers for the given type.\\n\\t\\t * If present, `'*'` handlers are invoked after type-matched handlers.\\n\\t\\t *\\n\\t\\t * Note: Manually firing '*' handlers is not supported.\\n\\t\\t *\\n\\t\\t * @param {string|symbol} type The event type to invoke\\n\\t\\t * @param {Any} [evt] Any value (object is recommended and powerful), passed to each handler\\n\\t\\t * @memberOf mitt\\n\\t\\t */\\n\\t\\temit<Key extends keyof Events>(type: Key, evt?: Events[Key]) {\\n\\t\\t\\tlet handlers = all!.get(type);\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\t(handlers as EventHandlerList<Events[keyof Events]>)\\n\\t\\t\\t\\t\\t.slice()\\n\\t\\t\\t\\t\\t.map((handler) => {\\n\\t\\t\\t\\t\\t\\thandler(evt!);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t}\\n\\n\\t\\t\\thandlers = all!.get('*');\\n\\t\\t\\tif (handlers) {\\n\\t\\t\\t\\t(handlers as WildCardEventHandlerList<Events>)\\n\\t\\t\\t\\t\\t.slice()\\n\\t\\t\\t\\t\\t.map((handler) => {\\n\\t\\t\\t\\t\\t\\thandler(type, evt!);\\n\\t\\t\\t\\t\\t});\\n\\t\\t\\t}\\n\\t\\t}\\n\\t};\\n}\\n\"],\"names\":[\"all\",\"Map\",\"on\",\"type\",\"handler\",\"handlers\",\"get\",\"push\",\"set\",\"off\",\"splice\",\"indexOf\",\"emit\",\"evt\",\"slice\",\"map\"],\"mappings\":\"6LA8CCA,GAOA,MAAO,CAINA,IANDA,EAAMA,GAAO,IAAIC,IAchBC,YAA6BC,EAAWC,GACvC,IAAMC,EAAmDL,EAAKM,IAAIH,GAC9DE,EACHA,EAASE,KAAKH,GAEdJ,EAAKQ,IAAIL,EAAM,CAACC,KAWlBK,aAA8BN,EAAWC,GACxC,IAAMC,EAAmDL,EAAKM,IAAIH,GAC9DE,IACCD,EACHC,EAASK,OAAOL,EAASM,QAAQP,KAAa,EAAG,GAEjDJ,EAAKQ,IAAIL,EAAM,MAelBS,cAA+BT,EAAWU,GACzC,IAAIR,EAAWL,EAAKM,IAAIH,GACpBE,GACFA,EACCS,QACAC,IAAI,SAACX,GACLA,EAAQS,MAIXR,EAAWL,EAAKM,IAAI,OAElBD,EACCS,QACAC,IAAI,SAACX,GACLA,EAAQD,EAAMU\"}",
+            "diff_truncated": false,
+            "source_map_evidence": {
+              "matching_sources": [],
+              "mismatched_sources": []
+            }
+          },
+          {
+            "path": "index.d.ts",
+            "artifact_path": "index.d.ts",
+            "source_path": null,
+            "state": "added",
+            "classification": "suspicious",
+            "artifact_sha256": "980d84ab65a61d1979a22e5cd3322672e75fb148392b6903d08ccef59bbf530c",
+            "source_sha256": null,
+            "finding_ids": [
+              "F0004"
+            ],
+            "explanation": "",
+            "diff": "--- source/index.d.ts\n+++ artifact/index.d.ts\n@@ -0,0 +1,21 @@\n+export declare type EventType = string | symbol;\n+export declare type Handler<T = unknown> = (event: T) => void;\n+export declare type WildcardHandler<T = Record<string, unknown>> = (type: keyof T, event: T[keyof T]) => void;\n+export declare type EventHandlerList<T = unknown> = Array<Handler<T>>;\n+export declare type WildCardEventHandlerList<T = Record<string, unknown>> = Array<WildcardHandler<T>>;\n+export declare type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<keyof Events | '*', EventHandlerList<Events[keyof Events]> | WildCardEventHandlerList<Events>>;\n+export interface Emitter<Events extends Record<EventType, unknown>> {\n+    all: EventHandlerMap<Events>;\n+    on<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;\n+    on(type: '*', handler: WildcardHandler<Events>): void;\n+    off<Key extends keyof Events>(type: Key, handler?: Handler<Events[Key]>): void;\n+    off(type: '*', handler: WildcardHandler<Events>): void;\n+    emit<Key extends keyof Events>(type: Key, event: Events[Key]): void;\n+    emit<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void;\n+}\n+/**\n+ * Mitt: Tiny (~200b) functional event emitter / pubsub.\n+ * @name mitt\n+ * @returns {Mitt}\n+ */\n+export default function mitt<Events extends Record<EventType, unknown>>(all?: EventHandlerMap<Events>): Emitter<Events>;",
+            "diff_truncated": false
+          },
+          {
+            "path": "package.json",
+            "artifact_path": "package.json",
+            "source_path": "package.json",
+            "state": "identical",
+            "classification": "identical",
+            "artifact_sha256": "99966ad2891dfe56614f039f5d03ada4bda6dba810952272ae57359abb527b91",
+            "source_sha256": "99966ad2891dfe56614f039f5d03ada4bda6dba810952272ae57359abb527b91",
+            "finding_ids": [],
+            "explanation": "",
+            "diff": ""
+          },
+          {
+            "path": "src/index.ts",
+            "artifact_path": null,
+            "source_path": "src/index.ts",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "1536a2dd71d64785d811076beee6d970583ca555dd34ce839face641a200054b",
+            "finding_ids": [],
+            "explanation": "Outside the literal source package.json files allowlist; no detected runtime reference.",
+            "diff": "",
+            "omission_kind": "packaging_exclusion",
+            "omission_rule": "NPM_FILES_EXCLUSION"
+          },
+          {
+            "path": "test/index_test.ts",
+            "artifact_path": null,
+            "source_path": "test/index_test.ts",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "cc25b9f1d50cf07d0ae99141e592bfe0d1ca7e8a48332bf1870b31ba8e62c43b",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "test/test-types-compilation.ts",
+            "artifact_path": null,
+            "source_path": "test/test-types-compilation.ts",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "ea625d6ba9a8bd1b44ab24715bd84745db2a38efec69d3441c1774bd89c67bc8",
+            "finding_ids": [],
+            "explanation": "Test/benchmark convention; no detected shipped-code reference or declared inclusion.",
+            "diff": "",
+            "omission_kind": "tests",
+            "omission_rule": "OMITTED_TEST"
+          },
+          {
+            "path": "tsconfig.json",
+            "artifact_path": null,
+            "source_path": "tsconfig.json",
+            "state": "removed",
+            "classification": "expected",
+            "artifact_sha256": null,
+            "source_sha256": "2569f69082a5b5e094466fdb4b5db9c8294b00e9c6d659b8a5571c77c695c9ec",
+            "finding_ids": [],
+            "explanation": "Outside the literal source package.json files allowlist; no detected runtime reference.",
+            "diff": "",
+            "omission_kind": "packaging_exclusion",
+            "omission_rule": "NPM_FILES_EXCLUSION"
+          }
+        ],
+        "limitations": []
+      }
+    }
+  ]
+}

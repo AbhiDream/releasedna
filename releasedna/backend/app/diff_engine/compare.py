@@ -2,18 +2,23 @@
 import difflib
 import json
 import re
+import math
+from collections import Counter
 from pathlib import PurePosixPath
 from app.diff_engine.omissions import Omissions
+from app.diff_engine.generated import GeneratedContext
+from app.diff_engine.metadata import explain_metadata
 
 CLEAN_MEANING = 'No suspicious differences detected within the available analysis scope.'
 
 CAPABILITIES = {
     'PROCESS_EXECUTION': (35, r'\b(?:child_process|execSync|spawnSync|subprocess|os\.system|Popen)\b'),
     'NETWORK_ACCESS': (15, r'\b(?:fetch\s*\(|https?\.(?:get|request)|requests\.|urllib\.|socket\.)'),
-    'DYNAMIC_EXECUTION': (35, r'\b(?:eval|exec|Function)\s*\('),
+    'DYNAMIC_EXECUTION': (35, r'(?<![\w.$])(?:eval|exec|Function)\s*\('),
     'ENCODED_PAYLOAD': (25, r'(?:fromCharCode|atob\s*\(|b64decode|[A-Za-z0-9+/]{300,}={0,2})'),
+    'SHELL_PIPELINE': (30, r'(?m)(?:\b(?:curl|wget|base64|xz|gzip|sed|tr)\b[^\n]{0,180}\|\s*(?:sh|bash|eval)\b|\b(?:m4_esyscmd|m4_syscmd)\s*\(|\b(?:sh|bash)\s+-c\b)'),
 }
-CODE = {'.js', '.mjs', '.cjs', '.ts', '.py', '.sh', '.ps1', '.bat', '.cmd'}
+CODE = {'.js', '.mjs', '.cjs', '.ts', '.mts', '.cts', '.py', '.sh', '.ps1', '.bat', '.cmd'}
 
 
 def text(data):
@@ -27,6 +32,7 @@ def text(data):
 def compare(artifact, source, source_corroborated):
     rows, findings, limitations = [], [], []
     omissions = Omissions(artifact, source)
+    generated = GeneratedContext(artifact, source)
     if not source:
         limitations.append('Source unavailable: added files mean unmatched files, not proven additions')
 
@@ -71,18 +77,35 @@ def compare(artifact, source, source_corroborated):
                 row['diff_truncated'] = True
                 limitations.append(f'{path}: line diff exceeds processing budget; whole-file pattern comparison used')
         suffix = PurePosixPath(path).suffix.lower()
+        build_evidence = generated.explain(path)
+        if build_evidence:
+            row['build_evidence'] = build_evidence
+            row.update(classification='generated_unverified', explanation=build_evidence['explanation'])
         is_code = suffix in CODE or a.executable
-        if is_code and at is not None:
+        # Non-code build macros and disguised blobs can carry executable text too.
+        # Inspect a byte-preserving view of binary data without executing or decompressing it.
+        scan_text = at if at is not None else a.data.decode('latin-1')
+        old_text = st if st is not None else (s.data.decode('latin-1') if s else '')
+        if scan_text:
             for rule, (points, pattern) in CAPABILITIES.items():
-                old_count = len(re.findall(pattern, st or ''))
-                new_matches = list(re.finditer(pattern, at))
+                old_count = len(re.findall(pattern, old_text or ''))
+                new_matches = list(re.finditer(pattern, scan_text))
                 if len(new_matches) > old_count:
-                    evidence = [{'line': at.count('\n', 0, m.start()) + 1,
-                                 'text': at[max(0,m.start()-60):m.end()+160]} for m in new_matches[:8]]
+                    evidence = [{'line': scan_text.count('\n', 0, m.start()) + 1,
+                                 'byte_offset': len(scan_text[:m.start()].encode('utf-8')) if at is not None else m.start(),
+                                 'text': scan_text[max(0,m.start()-60):m.end()+160]} for m in new_matches[:8]]
                     finding(row, rule, points, 'New or increased capability indicator; static heuristic, not proof of malicious intent.', evidence)
-            if s and re.sub(r'\s+', '', at) == re.sub(r'\s+', '', st or ''):
+            if at is not None and s and re.sub(r'\s+', '', at) == re.sub(r'\s+', '', st or ''):
                 # Whitespace can be semantic in Python and inside strings; do not claim equivalence.
                 row['explanation'] = 'Text differs only in whitespace; semantic equivalence is not assumed.'
+        if len(a.data) >= 1024:
+            def entropy(data):
+                return -sum((n / len(data)) * math.log2(n / len(data)) for n in Counter(data).values()) if data else 0
+            current_entropy = entropy(a.data)
+            previous_entropy = entropy(s.data) if s else 0
+            row['entropy'] = {'artifact_bits_per_byte': round(current_entropy, 4), 'source_bits_per_byte': round(previous_entropy, 4)}
+            if current_entropy >= 7.5 and (not s or current_entropy - previous_entropy >= .5):
+                finding(row, 'HIGH_ENTROPY_CHANGE', 15, 'New high-entropy content; compression/encryption may be legitimate. Inspect the source difference.', [row['entropy']])
         if path == 'package.json' and at is not None:
             try:
                 ap = json.loads(at)
@@ -106,33 +129,30 @@ def compare(artifact, source, source_corroborated):
         if a.data.startswith((b'\x7fELF', b'MZ', b'\xcf\xfa\xed\xfe')):
             finding(row, 'BINARY_CHANGED', 30, 'New or modified native executable; build provenance required')
         if suffix == '.map' and at:
-            try:
-                sm = json.loads(at)
-                matches, mismatches = [], []
-                for origin, content in zip(sm.get('sources', [])[:1000], sm.get('sourcesContent', [])[:1000]):
-                    if not isinstance(origin, str) or not isinstance(content, str):
-                        continue
-                    # Compare only exact relative paths. Never resolve URLs or traverse map paths.
-                    target = origin.removeprefix('./')
-                    if target in source:
-                        (matches if content.encode() == source[target].data else mismatches).append(target)
-                row['source_map_evidence'] = {'matching_sources': matches, 'mismatched_sources': mismatches}
-                if mismatches:
-                    finding(row, 'SOURCEMAP_SOURCE_MISMATCH', 25, 'Embedded source differs from repository: ' + ', '.join(mismatches[:8]))
-                row['explanation'] = 'Source map checked as data. Matching embedded source does not prove the generated JavaScript is trustworthy.'
-            except (ValueError, TypeError, AttributeError):
-                row['explanation'] = 'Malformed source map; cannot establish generated-code origin.'
+            evidence = generated.maps[path]
+            row['source_map_evidence'] = evidence
+            if evidence['mismatched_sources']:
+                finding(row, 'SOURCEMAP_SOURCE_MISMATCH', 25, 'Embedded sources differ from repository content.', evidence['mismatched_sources'][:8])
+            elif evidence['all_embedded_sources_match'] and not row['finding_ids']:
+                row['classification'] = 'expected'
+            row['explanation'] = ('Source-map metadata inspected without fetching references. '
+                                  f"{len(evidence['matching_sources'])} embedded sources match; "
+                                  f"{len(evidence['mismatched_sources'])} differ; "
+                                  f"{len(evidence['unresolved_sources'])} unresolved. " + evidence['limitation'])
         if row['classification'] == 'unexplained':
-            if state == 'added' and (path == 'PKG-INFO' or '.egg-info/' in path) and not is_code:
+            metadata_explanation = explain_metadata(path,a.data,generated) if state=='added' and not is_code else None
+            if metadata_explanation:
+                row.update(classification='expected',explanation=metadata_explanation)
+            elif state == 'added' and (path == 'PKG-INFO' or '.egg-info/' in path) and not is_code:
                 row.update(classification='expected', explanation='Standard source-distribution metadata, not executable code.')
             elif is_code:
                 finding(row, 'UNEXPLAINED_CODE', 15, 'Code has no exact source match; may be build output or a modification requiring review.', added_lines[:12])
             else:
-                row['explanation'] = row['explanation'] or 'No validated packaging transformation explains this difference.'
+                finding(row, 'UNEXPLAINED_NONCODE', 10, 'Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.', added_lines[:12] or [{'artifact_sha256':a.sha256, 'source_sha256':s.sha256 if s else None, 'size_bytes':len(a.data)}])
     # A rule contributes once per scan, preventing large packages from inflating scores by file count.
     reasons = {f['rule']: f['points'] for f in findings}
     score = min(100, sum(reasons.values()))
-    unresolved = any(r['classification'] == 'unexplained' for r in rows)
+    unresolved = any(r['classification'] in ('unexplained', 'generated_unverified') for r in rows)
     status = 'HIGH_RISK' if score >= 70 else 'REVIEW' if findings else 'CLEAN'
     if not source_corroborated or unresolved or limitations:
         status = 'INCONCLUSIVE'
@@ -145,4 +165,5 @@ def compare(artifact, source, source_corroborated):
             'total_files_inspected_definition': 'Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.',
             'metrics': metrics, 'counts': counts,
             'expected_generated_differences': [r['path'] for r in rows if r['classification'] == 'expected' and r['state'] != 'removed'],
+            'unverified_generated_outputs': [r['path'] for r in rows if r.get('build_evidence')],
             'findings': findings, 'files': rows, 'limitations': limitations}
