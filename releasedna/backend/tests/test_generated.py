@@ -71,8 +71,8 @@ class GeneratedTests(unittest.TestCase):
         self.assertEqual(pack(data), pack(data))
         self.assertEqual(inspect_archive(pack(data)), data)
 
-    def test_documented_quiet_bundle_gap_remains_inconclusive(self):
+    def test_quiet_bundle_trailer_is_detected_but_equivalence_remains_inconclusive(self):
         self.artifact['dist/a.js'] = File(self.artifact['dist/a.js'].data + b'\nglobalThis.fixture = 1;')
         report = compare(self.artifact, self.source, True)
-        self.assertEqual(report['findings'], [])
+        self.assertTrue(any(f['rule']=='UNEXPLAINED_CODE' and f['artifact_path']=='dist/a.js' for f in report['findings']))
         self.assertEqual(report['status'], 'INCONCLUSIVE')

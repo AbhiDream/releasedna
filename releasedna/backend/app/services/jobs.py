@@ -27,6 +27,34 @@ class JobStore:
                 id TEXT PRIMARY KEY, state TEXT NOT NULL, request TEXT NOT NULL,
                 created_at TEXT NOT NULL, started_at TEXT, finished_at TEXT,
                 result TEXT, error TEXT)''')
+            db.execute('CREATE TABLE IF NOT EXISTS uploads(id TEXT PRIMARY KEY,label TEXT,body BLOB,created_at TEXT)')
+
+    def upload(self,label,body):
+        from app.core.safety import MAX_DOWNLOAD
+        if not body or len(body)>MAX_DOWNLOAD: raise ValueError('Archive must contain 1 byte to 24 MiB')
+        identity=str(uuid.uuid4())
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            # Bound retained uploads. A caller can explicitly remove unused inputs.
+            total=db.execute('SELECT coalesce(sum(length(body)),0) FROM uploads').fetchone()[0]
+            if total+len(body)>256*1024*1024: raise QueueFull('Local archive storage full (256 MiB); remove unused uploads')
+            db.execute('INSERT INTO uploads VALUES (?,?,?,?)',(identity,label[:160],body,now()))
+        return {'id':identity,'bytes':len(body),'label':label[:160]}
+
+    def read_upload(self,identity):
+        with self.connect() as db:
+            row=db.execute('SELECT body FROM uploads WHERE id=?',(identity,)).fetchone()
+            if not row: raise ValueError('Upload not found')
+            return bytes(row['body'])
+
+    def remove_upload(self,identity):
+        with self.connect() as db:
+            db.execute('BEGIN IMMEDIATE')
+            for row in db.execute("SELECT request FROM scans WHERE state IN ('queued','running')"):
+                request=json.loads(row['request'])
+                if identity in (request.get('artifact_id'),request.get('source_id')):
+                    raise ValueError('Upload is referenced by an active comparison')
+            db.execute('DELETE FROM uploads WHERE id=?',(identity,))
 
     @contextmanager
     def connect(self):
@@ -54,6 +82,10 @@ class JobStore:
         identity = str(uuid.uuid4())
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
+            if request.get('kind') == 'local':
+                for key in ('artifact_id','source_id'):
+                    if not db.execute('SELECT 1 FROM uploads WHERE id=?',(request[key],)).fetchone():
+                        raise ValueError('Upload not found: '+key)
             if db.execute("SELECT count(*) FROM scans WHERE state IN ('queued','running')").fetchone()[0] >= 20:
                 raise QueueFull('Queue is full (20 pending jobs); try again after a job finishes')
             db.execute('INSERT INTO scans(id,state,request,created_at) VALUES (?,?,?,?)',

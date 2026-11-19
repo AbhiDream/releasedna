@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from app.services.scan import scan
+from app.services.process_boundary import bounded_inspection
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
     parser.add_argument('version')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
-    report = scan(args.ecosystem, args.name, args.version)
+    report = bounded_inspection('registry',{'ecosystem':args.ecosystem,'name':args.name,'version':args.version})
     data = json.dumps(report, indent=2, ensure_ascii=True)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -16,7 +16,7 @@ def scan(ecosystem, name, version):
               'status': 'INCONCLUSIVE', 'risk_score': None, 'risk_reasons': {},
               'publication': None, 'artifact': None, 'repository': None, 'source': None,
               'total_files_inspected': 0, 'counts': {}, 'findings': [], 'files': [],
-              'limitations': [], 'engine_version': '0.1.3', 'error': None, 'clean_definition': CLEAN_MEANING,
+              'limitations': [], 'engine_version': '0.2.0', 'error': None, 'clean_definition': CLEAN_MEANING,
               'metrics': {'artifact_file_count': 0, 'source_file_count': 0, 'unique_comparison_paths': 0,
                           'identical_files': 0, 'added_files': 0, 'removed_files': 0, 'changed_files': 0}}
     fetcher = Fetcher()
@@ -30,7 +30,7 @@ def scan(ecosystem, name, version):
             source_info, source = {'identity_corroborated': False, 'build_provenance_verified': False,
                                    'confidence': 'unresolved', 'reasons': [str(exc)]}, {}
         result['source'] = source_info
-        result.update(compare(artifact, source, source_info['identity_corroborated']))
+        result.update(compare(artifact, source, source_info['identity_corroborated'],source_info))
         result['limitations'].extend([
             'Static heuristic analysis cannot certify that a package is malware-free.',
             'Builds are never executed; compiled output and complex source layouts may remain unexplained.',

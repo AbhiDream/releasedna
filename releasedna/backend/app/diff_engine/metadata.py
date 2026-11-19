@@ -14,6 +14,22 @@ PYTEST_TEMPLATES = {
 }
 
 
+def manifest_cleanup(artifact,source):
+    """Explain removal-only development metadata when source declares clean-publish."""
+    if not isinstance(artifact,dict) or not isinstance(source,dict): return None
+    dev=source.get('devDependencies',{})
+    if not isinstance(dev,dict) or 'clean-publish' not in dev: return None
+    removed=set(source)-set(artifact)
+    if not removed or any(artifact[key]!=source.get(key) for key in artifact): return None
+    # Tool configuration must name a declared development tool; runtime manifest keys are protected.
+    protected={'name','version','main','module','exports','imports','type','bin','browser','types','typings','files','engines','os','cpu','sideEffects','dependencies','peerDependencies','optionalDependencies','bundledDependencies','bundleDependencies','private','publishConfig','workspaces','license','repository'}
+    allowed={'devDependencies','scripts'} | (set(dev)-protected)
+    if not removed<=allowed: return None
+    scripts=source.get('scripts',{})
+    if 'scripts' in removed and (not isinstance(scripts,dict) or any(key in scripts for key in ('preinstall','install','postinstall','prepare','prepublish','prepublishOnly','prepack','postpack','publish','postpublish'))): return None
+    return 'Removal-only development metadata; repository declares clean-publish. Removed keys: '+', '.join(sorted(removed))+'. Runtime fields and lifecycle hooks are not exempted.'
+
+
 def explain_metadata(path, data, generated):
     parts=PurePosixPath(path).parts
     if '.pytest_cache' in parts:
