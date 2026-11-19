@@ -60,6 +60,7 @@ class DetectorPriorityTests(unittest.TestCase):
                 self.assertIsNotNone(finding,report['risk_reasons'])
                 self.assertEqual(finding['artifact_path'],'dist/index.js')
                 self.assertIn('static heuristic',finding['message'])
+                self.assertNotIn('UNEXPLAINED_CODE',report['risk_reasons'])
 
     def test_obfuscator_rule_does_not_flag_plain_hex_or_local_binding(self):
         for text in (b'const _0x = 1;', b'const _0xabc = ordinaryData;', b"require('child_process');"):
