@@ -170,7 +170,7 @@ def compare(artifact, source, source_corroborated, source_context=None):
                 row.update(classification='expected',explanation=metadata_explanation)
             elif state == 'added' and (path == 'PKG-INFO' or '.egg-info/' in path) and not is_code:
                 row.update(classification='expected', explanation='Standard source-distribution metadata, not executable code.')
-            elif is_code:
+            elif is_code and not row['finding_ids']:
                 finding(row, 'UNEXPLAINED_CODE', 15, 'Code has no exact source match; may be build output or a modification requiring review.', added_lines[:12])
             elif (suffix in {'.md','.rst'} or (suffix=='.txt' and (path.lower().startswith(('docs/','doc/')) or PurePosixPath(path).stem.lower() in {'readme','changelog','license','authors','contributing'}))) and path not in omissions.entrypoints and path not in omissions.runtime and not a.executable and not row['finding_ids']:
                 row.update(classification='expected',explanation='Documentation/text difference without a new capability indicator; contents and hash remain available for review.')
