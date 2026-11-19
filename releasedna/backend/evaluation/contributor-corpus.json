@@ -1,0 +1,680 @@
+{
+  "schema_version": 1,
+  "design": "AI-assisted synthetic extension designed with knowledge of current rules; not independent blind validation, public release sampling or organizer data. Expectations and complete input bytes committed before first comparison. No detector tuning in this branch.",
+  "detector_commit": "3a93ae3d5b0cd7ee6fe51f5f248ac1981d142a80",
+  "input_hash_format": "sha256-json-sorted-compact-ascii-v1",
+  "cases": [
+    {
+      "id": "npm-export-subpath-removed",
+      "ecosystem": "npm",
+      "label": "tampered",
+      "description": "Remove a declared exported subpath while main stays identical.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "MISSING_ENTRYPOINT",
+      "expected_path": "lib/feature.mjs",
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "68ba8f56e7491dc5f00b2003446d0a5963683246e014963b9b1eb104afe8b2e5"
+      }
+    },
+    {
+      "id": "npm-configure-macro-added",
+      "ecosystem": "npm",
+      "label": "tampered",
+      "description": "Add inert build macro text outside .m4 extension.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "SHELL_PIPELINE",
+      "expected_path": "config/build.ac",
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        },
+        "config/build.ac": {
+          "text": "dnl inert synthetic input\nm4_syscmd([printf contributor])\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "7cf1374b44d6f9761bdf7a61933c70bf83e5169419121fae2a13cabbca0a80fe"
+      }
+    },
+    {
+      "id": "npm-quiet-change-before-map",
+      "ecosystem": "npm",
+      "label": "tampered",
+      "description": "Change emitted constant before source-map trailer; keep map untouched. Coverage challenge retained even if missed.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "UNEXPLAINED_CODE",
+      "expected_path": "out/answer.js",
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "src/answer.ts": {
+          "text": "export const answer: number = 7;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "out/answer.js": {
+          "text": "export const answer = 7;\n//# sourceMappingURL=answer.js.map\n",
+          "executable": false
+        },
+        "out/answer.js.map": {
+          "text": "{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+          "executable": false
+        },
+        "out/answer.d.ts": {
+          "text": "export declare const answer: number;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "out/answer.js": {
+          "text": "export const answer = 8;\n//# sourceMappingURL=answer.js.map\n",
+          "executable": false
+        },
+        "out/answer.js.map": {
+          "text": "{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+          "executable": false
+        },
+        "out/answer.d.ts": {
+          "text": "export declare const answer: number;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "baseline": "cfddef96864d39d2d6160d27ee58f1e55c4aeb361c2b431368a76fb0e208f816",
+        "artifact": "be7374c87f05d6431e65eb3fdcfd1c49aa43d584f1aad95ae8b23cbadc9a20b4"
+      }
+    },
+    {
+      "id": "python-relative-module-removed",
+      "ecosystem": "pypi",
+      "label": "tampered",
+      "description": "Remove a module statically imported by shipped package.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "MISSING_RUNTIME_FILE",
+      "expected_path": "sample/worker.py",
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "f82bc5a6ab2eea3b51e481acfa11d2b2dc3c5aa68834af6bc2450f2f01b0ef30"
+      }
+    },
+    {
+      "id": "python-process-in-config",
+      "ecosystem": "pypi",
+      "label": "tampered",
+      "description": "Add inert process-capability text in a non-code configuration file.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "PROCESS_EXECUTION",
+      "expected_path": "settings/runtime.cfg",
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "settings/runtime.cfg": {
+          "text": "[fixture]\ncommand = subprocess.Popen([\"echo\", \"inert\"] )\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "1f705369c93f00e1b6006d87ffc1cc05f9c315b7182b0d8146316b67adad8080"
+      }
+    },
+    {
+      "id": "python-decoder-in-data",
+      "ecosystem": "pypi",
+      "label": "tampered",
+      "description": "Add a decoder indicator inside a data extension; never evaluate it.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "ENCODED_PAYLOAD",
+      "expected_path": "resources/template.dat",
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "resources/template.dat": {
+          "text": "inert fixture only: b64decode(\"dm9pZCAw\")\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "56398bbb9c70a407fb3e5c095a6dd58973ed42e5d2038806054a009910229389"
+      }
+    },
+    {
+      "id": "npm-comment-only-export",
+      "ecosystem": "npm",
+      "label": "benign",
+      "description": "Add comment without changing syntax tokens.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "// release comment\nexport const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "0f7f66e1222f24238bf59106355bc3b70d62be065c6f4c8386e7ba3bfcfcc929"
+      }
+    },
+    {
+      "id": "npm-regex-layout-only",
+      "ecosystem": "npm",
+      "label": "benign",
+      "description": "Only layout changes around an existing regex exec call.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "package.json": {
+          "text": "{\"name\":\"regex-control\",\"version\":\"0.0.0\",\"main\":\"index.js\"}",
+          "executable": false
+        },
+        "index.js": {
+          "text": "export function match(x) { return /safe/.exec(x); }\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\":\"regex-control\",\"version\":\"0.0.0\",\"main\":\"index.js\"}",
+          "executable": false
+        },
+        "index.js": {
+          "text": "export function match(x) { return /safe/.exec(x); }\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\":\"regex-control\",\"version\":\"0.0.0\",\"main\":\"index.js\"}",
+          "executable": false
+        },
+        "index.js": {
+          "text": "export function match(x) {\n  return /safe/.exec(x);\n}\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "0ab28395f97645f1a3941db2147873eda4c26b09f4e24df52b049b0c186dda9f",
+        "baseline": "0ab28395f97645f1a3941db2147873eda4c26b09f4e24df52b049b0c186dda9f",
+        "artifact": "0d6809e61792d47238ef00ea81cb9d6a6279b4ee3b5fe6e4f3b3736a77eeba3b"
+      }
+    },
+    {
+      "id": "npm-declared-map-and-types",
+      "ecosystem": "npm",
+      "label": "benign",
+      "description": "Declared compiled output, exact embedded source and a paired declaration; no equivalence claim.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "src/answer.ts": {
+          "text": "export const answer: number = 7;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "src/answer.ts": {
+          "text": "export const answer: number = 7;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "out/answer.js": {
+          "text": "export const answer = 7;\n//# sourceMappingURL=answer.js.map\n",
+          "executable": false
+        },
+        "out/answer.js.map": {
+          "text": "{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+          "executable": false
+        },
+        "out/answer.d.ts": {
+          "text": "export declare const answer: number;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "baseline": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "artifact": "cfddef96864d39d2d6160d27ee58f1e55c4aeb361c2b431368a76fb0e208f816"
+      }
+    },
+    {
+      "id": "python-comment-only-function",
+      "ecosystem": "pypi",
+      "label": "benign",
+      "description": "Python comments/formatting change but function AST stays equal.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "# formatting control\ndef compute( ):\n    # same return value\n    return 7\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "a6180ed70fbdce073240b76edb18deeff607b979764c1b08c12f47a9765df60d"
+      }
+    },
+    {
+      "id": "python-wheel-metadata-control",
+      "ecosystem": "pypi",
+      "label": "benign",
+      "description": "Add ordinary wheel metadata; detector may lack a packaging explanation.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "synthetic_contributor-0.0.0.dist-info/METADATA": {
+          "text": "Metadata-Version: 2.1\nName: synthetic-contributor\nVersion: 0.0.0\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "6b9bd66ff0c4d7fc2bb13b07e665018206833644522d1ac3d583c19bae9eda0a"
+      }
+    },
+    {
+      "id": "python-version-stamp-control",
+      "ecosystem": "pypi",
+      "label": "benign",
+      "description": "Add a harmless generated version stamp; detector may conservatively alert.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "sample/_version.py": {
+          "text": "__version__ = \"0.0.0\"\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "9c19df25d15861d58d288481fabcf80f3f253f3da46c8146cfd1cc301957d183"
+      }
+    }
+  ]
+}
