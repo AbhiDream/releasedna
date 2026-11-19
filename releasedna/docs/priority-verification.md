@@ -62,4 +62,4 @@ The endpoint has no scan-write operation: it hashes the saved report and stores 
 
 ## Git workflow
 
-At the start, the GitHub API returned no existing PRs. The two earlier engine/hardening commits were already on main; this work does not rewrite that history. The previously unmerged evaluation commits and this iteration are included in the new feature PR. CI runs offline tests, corpus generation and frontend syntax checks. Remote provider inference and a naturally occurring future release remain outside CI.
+At the start, the GitHub API returned no existing PRs. The two earlier engine/hardening commits were already on main; this work does not rewrite that history. The previously unmerged evaluation commits and this iteration are included in the new feature PR. Local checks run offline tests, corpus generation and frontend syntax checks. GitHub rejected workflow upload because the saved token lacks the workflow scope. A ready workflow is retained as `github-checks.yml.example`; hosted CI is BLOCKED and was not run. No token permissions were changed. Remote provider inference and a naturally occurring future release remain untested.
