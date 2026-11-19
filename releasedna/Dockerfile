@@ -5,10 +5,13 @@ COPY requirements-lock.txt .
 RUN pip install --no-cache-dir -r requirements-lock.txt && pip check
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
+COPY docs/submission-evaluation.json ./evidence/evaluation.json
+COPY docs/fresh-evaluation.json ./evidence/fresh-evaluation.json
 RUN mkdir /app/data && chown 65534:65534 /app/data
 WORKDIR /app/backend
 # Fail the image build if the trusted application's offline regression suite fails.
 RUN python -m unittest discover -s tests -v
+RUN python -m app.bundle_evidence
 USER 65534:65534
 EXPOSE 8000
 CMD ["python", "-m", "app.container_start"]

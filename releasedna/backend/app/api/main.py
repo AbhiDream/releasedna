@@ -20,6 +20,11 @@ from app.services.explanation import explain, ExplanationUnavailable, MODEL
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def evidence_path(name):
+    generated = ROOT / 'data' / name
+    return generated if generated.is_file() else ROOT / 'evidence' / name
+
+
 class ScanRequest(BaseModel):
     ecosystem: Literal['npm', 'pypi']
     name: str = Field(min_length=1, max_length=214)
@@ -172,13 +177,13 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
 
     @application.get('/corpus',include_in_schema=False)
     def corpus_page():
-        path=ROOT/'data/adversarial.html'
+        path=evidence_path('adversarial.html')
         if not path.exists(): raise HTTPException(404,'Run python -m app.adversarial_corpus first')
         return FileResponse(path,media_type='text/html')
 
     @application.get('/api/corpus')
     def corpus_json():
-        path=ROOT/'data/adversarial.json'
+        path=evidence_path('adversarial.json')
         if not path.exists(): raise HTTPException(404,'No corpus run has been generated')
         return FileResponse(path,media_type='application/json')
 
@@ -243,26 +248,26 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
 
     @application.get('/evaluation', include_in_schema=False)
     def evaluation_page():
-        path = ROOT / 'data/evaluation.html'
+        path = evidence_path('evaluation.html')
         if not path.exists():
             raise HTTPException(404, 'Run python -m app.evaluation run --include-fixtures first')
         return FileResponse(path, media_type='text/html')
 
     @application.get('/fresh-evaluation',include_in_schema=False)
     def fresh_evaluation_page():
-        path=ROOT/'data/fresh-evaluation.html'
+        path=evidence_path('fresh-evaluation.html')
         if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run; see docs/submission-verification.md')
         return FileResponse(path,media_type='text/html')
 
     @application.get('/api/evaluation/fresh')
     def fresh_evaluation_json():
-        path=ROOT/'data/fresh-evaluation.json'
+        path=evidence_path('fresh-evaluation.json')
         if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run')
         return FileResponse(path,media_type='application/json')
 
     @application.get('/api/evaluation')
     def evaluation_json():
-        path = ROOT / 'data/evaluation.json'
+        path = evidence_path('evaluation.json')
         if not path.exists():
             raise HTTPException(404, 'No evaluation has been generated')
         return FileResponse(path, media_type='application/json', filename='releasedna-evaluation.json')

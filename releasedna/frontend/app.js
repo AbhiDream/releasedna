@@ -88,7 +88,7 @@ async function select(id) {
   try {
     const job = await api(`/api/scans/${encodeURIComponent(id)}`);
     if (selected !== id) return;
-    el('progress').textContent = `${job.state.toUpperCase()} · ${job.package.name} ${job.package.version || '· local archives'} · ${id}`;
+    el('progress').textContent = `${job.state.toUpperCase()} · ${job.package.name} ${job.package.version || (job.package.kind === 'text' ? '· text files' : '· local archives')} · ${id}`;
     if (job.result) { render(job.result); filterFiles(); }
     if (job.error) el('error').textContent = job.error;
     if (!terminal(job.state)) poll = setTimeout(() => select(id), 700);
