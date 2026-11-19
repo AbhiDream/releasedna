@@ -36,4 +36,4 @@ The original user-authored pasted request explicitly names ReleaseDNA and descri
 
 The detector's named-file fingerprint remains `593bf2033947f0d0cbdb26c0fd99229643586c27a058d16df19b019f14e827ad`. No detector weights, fixtures or expected labels were changed to improve reported accuracy. The separate prepared contributor experiment still records TP5/FN1 and FP2/TN4. Its small known-rule synthetic sample is not independent blind validation.
 
-The new branch passes **95 backend regression tests**, including nine additional queue/auth/text tests. Unit success is distinct from fixture recall, false-positive rate and remote container verification. See [deployment verification](remote-deployment.md) for the remaining blocked checks.
+The new branch passes **100 backend regression tests**, including nine additional queue/auth/text tests. Unit success is distinct from fixture recall, false-positive rate and remote container verification. See [deployment verification](remote-deployment.md) for the remaining blocked checks.

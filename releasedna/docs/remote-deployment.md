@@ -19,7 +19,7 @@ Provider references: [free service limits](https://render.com/docs/free), [Docke
 
 ## Deploy after reviewing the PR
 
-1. Review and merge the feature PR into `AbhiDream/releasedna:main`. The friends' separate documentation/evaluation PRs are not required to deploy this feature.
+1. Review and merge the feature PR into `AbhiDream/releasedna:main`. Main now includes the contributor PRs. A malformed corpus input discovered during integration was repaired with the separately identified prepared experiment; see [recovery details](contributor-corpus-recovery.md).
 2. Sign in to your own [Render dashboard](https://dashboard.render.com/). Connect the repository using the provider's normal authorization flow. Never send passwords, OTPs or private API keys in chat.
 3. Create a **Blueprint** from the repository's `main` branch and root `render.yaml`. Check that its instance plan is **Free**, runtime **Docker**, and no paid disk is attached before creating it. No paid resource has been created by this work.
 4. Wait for the Docker build and health check. The build runs the unit suite; a failed suite must fail the image rather than be reported as passing.
@@ -74,7 +74,7 @@ Official references: [Render persistent disks](https://render.com/docs/disks), [
 | Sequential worker + atomic batch | PASS | Regression verifies one running/two queued, FIFO with tied clocks, capacity rollback and continue after failure. |
 | Standalone and archived text differences | PASS | Hashes, exact macro line/path, UTF-8, limits, unsafe paths, unchanged bytes and API job persistence tested. |
 | Remote workspace access gate | PASS locally | Unauthenticated history, queue, uploads and mutation return 401; valid key works; missing required key prevents startup. |
-| Backend suite | PASS | 95 tests, 5.483 seconds on Windows/Python 3.13.1. New tests execute through TestClient and the inspection subprocess, not a deployed Render instance. |
+| Backend suite | PASS | 100 tests, 5.607 seconds on Windows/Python 3.13.1. New tests execute through TestClient and the inspection subprocess, not a deployed Render instance. |
 | Frontend checks | PASS statically | `node --check`, unique HTML IDs and literal JS-to-HTML bindings. New controls have not yet been browser-tested against the hosted service. |
 | Compose + both Render YAML schemas | PASS | Validated against current official Compose/Render schemas. This does not build or launch containers. |
 | PDF visible/white-text audit | PASS | Observed injection documented; neutral badge replaces the matching wording. No claim that all prior influence can be ruled out. |

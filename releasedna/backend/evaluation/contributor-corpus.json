@@ -1,1373 +1,679 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-19T15:00:57.678576+00:00",
-  "preregistration_url": "https://github.com/kirtisihag-1808/releasedna/commit/36df57d579e6c8438afd533d1a9d18526ea17a33",
-  "manifest_sha256": "d25bba48866c7a787174b361b0c9f1dc6c94f933714cb127dbee81f3591babb5",
-  "detector_sha256": "593bf2033947f0d0cbdb26c0fd99229643586c27a058d16df19b019f14e827ad",
-  "environment": {
-    "os": "Windows-11-10.0.26300-SP0",
-    "python": "3.15.1"
-  },
-  "ai_assistance": "Manifest and harness drafted with Gemini AI assistance; executed and verified by contributor kirtisihag-1808.",
-  "metrics": {
-    "total_cases": 12,
-    "evaluated_cases": 12,
-    "error_count": 0,
-    "inconclusive_count": 1,
-    "tampered_inspected": 6,
-    "benign_inspected": 6,
-    "TP": 5,
-    "FN": 1,
-    "FP": 2,
-    "TN": 4,
-    "TPR": {
-      "numerator": 5,
-      "denominator": 6,
-      "rate": 0.8333333333333334
-    },
-    "FPR": {
-      "numerator": 2,
-      "denominator": 6,
-      "rate": 0.3333333333333333
-    }
-  },
+  "design": "AI-assisted synthetic extension designed with knowledge of current rules; not independent blind validation, public release sampling or organizer data. Expectations and complete input bytes committed before first comparison. No detector tuning in this branch.",
+  "detector_commit": "3a93ae3d5b0cd7ee6fe51f5f248ac1981d142a80",
+  "input_hash_format": "sha256-json-sorted-compact-ascii-v1",
   "cases": [
     {
-      "id": "npm-tamper-makefile-shell",
+      "id": "npm-export-subpath-removed",
       "ecosystem": "npm",
-      "ground_truth": "harmless tampered fixture",
-      "base_identity": "synthetic-npm-pkg@1.0.0 (synthetic self-contained layout)",
-      "mutation": "Add inert shell subshell command to non-code Makefile build script",
+      "label": "tampered",
+      "description": "Remove a declared exported subpath while main stays identical.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "MISSING_ENTRYPOINT",
+      "expected_path": "lib/feature.mjs",
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "68ba8f56e7491dc5f00b2003446d0a5963683246e014963b9b1eb104afe8b2e5"
+      }
+    },
+    {
+      "id": "npm-configure-macro-added",
+      "ecosystem": "npm",
+      "label": "tampered",
+      "description": "Add inert build macro text outside .m4 extension.",
+      "origin": "synthetic; no official package identity or publication date",
       "expected_rule": "SHELL_PIPELINE",
-      "expected_path": "Makefile",
-      "source_sha256": "1fc63d084e04889d4b6a46fc9b46f338cf6d87d5cfaf29ada8cdf1de1fce4214",
-      "artifact_sha256": "9cce919f467527a100e762b51fb293787db3a643f5de674d8267750b751be08e",
-      "status": "REVIEW",
-      "risk_score": 10,
-      "detected": false,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "UNEXPLAINED_NONCODE",
-          "points": 10,
-          "artifact_path": "Makefile",
-          "source_path": "Makefile",
-          "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
-          "evidence": [
-            {
-              "line": 3,
-              "text": "\t$(shell printf synthetic-inert)"
-            }
-          ],
-          "diff": "--- source/Makefile\n+++ artifact/Makefile\n@@ -1,2 +1,3 @@\n all:\n \t@echo building synthetic-npm-pkg\n+\t$(shell printf synthetic-inert)"
+      "expected_path": "config/build.ac",
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
         }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 10,
-        "risk_reasons": {
-          "UNEXPLAINED_NONCODE": 10
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
         },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
         },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
         },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "UNEXPLAINED_NONCODE",
-            "points": 10,
-            "artifact_path": "Makefile",
-            "source_path": "Makefile",
-            "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
-            "evidence": [
-              {
-                "line": 3,
-                "text": "\t$(shell printf synthetic-inert)"
-              }
-            ],
-            "diff": "--- source/Makefile\n+++ artifact/Makefile\n@@ -1,2 +1,3 @@\n all:\n \t@echo building synthetic-npm-pkg\n+\t$(shell printf synthetic-inert)"
-          }
-        ],
-        "files": [
-          {
-            "path": "Makefile",
-            "artifact_path": "Makefile",
-            "source_path": "Makefile",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "0a67a27393e0d6688a1adc3d00690654ab9141730246d40713e8419e1ea8f21a",
-            "source_sha256": "e17423cac8462eb0d8bb0ada7bae4b1f9e9cd6331c08b3b9a57f4e62ed7752a2",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/Makefile\n+++ artifact/Makefile\n@@ -1,2 +1,3 @@\n all:\n \t@echo building synthetic-npm-pkg\n+\t$(shell printf synthetic-inert)",
-            "diff_truncated": false
-          },
-          {
-            "path": "lib/calc.js",
-            "artifact_path": "lib/calc.js",
-            "source_path": "lib/calc.js",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "5b8ba62d83b1d44c7bc5d930742981fbf9b27c12a0b088c3fc584edd42bce284",
-            "source_sha256": "5b8ba62d83b1d44c7bc5d930742981fbf9b27c12a0b088c3fc584edd42bce284",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "package.json",
-            "artifact_path": "package.json",
-            "source_path": "package.json",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "a81327e16bad6aee2d5a03235b3014a262509d19c064cfa47765723440dbb062",
-            "source_sha256": "a81327e16bad6aee2d5a03235b3014a262509d19c064cfa47765723440dbb062",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        },
+        "config/build.ac": {
+          "text": "dnl inert synthetic input\nm4_syscmd([printf contributor])\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "7cf1374b44d6f9761bdf7a61933c70bf83e5169419121fae2a13cabbca0a80fe"
       }
     },
     {
-      "id": "npm-tamper-generated-network",
+      "id": "npm-quiet-change-before-map",
       "ecosystem": "npm",
-      "ground_truth": "harmless tampered fixture",
-      "base_identity": "synthetic-npm-bundle@2.1.0 (synthetic self-contained layout with build output)",
-      "mutation": "Inject inert network fetch call to .invalid domain inside generated dist/bundle.min.js output",
-      "expected_rule": "NETWORK_ACCESS",
-      "expected_path": "dist/bundle.min.js",
-      "source_sha256": "ee9bf1f30ae5768a4fbe3aa9c1d2ad96e22a26d3ae7f3204e5d36b9bf6ad1b74",
-      "artifact_sha256": "572055252cae5a5ebc8a90584d607b9e3d42f47a1f4b2e8db8897a4bc44e1a7b",
-      "status": "REVIEW",
-      "risk_score": 15,
-      "detected": true,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "NETWORK_ACCESS",
-          "points": 15,
-          "artifact_path": "dist/bundle.min.js",
-          "source_path": "dist/bundle.min.js",
-          "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-          "evidence": [
-            {
-              "line": 1,
-              "byte_offset": 22,
-              "text": "var greet=()=>\"hello\";fetch('https://telemetry.invalid');export{greet};\n"
-            }
-          ],
-          "diff": "--- source/dist/bundle.min.js\n+++ artifact/dist/bundle.min.js\n@@ -1 +1 @@\n-var greet=()=>\"hello\";export{greet};\n+var greet=()=>\"hello\";fetch('https://telemetry.invalid');export{greet};"
-        }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 15,
-        "risk_reasons": {
-          "NETWORK_ACCESS": 15
-        },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
-        },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
-        },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "NETWORK_ACCESS",
-            "points": 15,
-            "artifact_path": "dist/bundle.min.js",
-            "source_path": "dist/bundle.min.js",
-            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-            "evidence": [
-              {
-                "line": 1,
-                "byte_offset": 22,
-                "text": "var greet=()=>\"hello\";fetch('https://telemetry.invalid');export{greet};\n"
-              }
-            ],
-            "diff": "--- source/dist/bundle.min.js\n+++ artifact/dist/bundle.min.js\n@@ -1 +1 @@\n-var greet=()=>\"hello\";export{greet};\n+var greet=()=>\"hello\";fetch('https://telemetry.invalid');export{greet};"
-          }
-        ],
-        "files": [
-          {
-            "path": "dist/bundle.min.js",
-            "artifact_path": "dist/bundle.min.js",
-            "source_path": "dist/bundle.min.js",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "44eaf2b06969d5066393cbb08599bdc6595926bf187f5be86f81e11762cafe33",
-            "source_sha256": "ede95038a01fb0b333f1f1594081218ad89e15e43efbfac0e20ca322df5a6880",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/dist/bundle.min.js\n+++ artifact/dist/bundle.min.js\n@@ -1 +1 @@\n-var greet=()=>\"hello\";export{greet};\n+var greet=()=>\"hello\";fetch('https://telemetry.invalid');export{greet};",
-            "diff_truncated": false
-          },
-          {
-            "path": "package.json",
-            "artifact_path": "package.json",
-            "source_path": "package.json",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "512e6bbca10d320b7d8b86e5ab4491149a72e0530bd502db99ce3bcd326c533d",
-            "source_sha256": "512e6bbca10d320b7d8b86e5ab4491149a72e0530bd502db99ce3bcd326c533d",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "src/index.js",
-            "artifact_path": "src/index.js",
-            "source_path": "src/index.js",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "bf75c31f027c4be3d099ea4c2093b93c69d2006a8c0bf45a48bcbf5e78379bfc",
-            "source_sha256": "bf75c31f027c4be3d099ea4c2093b93c69d2006a8c0bf45a48bcbf5e78379bfc",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "npm-tamper-dynamic-eval",
-      "ecosystem": "npm",
-      "ground_truth": "harmless tampered fixture",
-      "base_identity": "synthetic-npm-util@0.4.2 (synthetic self-contained layout)",
-      "mutation": "Add inert Function constructor dynamic execution indicator in src/format.js",
-      "expected_rule": "DYNAMIC_EXECUTION",
-      "expected_path": "src/format.js",
-      "source_sha256": "0306581e28bb9958b8ae7efa05bcfbf4bb1ff71ca018efadd78439e07b17950a",
-      "artifact_sha256": "b03babdff4bfe32a8e672a973585b0d372693d341fed90c345779928619c42b5",
-      "status": "REVIEW",
-      "risk_score": 35,
-      "detected": true,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "DYNAMIC_EXECUTION",
-          "points": 35,
-          "artifact_path": "src/format.js",
-          "source_path": "src/format.js",
-          "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-          "evidence": [
-            {
-              "line": 2,
-              "byte_offset": 51,
-              "text": "module.exports = (s) => s.trim();\nconst noop = new Function('return 0');\n"
-            }
-          ],
-          "diff": "--- source/src/format.js\n+++ artifact/src/format.js\n@@ -1 +1,2 @@\n module.exports = (s) => s.trim();\n+const noop = new Function('return 0');"
-        }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 35,
-        "risk_reasons": {
-          "DYNAMIC_EXECUTION": 35
-        },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 4,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 2,
-          "source_file_count": 2,
-          "unique_comparison_paths": 2,
-          "identical_files": 1,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
-        },
-        "counts": {
-          "identical": 1,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
-        },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "DYNAMIC_EXECUTION",
-            "points": 35,
-            "artifact_path": "src/format.js",
-            "source_path": "src/format.js",
-            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-            "evidence": [
-              {
-                "line": 2,
-                "byte_offset": 51,
-                "text": "module.exports = (s) => s.trim();\nconst noop = new Function('return 0');\n"
-              }
-            ],
-            "diff": "--- source/src/format.js\n+++ artifact/src/format.js\n@@ -1 +1,2 @@\n module.exports = (s) => s.trim();\n+const noop = new Function('return 0');"
-          }
-        ],
-        "files": [
-          {
-            "path": "package.json",
-            "artifact_path": "package.json",
-            "source_path": "package.json",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "d1ec9b39b74c5090f5251e45dc4d0c6a02984abd17dc3714920fd865682f28b8",
-            "source_sha256": "d1ec9b39b74c5090f5251e45dc4d0c6a02984abd17dc3714920fd865682f28b8",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "src/format.js",
-            "artifact_path": "src/format.js",
-            "source_path": "src/format.js",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "c27ddfee569cc5699ba0b4d30ce70d9fb69f7f862912e6060bb954ae57981ff4",
-            "source_sha256": "63a1b6aec396c8e1df28ffbba5af049de2e21ca5d32cbe4edbfb03fcecfd7d4b",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/src/format.js\n+++ artifact/src/format.js\n@@ -1 +1,2 @@\n module.exports = (s) => s.trim();\n+const noop = new Function('return 0');",
-            "diff_truncated": false
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "pypi-tamper-setup-process",
-      "ecosystem": "pypi",
-      "ground_truth": "harmless tampered fixture",
-      "base_identity": "synthetic-pypi-core==0.3.0 (synthetic self-contained sdist layout)",
-      "mutation": "Add inert subprocess execution call in non-code/packaging setup.py build script",
-      "expected_rule": "PROCESS_EXECUTION",
-      "expected_path": "setup.py",
-      "source_sha256": "434ef3079a03252cf1b24b5bbdb14f72e0b7ce160690c699eee7da72159a82fa",
-      "artifact_sha256": "5d316f426c466b34ebbf1f558c4e2cdef60d6a08616724231058875e76bfc6d4",
-      "status": "REVIEW",
-      "risk_score": 35,
-      "detected": true,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "PROCESS_EXECUTION",
-          "points": 35,
-          "artifact_path": "setup.py",
-          "source_path": "setup.py",
-          "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-          "evidence": [
-            {
-              "line": 1,
-              "byte_offset": 7,
-              "text": "import subprocess\nfrom setuptools import setup\nsubprocess.run(['echo', 'synthetic-inert'], check=False)\nsetup(name='synthetic-pypi-core', version='0.3.0')\n"
-            },
-            {
-              "line": 3,
-              "byte_offset": 47,
-              "text": "import subprocess\nfrom setuptools import setup\nsubprocess.run(['echo', 'synthetic-inert'], check=False)\nsetup(name='synthetic-pypi-core', version='0.3.0')\n"
-            }
-          ],
-          "diff": "--- source/setup.py\n+++ artifact/setup.py\n@@ -1,2 +1,4 @@\n+import subprocess\n from setuptools import setup\n+subprocess.run(['echo', 'synthetic-inert'], check=False)\n setup(name='synthetic-pypi-core', version='0.3.0')"
-        }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 35,
-        "risk_reasons": {
-          "PROCESS_EXECUTION": 35
-        },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
-        },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
-        },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "PROCESS_EXECUTION",
-            "points": 35,
-            "artifact_path": "setup.py",
-            "source_path": "setup.py",
-            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-            "evidence": [
-              {
-                "line": 1,
-                "byte_offset": 7,
-                "text": "import subprocess\nfrom setuptools import setup\nsubprocess.run(['echo', 'synthetic-inert'], check=False)\nsetup(name='synthetic-pypi-core', version='0.3.0')\n"
-              },
-              {
-                "line": 3,
-                "byte_offset": 47,
-                "text": "import subprocess\nfrom setuptools import setup\nsubprocess.run(['echo', 'synthetic-inert'], check=False)\nsetup(name='synthetic-pypi-core', version='0.3.0')\n"
-              }
-            ],
-            "diff": "--- source/setup.py\n+++ artifact/setup.py\n@@ -1,2 +1,4 @@\n+import subprocess\n from setuptools import setup\n+subprocess.run(['echo', 'synthetic-inert'], check=False)\n setup(name='synthetic-pypi-core', version='0.3.0')"
-          }
-        ],
-        "files": [
-          {
-            "path": "pyproject.toml",
-            "artifact_path": "pyproject.toml",
-            "source_path": "pyproject.toml",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "a8a24e150f8c55f1d1d6b617f1201ec3c01646c125ea5596c725d2b6761ddf55",
-            "source_sha256": "a8a24e150f8c55f1d1d6b617f1201ec3c01646c125ea5596c725d2b6761ddf55",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "setup.py",
-            "artifact_path": "setup.py",
-            "source_path": "setup.py",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "a51d77d85bbd32bf82e12ded8f31673b0f6cb0a043e4c893cab6de74ed2f9afe",
-            "source_sha256": "c5e9bdacdcab87eef147f13a55561045307c2161e502ec10edfb61dc00bc82ef",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/setup.py\n+++ artifact/setup.py\n@@ -1,2 +1,4 @@\n+import subprocess\n from setuptools import setup\n+subprocess.run(['echo', 'synthetic-inert'], check=False)\n setup(name='synthetic-pypi-core', version='0.3.0')",
-            "diff_truncated": false
-          },
-          {
-            "path": "synthetic_pypi_core/__init__.py",
-            "artifact_path": "synthetic_pypi_core/__init__.py",
-            "source_path": "synthetic_pypi_core/__init__.py",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "ba1a531f581d2e6094e978ed6f7aca7a8d92eeb62c6e7ad73ee692f7f18bc772",
-            "source_sha256": "ba1a531f581d2e6094e978ed6f7aca7a8d92eeb62c6e7ad73ee692f7f18bc772",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "pypi-tamper-generated-network",
-      "ecosystem": "pypi",
-      "ground_truth": "harmless tampered fixture",
-      "base_identity": "synthetic-pypi-codegen==1.2.0 (synthetic self-contained layout with generated module)",
-      "mutation": "Append inert urllib request to .invalid domain inside generated parser table file",
-      "expected_rule": "NETWORK_ACCESS",
-      "expected_path": "synthetic_pypi_codegen/_generated_tables.py",
-      "source_sha256": "de8976121bf03b91fb1a61486deb05cdba9dcae857bf92475527e81c5374debc",
-      "artifact_sha256": "f780c08eda81db579f779a5efd82dcfc504064cb0ae02ce2c20cdbcad719921d",
-      "status": "REVIEW",
-      "risk_score": 15,
-      "detected": true,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "NETWORK_ACCESS",
-          "points": 15,
-          "artifact_path": "synthetic_pypi_codegen/_generated_tables.py",
-          "source_path": "synthetic_pypi_codegen/_generated_tables.py",
-          "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-          "evidence": [
-            {
-              "line": 2,
-              "byte_offset": 30,
-              "text": "# Auto-generated table\nimport urllib.request\nTOKENS = {'A': 1, 'B': 2}\n_ = 'https://collector.invalid'\n"
-            }
-          ],
-          "diff": "--- source/synthetic_pypi_codegen/_generated_tables.py\n+++ artifact/synthetic_pypi_codegen/_generated_tables.py\n@@ -1,2 +1,4 @@\n # Auto-generated table\n+import urllib.request\n TOKENS = {'A': 1, 'B': 2}\n+_ = 'https://collector.invalid'"
-        }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 15,
-        "risk_reasons": {
-          "NETWORK_ACCESS": 15
-        },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
-        },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
-        },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "NETWORK_ACCESS",
-            "points": 15,
-            "artifact_path": "synthetic_pypi_codegen/_generated_tables.py",
-            "source_path": "synthetic_pypi_codegen/_generated_tables.py",
-            "message": "New or increased capability indicator; static heuristic, not proof of malicious intent.",
-            "evidence": [
-              {
-                "line": 2,
-                "byte_offset": 30,
-                "text": "# Auto-generated table\nimport urllib.request\nTOKENS = {'A': 1, 'B': 2}\n_ = 'https://collector.invalid'\n"
-              }
-            ],
-            "diff": "--- source/synthetic_pypi_codegen/_generated_tables.py\n+++ artifact/synthetic_pypi_codegen/_generated_tables.py\n@@ -1,2 +1,4 @@\n # Auto-generated table\n+import urllib.request\n TOKENS = {'A': 1, 'B': 2}\n+_ = 'https://collector.invalid'"
-          }
-        ],
-        "files": [
-          {
-            "path": "pyproject.toml",
-            "artifact_path": "pyproject.toml",
-            "source_path": "pyproject.toml",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "18980eb0a24443184e02949ece114d2fd665cfd2ef30209be5eb42dae90cd68f",
-            "source_sha256": "18980eb0a24443184e02949ece114d2fd665cfd2ef30209be5eb42dae90cd68f",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_codegen/__init__.py",
-            "artifact_path": "synthetic_pypi_codegen/__init__.py",
-            "source_path": "synthetic_pypi_codegen/__init__.py",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "b18fc20268f2902b5ea86fa6a023844aed5099d388b6cc6688602e4a2962824d",
-            "source_sha256": "b18fc20268f2902b5ea86fa6a023844aed5099d388b6cc6688602e4a2962824d",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_codegen/_generated_tables.py",
-            "artifact_path": "synthetic_pypi_codegen/_generated_tables.py",
-            "source_path": "synthetic_pypi_codegen/_generated_tables.py",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "b9d2ed68164dd25a9c8eb04210b6f36401eaeca8f560427c7dc41f3f8453b854",
-            "source_sha256": "4748450e7b303890063b207525dec40ddf1dd3a2eea6323fa8859a5b9ccd944e",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/synthetic_pypi_codegen/_generated_tables.py\n+++ artifact/synthetic_pypi_codegen/_generated_tables.py\n@@ -1,2 +1,4 @@\n # Auto-generated table\n+import urllib.request\n TOKENS = {'A': 1, 'B': 2}\n+_ = 'https://collector.invalid'",
-            "diff_truncated": false
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "pypi-tamper-missing-init",
-      "ecosystem": "pypi",
-      "ground_truth": "harmless tampered fixture",
-      "base_identity": "synthetic-pypi-lib==0.1.5 (synthetic self-contained layout)",
-      "mutation": "Add unexplained runtime helper function inside synthetic_pypi_lib/helper.py",
+      "label": "tampered",
+      "description": "Change emitted constant before source-map trailer; keep map untouched. Coverage challenge retained even if missed.",
+      "origin": "synthetic; no official package identity or publication date",
       "expected_rule": "UNEXPLAINED_CODE",
-      "expected_path": "synthetic_pypi_lib/helper.py",
-      "source_sha256": "65c31080ba3e9d2ac96288fbf021dcb1b8355726a5e061b7a42533377ca9cca6",
-      "artifact_sha256": "d5b075dc9e7bc18d627d9563fdb48d606a089ff910c89d4eb8bf967e1af4a3d9",
-      "status": "REVIEW",
-      "risk_score": 15,
-      "detected": true,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "UNEXPLAINED_CODE",
-          "points": 15,
-          "artifact_path": "synthetic_pypi_lib/helper.py",
-          "source_path": "synthetic_pypi_lib/helper.py",
-          "message": "Code has no exact source match; may be build output or a modification requiring review.",
-          "evidence": [
-            {
-              "line": 3,
-              "text": "def extra_unexplained():"
-            },
-            {
-              "line": 4,
-              "text": "    return 999"
-            }
-          ],
-          "diff": "--- source/synthetic_pypi_lib/helper.py\n+++ artifact/synthetic_pypi_lib/helper.py\n@@ -1,2 +1,4 @@\n def ping():\n     return 'pong'\n+def extra_unexplained():\n+    return 999"
+      "expected_path": "out/answer.js",
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "src/answer.ts": {
+          "text": "export const answer: number = 7;\n",
+          "executable": false
         }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 15,
-        "risk_reasons": {
-          "UNEXPLAINED_CODE": 15
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
         },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
+        "out/answer.js": {
+          "text": "export const answer = 7;\n//# sourceMappingURL=answer.js.map\n",
+          "executable": false
         },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
+        "out/answer.js.map": {
+          "text": "{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+          "executable": false
         },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "UNEXPLAINED_CODE",
-            "points": 15,
-            "artifact_path": "synthetic_pypi_lib/helper.py",
-            "source_path": "synthetic_pypi_lib/helper.py",
-            "message": "Code has no exact source match; may be build output or a modification requiring review.",
-            "evidence": [
-              {
-                "line": 3,
-                "text": "def extra_unexplained():"
-              },
-              {
-                "line": 4,
-                "text": "    return 999"
-              }
-            ],
-            "diff": "--- source/synthetic_pypi_lib/helper.py\n+++ artifact/synthetic_pypi_lib/helper.py\n@@ -1,2 +1,4 @@\n def ping():\n     return 'pong'\n+def extra_unexplained():\n+    return 999"
-          }
-        ],
-        "files": [
-          {
-            "path": "pyproject.toml",
-            "artifact_path": "pyproject.toml",
-            "source_path": "pyproject.toml",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "179990fc215797de24e9d9276fcfd7a5670915d93b918ddedfdfb75764896897",
-            "source_sha256": "179990fc215797de24e9d9276fcfd7a5670915d93b918ddedfdfb75764896897",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_lib/__init__.py",
-            "artifact_path": "synthetic_pypi_lib/__init__.py",
-            "source_path": "synthetic_pypi_lib/__init__.py",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "cbb50acb4fd9fb14b8ee10e14ca77bd2a93a8a7a11c9a64229c3f4d2426335ce",
-            "source_sha256": "cbb50acb4fd9fb14b8ee10e14ca77bd2a93a8a7a11c9a64229c3f4d2426335ce",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_lib/helper.py",
-            "artifact_path": "synthetic_pypi_lib/helper.py",
-            "source_path": "synthetic_pypi_lib/helper.py",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "942db1a5a29b1f673adc56d6177ee468ed2172328815e8a17a78244b1d74c077",
-            "source_sha256": "ce6cfe02ba1c42e7b17e557328ed3ae47472467877014ffe75f034496ca27390",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/synthetic_pypi_lib/helper.py\n+++ artifact/synthetic_pypi_lib/helper.py\n@@ -1,2 +1,4 @@\n def ping():\n     return 'pong'\n+def extra_unexplained():\n+    return 999",
-            "diff_truncated": false
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "npm-benign-readme-update",
-      "ecosystem": "npm",
-      "ground_truth": "benign control",
-      "base_identity": "synthetic-npm-docs@1.0.0 (synthetic self-contained layout)",
-      "mutation": "Benign documentation wording update in README.md",
-      "expected_rule": null,
-      "expected_path": null,
-      "source_sha256": "54e9c6f157ff7857363856b72ab2b2365d4711ea23a26405273407ded96cb33f",
-      "artifact_sha256": "1fea202f36e5d8776fb91a0e824cec0b5161ac993c821b86b878236e0dbb9670",
-      "status": "CLEAN",
-      "risk_score": 0,
-      "detected": null,
-      "alerted": false,
-      "new_findings": [],
-      "report": {
-        "status": "CLEAN",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 0,
-        "risk_reasons": {},
-        "suspicion_level": "NONE",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
-        },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
-        },
-        "expected_generated_differences": [
-          "README.md"
-        ],
-        "unverified_generated_outputs": [],
-        "findings": [],
-        "files": [
-          {
-            "path": "README.md",
-            "artifact_path": "README.md",
-            "source_path": "README.md",
-            "state": "changed",
-            "classification": "expected",
-            "artifact_sha256": "2b0ddfce007177167e6d2ab2063c46ffeb972b0197af631d95ba84f88c9d46c0",
-            "source_sha256": "bee7e69c1eaaafffaab4e79696ac965da03743a4c45d4dcab4ad60394d3bab59",
-            "finding_ids": [],
-            "explanation": "Documentation/text difference without a new capability indicator; contents and hash remain available for review.",
-            "diff": "--- source/README.md\n+++ artifact/README.md\n@@ -1,2 +1,2 @@\n # synthetic-npm-docs\n-Usage guide.\n+Updated usage guide with examples.",
-            "diff_truncated": false
-          },
-          {
-            "path": "index.js",
-            "artifact_path": "index.js",
-            "source_path": "index.js",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "c93eadbd51f980110caa19b11bc2e844ad883fa4a835190226cd4690df62cf52",
-            "source_sha256": "c93eadbd51f980110caa19b11bc2e844ad883fa4a835190226cd4690df62cf52",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "package.json",
-            "artifact_path": "package.json",
-            "source_path": "package.json",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "e7a8549374bde0d6b2220dd0a6d68c056dcdce91cd14f0137aaef22fb898ee3d",
-            "source_sha256": "e7a8549374bde0d6b2220dd0a6d68c056dcdce91cd14f0137aaef22fb898ee3d",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "npm-benign-clean-build-output",
-      "ecosystem": "npm",
-      "ground_truth": "benign control",
-      "base_identity": "synthetic-npm-ts@1.1.0 (synthetic self-contained layout with source map)",
-      "mutation": "Benign compiled JS output matching TypeScript source and valid source map",
-      "expected_rule": null,
-      "expected_path": null,
-      "source_sha256": "096d65fc808919381c1125b6607f8f6e3c61edace23119bcadf4637307e5c99b",
-      "artifact_sha256": "ed8a23b3472bfae7da84fce64886969d01a01e12457418eb162b1b57b6ac5ac2",
-      "status": "INCONCLUSIVE",
-      "risk_score": 0,
-      "detected": null,
-      "alerted": false,
-      "new_findings": [],
-      "report": {
-        "status": "INCONCLUSIVE",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 0,
-        "risk_reasons": {},
-        "suspicion_level": "NONE",
-        "total_files_inspected": 5,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 2,
-          "unique_comparison_paths": 4,
-          "identical_files": 1,
-          "added_files": 2,
-          "removed_files": 1,
-          "changed_files": 0
-        },
-        "counts": {
-          "identical": 1,
-          "added": 2,
-          "removed": 1,
-          "changed": 0
-        },
-        "expected_generated_differences": [
-          "dist/math.js.map"
-        ],
-        "unverified_generated_outputs": [
-          "dist/math.js"
-        ],
-        "findings": [],
-        "files": [
-          {
-            "path": "dist/math.js",
-            "artifact_path": "dist/math.js",
-            "source_path": null,
-            "state": "added",
-            "classification": "generated_unverified",
-            "artifact_sha256": "106f13fa0c2c3d4074705cfc8b10618432bd95b31bf36552ccf9ccad6955c8b1",
-            "source_sha256": null,
-            "finding_ids": [],
-            "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply.",
-            "diff": "--- source/dist/math.js\n+++ artifact/dist/math.js\n@@ -0,0 +1,2 @@\n+export const square = (x) => x * x;\n+//# sourceMappingURL=math.js.map",
-            "diff_truncated": false,
-            "build_evidence": {
-              "manifest_path": "package.json",
-              "build_scripts": {
-                "build": "tsc"
-              },
-              "output_declaration": "package.json:main",
-              "matching_files_patterns": [
-                "dist"
-              ],
-              "equivalence_verified": false,
-              "source_map": {
-                "map_path": "dist/math.js.map",
-                "matching_sources": [
-                  {
-                    "source_index": 0,
-                    "declared_path": "../src/math.ts",
-                    "source_path": "src/math.ts"
-                  }
-                ],
-                "mismatched_sources": [],
-                "unresolved_sources": [],
-                "all_embedded_sources_match": true,
-                "valid_structure": true,
-                "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
-              },
-              "explanation": "Declared build output: repository package.json declares a build and this output path. Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. Capability and tampering rules still apply."
-            }
-          },
-          {
-            "path": "dist/math.js.map",
-            "artifact_path": "dist/math.js.map",
-            "source_path": null,
-            "state": "added",
-            "classification": "expected",
-            "artifact_sha256": "e29554f3129383c5eab5914f45e68d00b7640339faf0f1c4593f5ea1eefc4ba3",
-            "source_sha256": null,
-            "finding_ids": [],
-            "explanation": "Source-map metadata inspected without fetching references. 1 embedded sources match; 0 differ; 0 unresolved. Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source.",
-            "diff": "--- source/dist/math.js.map\n+++ artifact/dist/math.js.map\n@@ -0,0 +1 @@\n+{\"version\":3,\"file\":\"math.js\",\"sources\":[\"../src/math.ts\"],\"sourcesContent\":[\"export const square = (x: number): number => x * x;\\n\"],\"names\":[],\"mappings\":\"\"}",
-            "diff_truncated": false,
-            "source_map_evidence": {
-              "map_path": "dist/math.js.map",
-              "matching_sources": [
-                {
-                  "source_index": 0,
-                  "declared_path": "../src/math.ts",
-                  "source_path": "src/math.ts"
-                }
-              ],
-              "mismatched_sources": [],
-              "unresolved_sources": [],
-              "all_embedded_sources_match": true,
-              "valid_structure": true,
-              "limitation": "Embedded-source matching does not validate mappings or prove the generated bundle is equivalent to source."
-            }
-          },
-          {
-            "path": "package.json",
-            "artifact_path": "package.json",
-            "source_path": "package.json",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "fe046518da10bb87fb702802366707137a2f2a02ea788a90fc1318538c19a524",
-            "source_sha256": "fe046518da10bb87fb702802366707137a2f2a02ea788a90fc1318538c19a524",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "src/math.ts",
-            "artifact_path": null,
-            "source_path": "src/math.ts",
-            "state": "removed",
-            "classification": "expected",
-            "artifact_sha256": null,
-            "source_sha256": "4127e1404489c2f13b9e327aeaf9275f69769017b5a3753d5bd1c4557dcb5516",
-            "finding_ids": [],
-            "explanation": "Outside the supported source package.json files allowlist; no detected runtime reference. Supported patterns: literals, *, ** and ?.",
-            "diff": "",
-            "omission_kind": "packaging_exclusion",
-            "omission_rule": "NPM_FILES_EXCLUSION"
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "npm-benign-makefile-comment",
-      "ecosystem": "npm",
-      "ground_truth": "benign control",
-      "base_identity": "synthetic-npm-make@1.0.2 (synthetic self-contained layout)",
-      "mutation": "Benign comment line added to non-code Makefile",
-      "expected_rule": null,
-      "expected_path": null,
-      "source_sha256": "653951f276411649ba64e4009ac20f4a04e8b304299973d671853ddee2cc9318",
-      "artifact_sha256": "efb7be24cc164064e1c9f1e3fc5a7554455c77f7885f17b0de5e61735806cda8",
-      "status": "REVIEW",
-      "risk_score": 10,
-      "detected": null,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "UNEXPLAINED_NONCODE",
-          "points": 10,
-          "artifact_path": "Makefile",
-          "source_path": "Makefile",
-          "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
-          "evidence": [
-            {
-              "line": 1,
-              "text": "# Benign build comment"
-            }
-          ],
-          "diff": "--- source/Makefile\n+++ artifact/Makefile\n@@ -1,2 +1,3 @@\n+# Benign build comment\n test:\n \t@echo ok"
+        "out/answer.d.ts": {
+          "text": "export declare const answer: number;\n",
+          "executable": false
         }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 10,
-        "risk_reasons": {
-          "UNEXPLAINED_NONCODE": 10
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
         },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 6,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 3,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
+        "out/answer.js": {
+          "text": "export const answer = 8;\n//# sourceMappingURL=answer.js.map\n",
+          "executable": false
         },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
+        "out/answer.js.map": {
+          "text": "{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+          "executable": false
         },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "UNEXPLAINED_NONCODE",
-            "points": 10,
-            "artifact_path": "Makefile",
-            "source_path": "Makefile",
-            "message": "Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.",
-            "evidence": [
-              {
-                "line": 1,
-                "text": "# Benign build comment"
-              }
-            ],
-            "diff": "--- source/Makefile\n+++ artifact/Makefile\n@@ -1,2 +1,3 @@\n+# Benign build comment\n test:\n \t@echo ok"
-          }
-        ],
-        "files": [
-          {
-            "path": "Makefile",
-            "artifact_path": "Makefile",
-            "source_path": "Makefile",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "2b15f70e22eee4b9fc391ca4f9c04f213ee3843cb085f3766c584904757861bb",
-            "source_sha256": "fe8428ae6ba99d17bb50562b1c1cb906dade9800be6a18afc7445a12bcc05a1a",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/Makefile\n+++ artifact/Makefile\n@@ -1,2 +1,3 @@\n+# Benign build comment\n test:\n \t@echo ok",
-            "diff_truncated": false
-          },
-          {
-            "path": "index.js",
-            "artifact_path": "index.js",
-            "source_path": "index.js",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "82b4c5aa11a16db1d6f436770a05bcd0726d9ebe05a6bfdf2716b546c856c680",
-            "source_sha256": "82b4c5aa11a16db1d6f436770a05bcd0726d9ebe05a6bfdf2716b546c856c680",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "package.json",
-            "artifact_path": "package.json",
-            "source_path": "package.json",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "caba5b549d0416f1d3e19dba361e7b49bc3b5e92dd4057eb47796422bb084eda",
-            "source_sha256": "caba5b549d0416f1d3e19dba361e7b49bc3b5e92dd4057eb47796422bb084eda",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "pypi-benign-identical-sdist",
-      "ecosystem": "pypi",
-      "ground_truth": "benign control",
-      "base_identity": "synthetic-pypi-clean==1.0.0 (synthetic self-contained sdist layout)",
-      "mutation": "Identical source and release artifact with zero modifications",
-      "expected_rule": null,
-      "expected_path": null,
-      "source_sha256": "e31ed3c68f3bd9b10433a4a2a6cf25fb97c61a99d2a99b5e5b24cac62b1fee60",
-      "artifact_sha256": "e31ed3c68f3bd9b10433a4a2a6cf25fb97c61a99d2a99b5e5b24cac62b1fee60",
-      "status": "CLEAN",
-      "risk_score": 0,
-      "detected": null,
-      "alerted": false,
-      "new_findings": [],
-      "report": {
-        "status": "CLEAN",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 0,
-        "risk_reasons": {},
-        "suspicion_level": "NONE",
-        "total_files_inspected": 4,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 2,
-          "source_file_count": 2,
-          "unique_comparison_paths": 2,
-          "identical_files": 2,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 0
-        },
-        "counts": {
-          "identical": 2,
-          "added": 0,
-          "removed": 0,
-          "changed": 0
-        },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [],
-        "files": [
-          {
-            "path": "pyproject.toml",
-            "artifact_path": "pyproject.toml",
-            "source_path": "pyproject.toml",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "198b6cd0327413f3235858ff49a4d7a24d1207da4544717697e120dfcf72a3c1",
-            "source_sha256": "198b6cd0327413f3235858ff49a4d7a24d1207da4544717697e120dfcf72a3c1",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_clean/__init__.py",
-            "artifact_path": "synthetic_pypi_clean/__init__.py",
-            "source_path": "synthetic_pypi_clean/__init__.py",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "f13e70099615a087c0a59a6b3555a5ffc119a36a99c2e59a3a0da36ed00e889d",
-            "source_sha256": "f13e70099615a087c0a59a6b3555a5ffc119a36a99c2e59a3a0da36ed00e889d",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "pypi-benign-pkg-info-metadata",
-      "ecosystem": "pypi",
-      "ground_truth": "benign control",
-      "base_identity": "synthetic-pypi-meta==2.0.0 (synthetic self-contained sdist layout)",
-      "mutation": "Standard sdist PKG-INFO packaging metadata file present in release archive",
-      "expected_rule": null,
-      "expected_path": null,
-      "source_sha256": "167ffdd1a23d27c95e2f603cb153713c96e9a8647a6f541161f597cdc3c01ccd",
-      "artifact_sha256": "b28af3f3b9276d0efd309432d9c2c05dc815d42b8de4d6845a44696f428b0c37",
-      "status": "CLEAN",
-      "risk_score": 0,
-      "detected": null,
-      "alerted": false,
-      "new_findings": [],
-      "report": {
-        "status": "CLEAN",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 0,
-        "risk_reasons": {},
-        "suspicion_level": "NONE",
-        "total_files_inspected": 5,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 3,
-          "source_file_count": 2,
-          "unique_comparison_paths": 3,
-          "identical_files": 2,
-          "added_files": 1,
-          "removed_files": 0,
-          "changed_files": 0
-        },
-        "counts": {
-          "identical": 2,
-          "added": 1,
-          "removed": 0,
-          "changed": 0
-        },
-        "expected_generated_differences": [
-          "PKG-INFO"
-        ],
-        "unverified_generated_outputs": [],
-        "findings": [],
-        "files": [
-          {
-            "path": "PKG-INFO",
-            "artifact_path": "PKG-INFO",
-            "source_path": null,
-            "state": "added",
-            "classification": "expected",
-            "artifact_sha256": "a7c0aa9feab7dad88715a3be951c94b5b257f9877996612dbbae37186ec2270a",
-            "source_sha256": null,
-            "finding_ids": [],
-            "explanation": "Standard source-distribution metadata, not executable code.",
-            "diff": "--- source/PKG-INFO\n+++ artifact/PKG-INFO\n@@ -0,0 +1,3 @@\n+Metadata-Version: 2.1\n+Name: synthetic-pypi-meta\n+Version: 2.0.0",
-            "diff_truncated": false
-          },
-          {
-            "path": "pyproject.toml",
-            "artifact_path": "pyproject.toml",
-            "source_path": "pyproject.toml",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "caa4dfbada726367477411d3eddaf5e17901fe57d926e82e2c233425915c2174",
-            "source_sha256": "caa4dfbada726367477411d3eddaf5e17901fe57d926e82e2c233425915c2174",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_meta/__init__.py",
-            "artifact_path": "synthetic_pypi_meta/__init__.py",
-            "source_path": "synthetic_pypi_meta/__init__.py",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "240e87a09cd5f710c6402878a198696080e0ee4d183db76d714a4981fb31f295",
-            "source_sha256": "240e87a09cd5f710c6402878a198696080e0ee4d183db76d714a4981fb31f295",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          }
-        ],
-        "limitations": []
-      }
-    },
-    {
-      "id": "pypi-benign-docstring-change",
-      "ecosystem": "pypi",
-      "ground_truth": "benign control",
-      "base_identity": "synthetic-pypi-docs==0.9.0 (synthetic self-contained layout)",
-      "mutation": "Benign docstring clarification in Python module",
-      "expected_rule": null,
-      "expected_path": null,
-      "source_sha256": "c0c31bee7d4fb5fe8af22d0d769379aace97118db17d87f093e5d80aa2b0e69e",
-      "artifact_sha256": "cbaebbb754937bcae188c05cd125049d3a53479fd3c37cbdde19ba2e8eb96dfb",
-      "status": "REVIEW",
-      "risk_score": 15,
-      "detected": null,
-      "alerted": true,
-      "new_findings": [
-        {
-          "id": "F0001",
-          "rule": "UNEXPLAINED_CODE",
-          "points": 15,
-          "artifact_path": "synthetic_pypi_docs/__init__.py",
-          "source_path": "synthetic_pypi_docs/__init__.py",
-          "message": "Code has no exact source match; may be build output or a modification requiring review.",
-          "evidence": [
-            {
-              "line": 2,
-              "text": "    \"\"\"Increment x by one.\"\"\""
-            }
-          ],
-          "diff": "--- source/synthetic_pypi_docs/__init__.py\n+++ artifact/synthetic_pypi_docs/__init__.py\n@@ -1,2 +1,3 @@\n def compute(x):\n+    \"\"\"Increment x by one.\"\"\"\n     return x + 1"
+        "out/answer.d.ts": {
+          "text": "export declare const answer: number;\n",
+          "executable": false
         }
-      ],
-      "report": {
-        "status": "REVIEW",
-        "clean_definition": "No suspicious differences detected within the available analysis scope.",
-        "risk_score": 15,
-        "risk_reasons": {
-          "UNEXPLAINED_CODE": 15
+      },
+      "input_sha256": {
+        "source": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "baseline": "cfddef96864d39d2d6160d27ee58f1e55c4aeb361c2b431368a76fb0e208f816",
+        "artifact": "be7374c87f05d6431e65eb3fdcfd1c49aa43d584f1aad95ae8b23cbadc9a20b4"
+      }
+    },
+    {
+      "id": "python-relative-module-removed",
+      "ecosystem": "pypi",
+      "label": "tampered",
+      "description": "Remove a module statically imported by shipped package.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "MISSING_RUNTIME_FILE",
+      "expected_path": "sample/worker.py",
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
         },
-        "suspicion_level": "REVIEW",
-        "total_files_inspected": 4,
-        "total_files_inspected_definition": "Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.",
-        "metrics": {
-          "artifact_file_count": 2,
-          "source_file_count": 2,
-          "unique_comparison_paths": 2,
-          "identical_files": 1,
-          "added_files": 0,
-          "removed_files": 0,
-          "changed_files": 1
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
         },
-        "counts": {
-          "identical": 1,
-          "added": 0,
-          "removed": 0,
-          "changed": 1
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
         },
-        "expected_generated_differences": [],
-        "unverified_generated_outputs": [],
-        "findings": [
-          {
-            "id": "F0001",
-            "rule": "UNEXPLAINED_CODE",
-            "points": 15,
-            "artifact_path": "synthetic_pypi_docs/__init__.py",
-            "source_path": "synthetic_pypi_docs/__init__.py",
-            "message": "Code has no exact source match; may be build output or a modification requiring review.",
-            "evidence": [
-              {
-                "line": 2,
-                "text": "    \"\"\"Increment x by one.\"\"\""
-              }
-            ],
-            "diff": "--- source/synthetic_pypi_docs/__init__.py\n+++ artifact/synthetic_pypi_docs/__init__.py\n@@ -1,2 +1,3 @@\n def compute(x):\n+    \"\"\"Increment x by one.\"\"\"\n     return x + 1"
-          }
-        ],
-        "files": [
-          {
-            "path": "pyproject.toml",
-            "artifact_path": "pyproject.toml",
-            "source_path": "pyproject.toml",
-            "state": "identical",
-            "classification": "identical",
-            "artifact_sha256": "6069c7aa651418e3d628ad31b8d800a1a9b44c4b7f0f224d7c0ecba4df605980",
-            "source_sha256": "6069c7aa651418e3d628ad31b8d800a1a9b44c4b7f0f224d7c0ecba4df605980",
-            "finding_ids": [],
-            "explanation": "",
-            "diff": ""
-          },
-          {
-            "path": "synthetic_pypi_docs/__init__.py",
-            "artifact_path": "synthetic_pypi_docs/__init__.py",
-            "source_path": "synthetic_pypi_docs/__init__.py",
-            "state": "changed",
-            "classification": "suspicious",
-            "artifact_sha256": "8d15609c4cddf90f01c8004d4a8043755f08c5099ac871ea557555bd151233c8",
-            "source_sha256": "c9eeaf5912dcfeff5ce1505f522e69fcb43ea782f5b7dd5a4432d83e153d5583",
-            "finding_ids": [
-              "F0001"
-            ],
-            "explanation": "",
-            "diff": "--- source/synthetic_pypi_docs/__init__.py\n+++ artifact/synthetic_pypi_docs/__init__.py\n@@ -1,2 +1,3 @@\n def compute(x):\n+    \"\"\"Increment x by one.\"\"\"\n     return x + 1",
-            "diff_truncated": false
-          }
-        ],
-        "limitations": []
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "f82bc5a6ab2eea3b51e481acfa11d2b2dc3c5aa68834af6bc2450f2f01b0ef30"
+      }
+    },
+    {
+      "id": "python-process-in-config",
+      "ecosystem": "pypi",
+      "label": "tampered",
+      "description": "Add inert process-capability text in a non-code configuration file.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "PROCESS_EXECUTION",
+      "expected_path": "settings/runtime.cfg",
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "settings/runtime.cfg": {
+          "text": "[fixture]\ncommand = subprocess.Popen([\"echo\", \"inert\"] )\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "1f705369c93f00e1b6006d87ffc1cc05f9c315b7182b0d8146316b67adad8080"
+      }
+    },
+    {
+      "id": "python-decoder-in-data",
+      "ecosystem": "pypi",
+      "label": "tampered",
+      "description": "Add a decoder indicator inside a data extension; never evaluate it.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": "ENCODED_PAYLOAD",
+      "expected_path": "resources/template.dat",
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "resources/template.dat": {
+          "text": "inert fixture only: b64decode(\"dm9pZCAw\")\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "56398bbb9c70a407fb3e5c095a6dd58973ed42e5d2038806054a009910229389"
+      }
+    },
+    {
+      "id": "npm-comment-only-export",
+      "ecosystem": "npm",
+      "label": "benign",
+      "description": "Add comment without changing syntax tokens.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "export const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"contributor-synthetic\", \"version\": \"0.0.0\", \"main\": \"lib/main.mjs\", \"exports\": {\".\": \"./lib/main.mjs\", \"./feature\": \"./lib/feature.mjs\"}}",
+          "executable": false
+        },
+        "lib/main.mjs": {
+          "text": "export const ready = true;\n",
+          "executable": false
+        },
+        "lib/feature.mjs": {
+          "text": "// release comment\nexport const feature = 2;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "baseline": "6b19aa8d9f2a7dc627aee5351bf9276f3007cab71ffda0d4025ac6d7d334b173",
+        "artifact": "0f7f66e1222f24238bf59106355bc3b70d62be065c6f4c8386e7ba3bfcfcc929"
+      }
+    },
+    {
+      "id": "npm-regex-layout-only",
+      "ecosystem": "npm",
+      "label": "benign",
+      "description": "Only layout changes around an existing regex exec call.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "package.json": {
+          "text": "{\"name\":\"regex-control\",\"version\":\"0.0.0\",\"main\":\"index.js\"}",
+          "executable": false
+        },
+        "index.js": {
+          "text": "export function match(x) { return /safe/.exec(x); }\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\":\"regex-control\",\"version\":\"0.0.0\",\"main\":\"index.js\"}",
+          "executable": false
+        },
+        "index.js": {
+          "text": "export function match(x) { return /safe/.exec(x); }\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\":\"regex-control\",\"version\":\"0.0.0\",\"main\":\"index.js\"}",
+          "executable": false
+        },
+        "index.js": {
+          "text": "export function match(x) {\n  return /safe/.exec(x);\n}\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "0ab28395f97645f1a3941db2147873eda4c26b09f4e24df52b049b0c186dda9f",
+        "baseline": "0ab28395f97645f1a3941db2147873eda4c26b09f4e24df52b049b0c186dda9f",
+        "artifact": "0d6809e61792d47238ef00ea81cb9d6a6279b4ee3b5fe6e4f3b3736a77eeba3b"
+      }
+    },
+    {
+      "id": "npm-declared-map-and-types",
+      "ecosystem": "npm",
+      "label": "benign",
+      "description": "Declared compiled output, exact embedded source and a paired declaration; no equivalence claim.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "src/answer.ts": {
+          "text": "export const answer: number = 7;\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "src/answer.ts": {
+          "text": "export const answer: number = 7;\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "package.json": {
+          "text": "{\"name\": \"mapped-synthetic\", \"version\": \"0.0.0\", \"main\": \"out/answer.js\", \"types\": \"out/answer.d.ts\", \"files\": [\"out\"], \"scripts\": {\"build\": \"tsc\"}}",
+          "executable": false
+        },
+        "out/answer.js": {
+          "text": "export const answer = 7;\n//# sourceMappingURL=answer.js.map\n",
+          "executable": false
+        },
+        "out/answer.js.map": {
+          "text": "{\"version\": 3, \"sources\": [\"../src/answer.ts\"], \"sourcesContent\": [\"export const answer: number = 7;\\n\"], \"names\": [], \"mappings\": \"\", \"file\": \"answer.js\"}",
+          "executable": false
+        },
+        "out/answer.d.ts": {
+          "text": "export declare const answer: number;\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "baseline": "9e16b4986916056c0d553a85082c26878711f0e5581dc75c86e7feeee5531b01",
+        "artifact": "cfddef96864d39d2d6160d27ee58f1e55c4aeb361c2b431368a76fb0e208f816"
+      }
+    },
+    {
+      "id": "python-comment-only-function",
+      "ecosystem": "pypi",
+      "label": "benign",
+      "description": "Python comments/formatting change but function AST stays equal.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "# formatting control\ndef compute( ):\n    # same return value\n    return 7\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "a6180ed70fbdce073240b76edb18deeff607b979764c1b08c12f47a9765df60d"
+      }
+    },
+    {
+      "id": "python-wheel-metadata-control",
+      "ecosystem": "pypi",
+      "label": "benign",
+      "description": "Add ordinary wheel metadata; detector may lack a packaging explanation.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "synthetic_contributor-0.0.0.dist-info/METADATA": {
+          "text": "Metadata-Version: 2.1\nName: synthetic-contributor\nVersion: 0.0.0\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "6b9bd66ff0c4d7fc2bb13b07e665018206833644522d1ac3d583c19bae9eda0a"
+      }
+    },
+    {
+      "id": "python-version-stamp-control",
+      "ecosystem": "pypi",
+      "label": "benign",
+      "description": "Add a harmless generated version stamp; detector may conservatively alert.",
+      "origin": "synthetic; no official package identity or publication date",
+      "expected_rule": null,
+      "expected_path": null,
+      "source": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "baseline": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        }
+      },
+      "artifact": {
+        "pyproject.toml": {
+          "text": "[project]\nname=\"synthetic-contributor\"\nversion=\"0.0.0\"\n",
+          "executable": false
+        },
+        "sample/__init__.py": {
+          "text": "from .worker import compute\n",
+          "executable": false
+        },
+        "sample/worker.py": {
+          "text": "def compute():\n    return 7\n",
+          "executable": false
+        },
+        "sample/_version.py": {
+          "text": "__version__ = \"0.0.0\"\n",
+          "executable": false
+        }
+      },
+      "input_sha256": {
+        "source": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "baseline": "5cf7ced1ddd87a87de39859f20c4e1d868d76bbb51fbbe4e08e372e8a9738d14",
+        "artifact": "9c19df25d15861d58d288481fabcf80f3f253f3da46c8146cfd1cc301957d183"
       }
     }
   ]

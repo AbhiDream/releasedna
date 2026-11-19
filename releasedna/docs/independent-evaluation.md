@@ -1,3 +1,9 @@
+# Historical report notice — 20 November 2026
+
+The contributor-submitted report below is retained as history, but its exact original inputs are unavailable in the referenced preregistration commit. The merged input file contained report output and failed validation. The runnable default has been restored to the separately identified prepared maintainer experiment; see [corpus recovery and evidence](contributor-corpus-recovery.md). Do not treat the historical provenance or personal-execution claims below as independently verified by this recovery.
+
+---
+
 # ReleaseDNA Independent Contributor Evaluation
 
 - **Generated at:** 2026-11-19T15:00:57.678576+00:00
