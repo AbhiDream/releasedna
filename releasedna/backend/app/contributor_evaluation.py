@@ -1,186 +1,180 @@
+"""AI-assisted synthetic evaluation. Inspect fixture bytes; never execute them."""
 import argparse
 import hashlib
 import json
 import platform
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from app.core.safety import File, inspect_archive
+from app.core.safety import File, inspect_archive, safe_path
 from app.diff_engine.compare import compare
 from app.diff_engine.fingerprint import detector_fingerprint
 from app.evaluation_fixtures import pack
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_CORPUS = ROOT / 'backend/evaluation/contributor-corpus.json'
-PREREGISTRATION_URL = 'https://github.com/kirtisihag-1808/releasedna/commit/36df57d579e6c8438afd533d1a9d18526ea17a33'
-
-REQUIRED_FIELDS = {'id', 'ecosystem', 'ground_truth', 'base_identity', 'mutation', 'expected_rule', 'expected_path', 'source_files', 'artifact_files'}
-
-
-def fraction(num, den):
-    return {'numerator': num, 'denominator': den, 'rate': num / den if den else None}
+MANIFEST = ROOT / 'backend/evaluation/contributor-corpus.json'
+PINNED_DETECTOR = '593bf2033947f0d0cbdb26c0fd99229643586c27a058d16df19b019f14e827ad'
+PREREGISTRATION = '8d114b5'
+SIDES = ('source', 'baseline', 'artifact')
 
 
-def pct(val):
-    return 'not measured' if val['rate'] is None else f"{val['numerator']}/{val['denominator']} ({100 * val['rate']:.1f}%)"
+def input_hash(snapshot):
+    encoded = json.dumps(snapshot, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode()
+    return hashlib.sha256(encoded).hexdigest()
 
 
-def validate_manifest(data):
-    if not isinstance(data, dict) or not isinstance(data.get('cases'), list) or not data['cases']:
-        raise ValueError('Manifest must contain a non-empty cases list.')
-    seen = set()
-    for c in data['cases']:
-        missing = REQUIRED_FIELDS - set(c.keys())
-        if missing:
-            raise ValueError(f"Case missing required fields: {sorted(missing)}")
-        if c['id'] in seen:
-            raise ValueError(f"Duplicate case id: {c['id']}")
-        seen.add(c['id'])
-        if c['ground_truth'] == 'harmless tampered fixture' and (not c['expected_rule'] or not c['expected_path']):
-            raise ValueError(f"Tampered case {c['id']} requires expected_rule and expected_path.")
+def load_manifest(path):
+    with Path(path).open('rb') as stream:
+        raw = stream.read(1024 * 1024 + 1)
+    if len(raw) > 1024 * 1024:
+        raise ValueError('Manifest exceeds 1 MiB')
+    value = json.loads(raw)
+    if not isinstance(value, dict) or value.get('schema_version') != 1:
+        raise ValueError('Expected manifest schema_version 1')
+    if (value.get('detector_commit') != '3a93ae3d5b0cd7ee6fe51f5f248ac1981d142a80'
+            or value.get('input_hash_format') != 'sha256-json-sorted-compact-ascii-v1'
+            or not isinstance(value.get('design'), str)):
+        raise ValueError('Manifest must identify the frozen detector and supported hash format')
+    rows = value.get('cases')
+    if not isinstance(rows, list) or not rows or len(rows) > 100:
+        raise ValueError('Expected 1 to 100 cases')
+    identities = set()
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get('id'), str) or not row['id'] or row['id'] in identities:
+            raise ValueError('Missing or duplicate case ID')
+        identities.add(row['id'])
+        if not isinstance(row.get('input_sha256'), dict) or set(row['input_sha256']) != set(SIDES):
+            raise ValueError('All three input hashes are required')
+        if row.get('label') not in ('tampered', 'benign') or row.get('ecosystem') not in ('npm', 'pypi'):
+            raise ValueError('Invalid case label/ecosystem')
+        if not isinstance(row.get('description'), str) or not isinstance(row.get('origin'), str):
+            raise ValueError('Case description/origin required')
+        if row['label'] == 'tampered':
+            if not isinstance(row.get('expected_rule'), str) or not row['expected_rule']:
+                raise ValueError('Tampered case requires expected rule')
+            if not isinstance(row.get('expected_path'), str):
+                raise ValueError('Tampered case requires expected path')
+            safe_path(row['expected_path'])
+        elif row.get('expected_rule') is not None or row.get('expected_path') is not None:
+            raise ValueError('Benign case cannot declare a detection target')
+        for side in SIDES:
+            snapshot = row.get(side)
+            if not isinstance(snapshot, dict) or not snapshot or len(snapshot) > 100:
+                raise ValueError('Expected 1 to 100 files in each snapshot')
+            for path, entry in snapshot.items():
+                safe_path(path)
+                if (not isinstance(entry, dict) or set(entry) != {'text', 'executable'}
+                        or not isinstance(entry['text'], str) or type(entry['executable']) is not bool
+                        or len(entry['text'].encode()) > 64000):
+                    raise ValueError('Invalid or oversized fixture file')
+            if row.get('input_sha256', {}).get(side) != input_hash(snapshot):
+                raise ValueError(f"Input digest mismatch: {row['id']}/{side}")
+        if row['label'] == 'tampered' and row['expected_path'] not in set(row['source']) | set(row['artifact']):
+            raise ValueError('Expected path does not exist in either comparison side')
+    return value
 
 
-def build_archive(files_map):
-    wrapped = {path: File(content.encode('utf-8')) for path, content in files_map.items()}
-    return pack(wrapped)
+def finding_key(finding):
+    return finding['rule'], finding.get('artifact_path') or finding.get('source_path')
 
 
-def evaluate_case(case):
-    src_blob = build_archive(case['source_files'])
-    art_blob = build_archive(case['artifact_files'])
-    baseline_report = compare(inspect_archive(src_blob), inspect_archive(src_blob), True)
-    report = compare(inspect_archive(art_blob), inspect_archive(src_blob), True)
+def detection_evidence(case, baseline, report):
+    old = {finding_key(item) for item in baseline['findings']}
+    expected = (case['expected_rule'], case['expected_path'])
+    return [item['id'] for item in report['findings']
+            if finding_key(item) == expected and finding_key(item) not in old]
 
-    fp = lambda f: (f['rule'], f['artifact_path'] or f['source_path'])
-    baseline_alerts = {fp(f) for f in baseline_report['findings']}
-    new_findings = [f for f in report['findings'] if fp(f) not in baseline_alerts]
 
-    is_tampered = case['ground_truth'] == 'harmless tampered fixture'
-    matched = [f for f in new_findings if fp(f) == (case['expected_rule'], case['expected_path'])] if is_tampered else []
-
-    return {
-        'id': case['id'],
-        'ecosystem': case['ecosystem'],
-        'ground_truth': case['ground_truth'],
-        'base_identity': case['base_identity'],
-        'mutation': case['mutation'],
-        'expected_rule': case['expected_rule'],
-        'expected_path': case['expected_path'],
-        'source_sha256': hashlib.sha256(src_blob).hexdigest(),
-        'artifact_sha256': hashlib.sha256(art_blob).hexdigest(),
-        'status': report['status'],
-        'risk_score': report['risk_score'],
-        'detected': bool(matched) if is_tampered else None,
-        'alerted': bool(new_findings),
-        'new_findings': new_findings,
-        'report': report,
-    }
+def evaluate_case(case, comparator=compare):
+    archives = {side: pack({path: File(entry['text'].encode(), entry['executable'])
+                           for path, entry in case[side].items()}) for side in SIDES}
+    files = {side: inspect_archive(blob) for side, blob in archives.items()}
+    # True denotes known controlled source identity here, never a registry/provenance claim.
+    baseline = comparator(files['baseline'], files['source'], True)
+    report = comparator(files['artifact'], files['source'], True)
+    evidence = detection_evidence(case, baseline, report) if case['label'] == 'tampered' else []
+    return {'id': case['id'], 'label': case['label'], 'ecosystem': case['ecosystem'],
+            'description': case['description'], 'expected_rule': case['expected_rule'],
+            'expected_path': case['expected_path'], 'detected': bool(evidence),
+            'alerted': bool(report['findings']), 'supporting_finding_ids': evidence,
+            'archive_sha256': {side: hashlib.sha256(blob).hexdigest() for side, blob in archives.items()},
+            'input_sha256': case['input_sha256'], 'baseline_report': baseline, 'report': report}
 
 
 def summarize(rows):
-    ok = [r for r in rows if 'error' not in r]
-    tampered = [r for r in ok if r['ground_truth'] == 'harmless tampered fixture']
-    benign = [r for r in ok if r['ground_truth'] != 'harmless tampered fixture']
-    tp = sum(bool(r['detected']) for r in tampered)
-    fn = len(tampered) - tp
-    fp = sum(bool(r['alerted']) for r in benign)
-    tn = len(benign) - fp
-    return {
-        'total_cases': len(rows),
-        'evaluated_cases': len(ok),
-        'error_count': len(rows) - len(ok),
-        'inconclusive_count': sum(r['status'] == 'INCONCLUSIVE' for r in ok),
-        'tampered_inspected': len(tampered),
-        'benign_inspected': len(benign),
-        'TP': tp, 'FN': fn, 'FP': fp, 'TN': tn,
-        'TPR': fraction(tp, tp + fn),
-        'FPR': fraction(fp, fp + tn),
-    }
+    successful = [row for row in rows if 'report' in row]
+    positives = [row for row in successful if row['label'] == 'tampered']
+    negatives = [row for row in successful if row['label'] == 'benign']
+    tp = sum(row['detected'] for row in positives)
+    fp = sum(row['alerted'] for row in negatives)
+    return {'total': len(rows), 'evaluated': len(successful), 'errors': len(rows) - len(successful),
+            'TP': tp, 'FN': len(positives) - tp, 'FP': fp, 'TN': len(negatives) - fp,
+            'TPR': tp / len(positives) if positives else None,
+            'FPR': fp / len(negatives) if negatives else None,
+            'inconclusive': sum(row['report']['status'] == 'INCONCLUSIVE' for row in successful),
+            'errors_by_label': {label: sum('report' not in row and row['label'] == label for row in rows)
+                                for label in ('tampered', 'benign')}}
 
 
-def run_evaluation(corpus_path=DEFAULT_CORPUS, output_path=None):
-    raw_bytes = Path(corpus_path).read_bytes()
-    manifest = json.loads(raw_bytes.decode('utf-8'))
-    validate_manifest(manifest)
-
+def run(manifest_path=MANIFEST, comparator=compare):
+    manifest = load_manifest(manifest_path)
+    actual = detector_fingerprint()
+    if actual != PINNED_DETECTOR:
+        raise ValueError('Detector changed: preregister a new experiment instead of overwriting this frozen result')
     rows = []
     for case in manifest['cases']:
         try:
-            rows.append(evaluate_case(case))
+            rows.append(evaluate_case(case, comparator))
         except Exception as exc:
-            rows.append({'id': case.get('id', 'unknown'), 'error': f'{type(exc).__name__}: {exc}'})
-
-    metrics = summarize(rows)
-    payload = {
-        'schema_version': 1,
-        'generated_at': datetime.now(timezone.utc).isoformat(),
-        'preregistration_url': PREREGISTRATION_URL,
-        'manifest_sha256': hashlib.sha256(raw_bytes).hexdigest(),
-        'detector_sha256': detector_fingerprint(),
-        'environment': {'os': platform.platform(), 'python': sys.version.split()[0]},
-        'ai_assistance': 'Manifest and harness drafted with Gemini AI assistance; executed and verified by contributor kirtisihag-1808.',
-        'metrics': metrics,
-        'cases': rows,
-    }
-
-    if output_path:
-        out = Path(output_path)
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(json.dumps(payload, indent=2), encoding='utf-8')
-        write_markdown(payload, out.with_suffix('.md'))
-    return payload
+            rows.append({'id': case['id'], 'label': case['label'], 'ecosystem': case['ecosystem'],
+                         'error': f'{type(exc).__name__}: {exc}'})
+    return {'schema_version': 1, 'generated_at': datetime.now(timezone.utc).isoformat(),
+            'design': manifest['design'], 'preregistration_commit': PREREGISTRATION,
+            'detector_commit': manifest['detector_commit'], 'detector_sha256': actual,
+            'manifest_sha256': hashlib.sha256(Path(manifest_path).read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
+            'manifest_hash_format': 'sha256-utf8-lf',
+            'environment': {'os': platform.system(), 'python': platform.python_version()},
+            'scope': 'Synthetic fixtures; controlled source identity, no registry verification. No fixture code executed.',
+            'metrics': summarize(rows), 'cases': rows}
 
 
-def write_markdown(payload, md_path):
-    m = payload['metrics']
-    lines = [
-        '# ReleaseDNA Independent Contributor Evaluation', '',
-        f"- **Generated at:** {payload['generated_at']}",
-        f"- **Preregistration commit:** {payload['preregistration_url']}",
-        f"- **Manifest SHA-256:** `{payload['manifest_sha256']}`",
-        f"- **Detector fingerprint:** `{payload['detector_sha256']}`",
-        f"- **Environment:** {payload['environment']['os']} | Python {payload['environment']['python']}",
-        f"- **AI assistance:** {payload['ai_assistance']}", '',
-        '## Summary Metrics', '',
-        '| Metric | Result |', '| --- | --- |',
-        f"| Tampered cases inspected | {m['tampered_inspected']} |",
-        f"| Benign cases inspected | {m['benign_inspected']} |",
-        f"| TP / FN / FP / TN | {m['TP']} / {m['FN']} / {m['FP']} / {m['TN']} |",
-        f"| True Positive Rate (TPR) | {pct(m['TPR'])} |",
-        f"| False Positive Rate (FPR) | {pct(m['FPR'])} |",
-        f"| Retrieval / inspection errors | {m['error_count']} |",
-        f"| INCONCLUSIVE verdicts | {m['inconclusive_count']} |", '',
-        '## Per-Case Results', '',
-        '| Case ID | Ecosystem | Ground Truth | Expected | Verdict | Outcome |',
-        '| --- | --- | --- | --- | --- | --- |',
-    ]
-    for r in payload['cases']:
-        if 'error' in r:
-            lines.append(f"| `{r['id']}` | — | — | — | ERROR | {r['error']} |")
-            continue
-        exp = f"`{r['expected_rule']}` at `{r['expected_path']}`" if r['expected_rule'] else 'No findings'
-        if r['ground_truth'] == 'harmless tampered fixture':
-            outcome = 'TP (Detected)' if r['detected'] else 'FN (Missed)'
+def write_report(result, output):
+    output = Path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+    def cell(value):
+        return str(value).replace('|', '\\|').replace('\n', ' ').replace('<', '&lt;').replace('>', '&gt;')
+    metrics = result['metrics']
+    lines = ['# AI-assisted contributor evaluation', '', result['design'], '',
+             'Generated: ' + result['generated_at'], '',
+             '| Measure | Result |', '| --- | --- |']
+    for key in ('total', 'evaluated', 'errors', 'TP', 'FN', 'FP', 'TN', 'TPR', 'FPR', 'inconclusive'):
+        value = metrics[key]
+        lines.append(f'| {key} | {"Not measured" if value is None else value} |')
+    lines += ['', 'TP requires the expected NEW rule at the exact path, beyond baseline findings. '
+              'Errors are excluded from TPR/FPR and retained separately. INCONCLUSIVE is not CLEAN.', '',
+              '| Case | Label | Outcome | Verdict | Evidence IDs |', '| --- | --- | --- | --- | --- |']
+    for row in result['cases']:
+        if 'report' not in row:
+            outcome, verdict, evidence = 'ERROR: ' + row['error'], 'not evaluated', ''
         else:
-            outcome = 'FP (False Alarm)' if r['alerted'] else 'TN (Clean)'
-        lines.append(f"| `{r['id']}` | {r['ecosystem']} | {r['ground_truth']} | {exp} | {r['status']} | {outcome} |")
-    lines += [
-        '', '## Limitations & Scope', '',
-        '- Synthetic self-contained fixtures only; not organizer-supplied data or real historical malware.',
-        '- Scanned archive bytes were never installed, imported, built, or executed.',
-        '- AI assistance (Gemini) was used to help design the manifest and harness; all runs were executed locally.',
-    ]
-    md_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+            outcome = ('TP' if row['detected'] else 'FN') if row['label'] == 'tampered' else ('FP' if row['alerted'] else 'TN')
+            verdict, evidence = row['report']['status'], ', '.join(row['supporting_finding_ids'])
+        lines.append('| ' + ' | '.join(map(cell, (row['id'], row['label'], outcome, verdict, evidence))) + ' |')
+    lines += ['', 'Synthetic known-rule convenience cases, not independent unseen recall or organizer validation. '
+              'No detector changes were made. Sibling JSON includes complete diffs, baseline findings, hashes and errors.', '']
+    output.with_suffix('.md').write_text('\n'.join(lines), encoding='utf-8')
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Run contributor evaluation manifest.')
-    parser.add_argument('--corpus', type=Path, default=DEFAULT_CORPUS)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--manifest', type=Path, default=MANIFEST)
     parser.add_argument('--output', type=Path, default=ROOT / 'data/contributor-evaluation.json')
     args = parser.parse_args()
-    res = run_evaluation(args.corpus, args.output)
-    print(json.dumps(res['metrics'], indent=2))
+    result = run(args.manifest)
+    write_report(result, args.output)
+    print(json.dumps(result['metrics'], indent=2))
+    return 1 if result['metrics']['errors'] else 0
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

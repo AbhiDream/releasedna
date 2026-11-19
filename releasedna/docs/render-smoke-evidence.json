@@ -1,0 +1,298 @@
+{
+  "recorded_at": "2026-11-19T19:08:30.934377+00:00",
+  "url": "https://releasedna.onrender.com",
+  "deployed_commit": "c560bc946183a2463f3a291d2d9dae9998e46b29",
+  "provider": "Render Free Docker",
+  "health": {
+    "status": "ok",
+    "engine": "0.2.0",
+    "worker_alive": true,
+    "monitor_alive": true,
+    "auth_required": true,
+    "scan_concurrency": 1,
+    "storage": "ephemeral",
+    "deployment": "render-free-docker"
+  },
+  "observed_states": [
+    [
+      "running",
+      "queued",
+      "queued"
+    ],
+    [
+      "running",
+      "queued",
+      "queued"
+    ],
+    [
+      "completed",
+      "running",
+      "queued"
+    ],
+    [
+      "completed",
+      "running",
+      "queued"
+    ],
+    [
+      "completed",
+      "completed",
+      "running"
+    ],
+    [
+      "completed",
+      "completed",
+      "completed"
+    ]
+  ],
+  "jobs": [
+    {
+      "id": "6fbc87ac-3e21-4b38-923f-e09c427f223e",
+      "state": "completed",
+      "package": {
+        "ecosystem": "npm",
+        "name": "is-number",
+        "version": "7.0.0"
+      },
+      "result": {
+        "status": "CLEAN",
+        "risk_score": 0,
+        "metrics": {
+          "artifact_file_count": 4,
+          "source_file_count": 15,
+          "unique_comparison_paths": 15,
+          "identical_files": 4,
+          "added_files": 0,
+          "removed_files": 11,
+          "changed_files": 0
+        },
+        "artifact": {
+          "url": "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz",
+          "digest": "sha512:e350a27e483a7bc4f2952a5db53a5e2d532abd20445734edb47bc4443ef8d7ea6767c00dbf4d34e0c44be3740a3c394af5c1af369e8d6566540656c65d8c719e",
+          "verified": true
+        },
+        "source": {
+          "commit": "98e8ff1da1a89f93d1397a24d7413ed15421c139",
+          "tag": "7.0.0",
+          "tag_status": "matched",
+          "confidence": "corroborated",
+          "identity_corroborated": true,
+          "build_provenance_verified": false,
+          "reasons": [
+            "GitHub REST rate limited; release tags resolved through public Git HTTPS ref advertisement",
+            "Tag/manifest matching is not a cryptographic build provenance verification"
+          ],
+          "resolution_transport": "git_https_refs",
+          "archive_url": "https://codeload.github.com/jonschlinkert/is-number/tar.gz/98e8ff1da1a89f93d1397a24d7413ed15421c139",
+          "archive_sha256": "4e169d1ea361d1b92907a6ab2dd6bcd781c85027858d99df1596a712aab49506"
+        },
+        "publication": {
+          "maintainers": [
+            {
+              "name": "doowb",
+              "email": "brian.woodward@gmail.com"
+            },
+            {
+              "name": "jonschlinkert",
+              "email": "github@sellside.com"
+            },
+            {
+              "name": "realityking",
+              "email": "me@rouvenwessling.de"
+            }
+          ],
+          "deprecated": null,
+          "registry": "https://registry.npmjs.org",
+          "publication_time": "2018-07-04T15:08:58.238Z",
+          "publication_time_source": "https://registry.npmjs.org/is-number#time.7.0.0",
+          "publication_time_limitation": null
+        },
+        "risk_reasons": {},
+        "execution_boundary": {
+          "separate_process": true,
+          "wall_timeout_seconds": 150,
+          "os_memory_limit": true,
+          "network_isolation": false,
+          "container": {
+            "deployment_configuration": "render-free-docker",
+            "docker_marker_observed": false,
+            "non_root": true,
+            "root_filesystem_read_only": false,
+            "note": "Runtime observations, not an attestation. Provider network/filesystem policy must be verified separately."
+          }
+        }
+      }
+    },
+    {
+      "id": "88fcb23b-d59a-4766-b406-71a1e171f26a",
+      "state": "completed",
+      "package": {
+        "ecosystem": "pypi",
+        "name": "packaging",
+        "version": "25.0"
+      },
+      "result": {
+        "status": "INCONCLUSIVE",
+        "risk_score": 0,
+        "metrics": {
+          "artifact_file_count": 79,
+          "source_file_count": 90,
+          "unique_comparison_paths": 97,
+          "identical_files": 72,
+          "added_files": 7,
+          "removed_files": 18,
+          "changed_files": 0
+        },
+        "artifact": {
+          "url": "https://files.pythonhosted.org/packages/a1/d4/1fc4078c65507b51b96ca8f8c3ba19e6a61c8253c72794544580a7b6c24d/packaging-25.0.tar.gz",
+          "digest": "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f",
+          "verified": true
+        },
+        "source": {
+          "commit": "f58537628042c7f29780b9d33f31597e7fc9d664",
+          "tag": "25.0",
+          "tag_status": "matched",
+          "confidence": "candidate",
+          "identity_corroborated": false,
+          "build_provenance_verified": false,
+          "reasons": [
+            "GitHub REST rate limited; release tags resolved through public Git HTTPS ref advertisement",
+            "Source manifest does not statically corroborate package name and version",
+            "Tag/manifest matching is not a cryptographic build provenance verification"
+          ],
+          "resolution_transport": "git_https_refs",
+          "archive_url": "https://codeload.github.com/pypa/packaging/tar.gz/f58537628042c7f29780b9d33f31597e7fc9d664",
+          "archive_sha256": "8f0606147c38fefad972f9653586c3f0e46d8a056d27499e4a5ed952e712d953"
+        },
+        "publication": {
+          "publication_time": "2025-04-19T11:48:59.673349Z",
+          "yanked": false,
+          "registry": "https://pypi.org"
+        },
+        "risk_reasons": {},
+        "execution_boundary": {
+          "separate_process": true,
+          "wall_timeout_seconds": 150,
+          "os_memory_limit": true,
+          "network_isolation": false,
+          "container": {
+            "deployment_configuration": "render-free-docker",
+            "docker_marker_observed": false,
+            "non_root": true,
+            "root_filesystem_read_only": false,
+            "note": "Runtime observations, not an attestation. Provider network/filesystem policy must be verified separately."
+          }
+        }
+      }
+    },
+    {
+      "id": "f410653b-eb80-44d4-aa22-c11458a48432",
+      "state": "completed",
+      "package": {
+        "kind": "text",
+        "artifact_id": "a48c549f-9890-4b60-82c5-5fee14a30063",
+        "source_id": "a344412c-951b-4ee4-aafd-4d17d391ebc2",
+        "name": "build.txt"
+      },
+      "result": {
+        "status": "INCONCLUSIVE",
+        "risk_score": 30,
+        "metrics": {
+          "artifact_file_count": 1,
+          "source_file_count": 1,
+          "unique_comparison_paths": 1,
+          "identical_files": 0,
+          "added_files": 0,
+          "removed_files": 0,
+          "changed_files": 1
+        },
+        "artifact": {
+          "digest": "sha256:9f95745b351f2042603dcab06943d2fe6c0b557669a25a85c05fada6735fd649",
+          "verified": false,
+          "origin": "user_supplied"
+        },
+        "source": {
+          "confidence": "user_supplied",
+          "identity_corroborated": false,
+          "build_provenance_verified": false,
+          "sha256": "83d7d4df18591f6a966c7999355338c625e5a2f7c9cb0c35f11d3ed9f725e022",
+          "reasons": [
+            "A supplied text pair has no independently verified package/source identity."
+          ]
+        },
+        "publication": null,
+        "risk_reasons": {
+          "SHELL_PIPELINE": 30
+        },
+        "execution_boundary": {
+          "separate_process": true,
+          "wall_timeout_seconds": 150,
+          "os_memory_limit": true,
+          "network_isolation": false,
+          "container": {
+            "deployment_configuration": "render-free-docker",
+            "docker_marker_observed": false,
+            "non_root": true,
+            "root_filesystem_read_only": false,
+            "note": "Runtime observations, not an attestation. Provider network/filesystem policy must be verified separately."
+          }
+        }
+      }
+    }
+  ],
+  "routes": {
+    "/corpus": {
+      "status": 200,
+      "bytes": 93682,
+      "unauthenticated": 401
+    },
+    "/evaluation": {
+      "status": 200,
+      "bytes": 644657,
+      "unauthenticated": 401
+    },
+    "/fresh-evaluation": {
+      "status": 200,
+      "bytes": 299070,
+      "unauthenticated": 401
+    },
+    "/api/corpus": {
+      "status": 200,
+      "bytes": 67359,
+      "unauthenticated": 401
+    },
+    "/api/evaluation": {
+      "status": 200,
+      "bytes": 524611,
+      "unauthenticated": 401,
+      "recorded_generated_at": "2026-11-19T05:05:57.243122+00:00"
+    },
+    "/api/evaluation/fresh": {
+      "status": 200,
+      "bytes": 232096,
+      "unauthenticated": 401,
+      "recorded_generated_at": "2026-11-19T05:06:06.778662+00:00"
+    },
+    "/openapi.json": {
+      "status": 200,
+      "bytes": 9885,
+      "unauthenticated": 401
+    },
+    "health": {
+      "status": "ok",
+      "engine": "0.2.0",
+      "worker_alive": true,
+      "monitor_alive": true,
+      "auth_required": true,
+      "scan_concurrency": 1,
+      "storage": "ephemeral",
+      "deployment": "render-free-docker"
+    }
+  },
+  "limits": [
+    "Smoke checks do not establish ecosystem-wide accuracy.",
+    "Ephemeral scan history was reset by redeployment; durable persistence is not provided.",
+    "Non-root and Linux address-space limits observed. Root filesystem writable; Docker marker absent; network enabled.",
+    "Provider identifies runtime as Docker. Self-reported observations do not attest to every provider isolation control."
+  ]
+}

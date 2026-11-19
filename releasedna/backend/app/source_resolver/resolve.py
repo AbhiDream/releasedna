@@ -4,6 +4,7 @@ import tomllib
 from urllib.parse import quote
 import httpx
 from app.core.safety import InspectionError, inspect_archive, safe_path
+from app.source_resolver.git_refs import advertised_tags
 
 
 def resolve(fetcher, release):
@@ -14,7 +15,9 @@ def resolve(fetcher, release):
         evidence['reasons'].append('No unambiguous supported GitHub repository in registry metadata')
         return evidence, {}
     commits = {}
-    for tag in ('v' + version, version, release['name'].split('/')[-1] + '@' + version):
+    candidates = ('v' + version, version, release['name'].split('/')[-1] + '@' + version)
+    evidence['resolution_transport'] = 'github_rest'
+    for tag in candidates:
         try:
             ref = fetcher.json(f'https://api.github.com/repos/{slug}/git/ref/tags/{quote(tag, safe="")}')
             obj = ref['object']
@@ -25,6 +28,11 @@ def resolve(fetcher, release):
             if obj['type'] == 'commit' and re.fullmatch(r'[0-9a-f]{40}', obj['sha']):
                 commits[tag] = obj['sha']
         except httpx.HTTPStatusError as exc:
+            if exc.response.status_code == 429 or (exc.response.status_code == 403 and exc.response.headers.get('x-ratelimit-remaining') == '0'):
+                commits = advertised_tags(fetcher, slug, candidates)
+                evidence['resolution_transport'] = 'git_https_refs'
+                evidence['reasons'].append('GitHub REST rate limited; release tags resolved through public Git HTTPS ref advertisement')
+                break
             if exc.response.status_code != 404:
                 raise
     evidence['tag_status']='matched' if commits else 'missing'
@@ -41,9 +49,10 @@ def resolve(fetcher, release):
         if head and head != sha:
             evidence['reasons'].append('npm gitHead disagrees with release tag')
     elif head:
-        commit = fetcher.json(f'https://api.github.com/repos/{slug}/commits/{head}')
-        if commit['sha'] != head:
-            raise InspectionError('Source commit identity mismatch')
+        if evidence['resolution_transport'] != 'git_https_refs':
+            commit = fetcher.json(f'https://api.github.com/repos/{slug}/commits/{head}')
+            if commit['sha'] != head:
+                raise InspectionError('Source commit identity mismatch')
         sha = head
         evidence.update(commit=sha)
         evidence['reasons'].append('No matching release tag; registry gitHead is only a candidate')

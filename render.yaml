@@ -1,0 +1,23 @@
+# Free Docker demo. Storage is ephemeral and monitoring stops during idle sleep.
+services:
+  - type: web
+    name: releasedna
+    runtime: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./releasedna/Dockerfile
+    dockerContext: ./releasedna
+    healthCheckPath: /health
+    numInstances: 1
+    autoDeployTrigger: "off"
+    envVars:
+      - key: RELEASEDNA_REQUIRE_AUTH
+        value: "1"
+      - key: RELEASEDNA_API_TOKEN
+        generateValue: true
+      - key: RELEASEDNA_DB
+        value: /app/data/scans.sqlite3
+      - key: RELEASEDNA_DEPLOYMENT
+        value: render-free-docker
+      - key: RELEASEDNA_STORAGE
+        value: ephemeral

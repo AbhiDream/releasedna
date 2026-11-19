@@ -3,9 +3,17 @@ const el = id => document.getElementById(id);
 let currentReport = null;
 let selected = null;
 let poll = null;
+let workspaceKey = sessionStorage.getItem('releasedna-access-key') || '';
+async function authorizedFetch(path, options = {}) {
+  const headers = new Headers(options.headers);
+  if (workspaceKey) headers.set('Authorization', 'Bearer ' + workspaceKey);
+  const response = await fetch(path, {...options, headers});
+  if (response.status === 401) el('access-panel').hidden = false;
+  return response;
+}
 const terminal = state => ['completed', 'failed'].includes(state);
 async function api(path, options) {
-  const response = await fetch(path, options);
+  const response = await authorizedFetch(path, options);
   const body = await response.json();
   if (!response.ok) throw new Error(typeof body.detail === 'string' ? body.detail : `Request failed (${response.status})`);
   return body;
@@ -66,7 +74,7 @@ async function history() {
   if (!data.items.length) el('history').append(node('p', 'No persisted scans yet.'));
   for (const job of data.items) {
     const row = node('div', undefined, 'history-item');
-    const description = node('div', `${job.package.name}${job.package.version ? '@'+job.package.version : ' · local archives'} · ${job.state}`);
+    const description = node('div', `${job.package.name}${job.package.version ? '@'+job.package.version : ` · ${job.package.kind==='text'?'text files':'local archives'}`} · ${job.state}`);
     description.append(node('div', `${job.created_at} · ${job.id}`, 'muted'));
     const button = node('button', 'View'); button.type = 'button';
     button.addEventListener('click', () => select(job.id));
@@ -80,7 +88,7 @@ async function select(id) {
   try {
     const job = await api(`/api/scans/${encodeURIComponent(id)}`);
     if (selected !== id) return;
-    el('progress').textContent = `${job.state.toUpperCase()} · ${job.package.name} ${job.package.version || '· local archives'} · ${id}`;
+    el('progress').textContent = `${job.state.toUpperCase()} · ${job.package.name} ${job.package.version || (job.package.kind === 'text' ? '· text files' : '· local archives')} · ${id}`;
     if (job.result) { render(job.result); filterFiles(); }
     if (job.error) el('error').textContent = job.error;
     if (!terminal(job.state)) poll = setTimeout(() => select(id), 700);
@@ -129,7 +137,7 @@ async function monitor() {
     const remove = node('button', 'Stop watching'); remove.type = 'button';
     remove.addEventListener('click', async () => {
       try {
-        const response = await fetch(`/api/monitor/${encodeURIComponent(watch.id)}`, {method:'DELETE'});
+        const response = await authorizedFetch(`/api/monitor/${encodeURIComponent(watch.id)}`, {method:'DELETE'});
         if (!response.ok) throw new Error('Could not stop monitoring');
         await monitor();
       } catch (error) { el('monitor-error').textContent = error.message; }
@@ -174,18 +182,22 @@ function filterFiles() {
 }
 el('file-search').addEventListener('input', () => { if(currentReport) filterFiles(); });
 el('file-filter').addEventListener('change', () => { if(currentReport) filterFiles(); });
-function inputTab(local) {
-  el('registry-input').hidden=local; el('local-input').hidden=!local;
-  for(const side of ['registry','local']) {
-    const active = (side === 'local') === local;
+function inputTab(selectedSide) {
+  for(const side of ['registry','local','text']) {
+    const active = side === selectedSide;
+    el(side+'-input').hidden = !active;
     el(side+'-tab').setAttribute('aria-selected',String(active));
     el(side+'-tab').tabIndex = active ? 0 : -1;
   }
 }
-for(const side of ['registry','local']) {
-  el(side+'-tab').addEventListener('click',()=>inputTab(side==='local'));
+for(const [index,side] of ['registry','local','text'].entries()) {
+  el(side+'-tab').addEventListener('click',()=>inputTab(side));
   el(side+'-tab').addEventListener('keydown',event=>{
-    if (['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); const next=side==='registry';inputTab(next);el((next?'local':'registry')+'-tab').focus(); }
+    if (['ArrowLeft','ArrowRight'].includes(event.key)) {
+      event.preventDefault();
+      const next=['registry','local','text'][(index+(event.key==='ArrowRight'?1:2))%3];
+      inputTab(next);el(next+'-tab').focus();
+    }
   });
 }
 el('baseline').addEventListener('click',()=>{el('ecosystem').value='npm';el('name').value='is-number';el('version').value='7.0.0';el('scan-form').requestSubmit();});
@@ -198,7 +210,7 @@ async function uploads() {
     row.append(node('span',`${item.label} · ${(item.bytes/1024).toFixed(1)} KiB`));
     const button=node('button','Remove');button.type='button';
     button.addEventListener('click',async()=>{
-      try { const res=await fetch('/api/uploads/'+encodeURIComponent(item.id),{method:'DELETE'});if(!res.ok)throw new Error((await res.json()).detail);await uploads(); }
+      try { const res=await authorizedFetch('/api/uploads/'+encodeURIComponent(item.id),{method:'DELETE'});if(!res.ok)throw new Error((await res.json()).detail);await uploads(); }
       catch(error){el('local-error').textContent=error.message;}
     });
     row.append(button);el('uploads').append(row);
@@ -220,14 +232,93 @@ el('local-form').addEventListener('submit',async event=>{
     submitted=true;await history();await select(job.id);
   } catch(error){el('local-error').textContent=error.message;}
   finally {
-    if(!submitted) for(const id of created) await fetch('/api/uploads/'+encodeURIComponent(id),{method:'DELETE'}).catch(()=>{});
+    if(!submitted) for(const id of created) await authorizedFetch('/api/uploads/'+encodeURIComponent(id),{method:'DELETE'}).catch(()=>{});
     el('local-submit').disabled=false;await uploads().catch(()=>{});
   }
 });
 async function health() {
-  try {const status=await api('/health');el('health-label').textContent=status.worker_alive?'Inspection engine online':'Worker unavailable';}
+  try {const status=await api('/health');el('health-label').textContent=status.worker_alive?'Inspection engine online':'Worker unavailable';el('deployment-label').textContent=status.deployment;el('storage-warning').hidden=status.storage!=='ephemeral';el('access-panel').hidden=!status.auth_required || Boolean(workspaceKey);}
   catch {el('health-label').textContent='Backend disconnected';}
 }
 health();uploads().catch(error=>{el('local-error').textContent=error.message;});
 
-api('/api/explanation/config').then(config=>{if(!config.configured){el('explain').textContent='Groq explanation · key not configured';el('explain').disabled=true;}}).catch(()=>{});
+async function explanationConfig() {
+  try {
+    const config = await api('/api/explanation/config');
+    el('explain').disabled = !config.configured;
+    el('explain').textContent = config.configured ? 'Explain findings' : 'Groq explanation · key not configured';
+  } catch { el('explain').disabled = true; }
+}
+explanationConfig();
+
+el('access-form').addEventListener('submit', async event => {
+  event.preventDefault(); workspaceKey=el('access-key').value.trim();
+  try {
+    await api('/api/queue'); sessionStorage.setItem('releasedna-access-key',workspaceKey);
+    el('access-key').value='';el('access-panel').hidden=true;el('access-error').textContent='';
+    await Promise.all([history(),uploads(),monitor(),explanationConfig()]);el('error').textContent='';el('local-error').textContent='';el('monitor-error').textContent='';
+  } catch(error) {workspaceKey='';sessionStorage.removeItem('releasedna-access-key');el('access-error').textContent=error.message;}
+});
+el('batch-form').addEventListener('submit',async event=>{
+  event.preventDefault();el('batch-submit').disabled=true;el('batch-error').textContent='';
+  try {
+    const lines=el('batch-packages').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    if(!lines.length || lines.length>20)throw new Error('Enter 1 to 20 package lines.');
+    const packages=lines.map((line,index)=>{
+      const parts=line.split(',').map(x=>x.trim());
+      if(parts.length!==3 || !['npm','pypi'].includes(parts[0]) || !parts[1] || !parts[2])throw new Error(`Line ${index+1}: use ecosystem,package,version.`);
+      return {ecosystem:parts[0],name:parts[1],version:parts[2]};
+    });
+    const result=await api('/api/scans/batch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({packages})});
+    await history();await select(result.items[0].id);
+  } catch(error){el('batch-error').textContent=error.message;}
+  finally{el('batch-submit').disabled=false;}
+});
+el('text-form').addEventListener('submit',async event=>{
+  event.preventDefault();el('text-submit').disabled=true;el('text-error').textContent='';
+  const created=[];let submitted=false;
+  try {
+    const request={name:el('text-name').value.trim()};
+    for(const side of ['artifact','source']) {
+      const file=el('text-'+side).files[0];
+      if(!file || !file.size || file.size>120000)throw new Error('Each text file must contain 1 to 120,000 bytes.');
+      const saved=await api('/api/uploads?label='+encodeURIComponent(file.name.slice(0,160)),{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:file});
+      created.push(saved.id);request[side+'_id']=saved.id;
+    }
+    const job=await api('/api/text-comparisons',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)});
+    submitted=true;await history();await select(job.id);
+  } catch(error){el('text-error').textContent=error.message;}
+  finally {
+    if(!submitted)for(const id of created)await authorizedFetch('/api/uploads/'+encodeURIComponent(id),{method:'DELETE'}).catch(()=>{});
+    el('text-submit').disabled=false;await uploads().catch(()=>{});
+  }
+});
+async function refreshQueue() {
+  try {
+    const state=await api('/api/queue');
+    const running=state.items.filter(x=>x.state==='running').length;
+    el('queue-status').textContent=`One scan at a time · ${running} running · ${state.items.length-running} queued · capacity ${state.capacity}`;
+    el('queue-items').replaceChildren(...state.items.map((job,index)=>{
+      const row=node('div',undefined,'history-item');
+      row.append(node('span',`${index+1}. ${job.package.name} ${job.package.version||''} · ${job.state}`));
+      const view=node('button','View');view.type='button';view.addEventListener('click',()=>select(job.id));row.append(view);return row;
+    }));
+  }catch(error){el('queue-status').textContent=error.message;}
+  setTimeout(refreshQueue,2000);
+}
+refreshQueue();
+// Protected generated reports are downloaded with the workspace key; it never enters a URL.
+for(const link of document.querySelectorAll('a[href="/corpus"],a[href="/evaluation"],a[href="/fresh-evaluation"],a[href="/docs"]')) {
+  link.addEventListener('click',async event=>{
+    if(!workspaceKey)return;
+    event.preventDefault();
+    try {
+      const path=link.getAttribute('href')==='/docs'?'/openapi.json':link.getAttribute('href');
+      const response=await authorizedFetch(path);
+      if(!response.ok)throw new Error((await response.json()).detail || 'Report unavailable');
+      const url=URL.createObjectURL(await response.blob());const save=node('a');save.href=url;
+      save.download=path==='/openapi.json'?'releasedna-openapi.json':`releasedna-${path.slice(1)}.html`;
+      save.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }catch(error){el('error').textContent=error.message;}
+  });
+}

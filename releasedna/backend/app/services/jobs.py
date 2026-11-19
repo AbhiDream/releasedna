@@ -79,18 +79,29 @@ class JobStore:
         return item
 
     def create(self, request):
-        identity = str(uuid.uuid4())
+        return self.create_many([request])[0]
+
+    def create_many(self, requests):
+        if not 1 <= len(requests) <= 20:
+            raise ValueError('Submit 1 to 20 jobs')
+        identities = [str(uuid.uuid4()) for _ in requests]
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
-            if request.get('kind') == 'local':
-                for key in ('artifact_id','source_id'):
-                    if not db.execute('SELECT 1 FROM uploads WHERE id=?',(request[key],)).fetchone():
-                        raise ValueError('Upload not found: '+key)
-            if db.execute("SELECT count(*) FROM scans WHERE state IN ('queued','running')").fetchone()[0] >= 20:
+            if db.execute("SELECT count(*) FROM scans WHERE state IN ('queued','running')").fetchone()[0] + len(requests) > 20:
                 raise QueueFull('Queue is full (20 pending jobs); try again after a job finishes')
-            db.execute('INSERT INTO scans(id,state,request,created_at) VALUES (?,?,?,?)',
-                       (identity, 'queued', json.dumps(request), now()))
-        return self.get(identity)
+            for identity, request in zip(identities, requests):
+                if request.get('kind') in ('local', 'text'):
+                    for key in ('artifact_id','source_id'):
+                        if not db.execute('SELECT 1 FROM uploads WHERE id=?',(request[key],)).fetchone():
+                            raise ValueError('Upload not found: '+key)
+                db.execute('INSERT INTO scans(id,state,request,created_at) VALUES (?,?,?,?)',
+                           (identity, 'queued', json.dumps(request), now()))
+        return [self.get(identity) for identity in identities]
+
+    def queue(self):
+        with self.connect() as db:
+            rows = db.execute("SELECT id,state,request,created_at,started_at,finished_at,error FROM scans WHERE state IN ('queued','running') ORDER BY rowid").fetchall()
+        return {'concurrency': 1, 'capacity': 20, 'items': [self.decode(row, False) for row in rows]}
 
     def get(self, identity):
         with self.connect() as db:
@@ -110,7 +121,8 @@ class JobStore:
     def claim(self):
         with self.connect() as db:
             db.execute('BEGIN IMMEDIATE')
-            row = db.execute("SELECT * FROM scans WHERE state='queued' ORDER BY created_at,id LIMIT 1").fetchone()
+            # Insertion order remains FIFO even when timestamps tie or the clock moves.
+            row = db.execute("SELECT * FROM scans WHERE state='queued' ORDER BY rowid LIMIT 1").fetchone()
             if not row:
                 return None
             db.execute("UPDATE scans SET state='running',started_at=? WHERE id=? AND state='queued'", (now(), row['id']))

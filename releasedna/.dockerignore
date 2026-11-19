@@ -3,3 +3,11 @@ data
 __pycache__
 *.pyc
 .env
+**/.env*
+**/.venv
+**/__pycache__
+**/*.pyc
+docs/*
+!docs/submission-evaluation.json
+!docs/fresh-evaluation.json
+*.sqlite3*

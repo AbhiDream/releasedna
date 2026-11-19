@@ -1,10 +1,11 @@
 import os
 import asyncio
+import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 from fastapi import FastAPI, HTTPException, Query, Response, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from app.core.safety import InspectionError
@@ -19,6 +20,11 @@ from app.services.explanation import explain, ExplanationUnavailable, MODEL
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def evidence_path(name):
+    generated = ROOT / 'data' / name
+    return generated if generated.is_file() else ROOT / 'evidence' / name
+
+
 class ScanRequest(BaseModel):
     ecosystem: Literal['npm', 'pypi']
     name: str = Field(min_length=1, max_length=214)
@@ -28,6 +34,16 @@ class ScanRequest(BaseModel):
 class WatchRequest(BaseModel):
     ecosystem: Literal['npm','pypi']
     name: str = Field(min_length=1,max_length=214)
+
+
+class BatchRequest(BaseModel):
+    packages: list[ScanRequest] = Field(min_length=1, max_length=20)
+
+
+class TextRequest(BaseModel):
+    artifact_id: str = Field(min_length=36, max_length=36)
+    source_id: str = Field(min_length=36, max_length=36)
+    name: str = Field(default='comparison.txt', min_length=1, max_length=160)
 
 
 class LocalRequest(BaseModel):
@@ -43,12 +59,15 @@ class LocalRequest(BaseModel):
 def create_app(db_path=None, scanner=scan, monitor_poller=None):
     @asynccontextmanager
     async def lifespan(application):
+        if os.environ.get('RELEASEDNA_REQUIRE_AUTH') == '1' and len(os.environ.get('RELEASEDNA_API_TOKEN', '')) < 32:
+            raise RuntimeError('Remote deployment requires RELEASEDNA_API_TOKEN with at least 32 characters')
         store = JobStore(db_path or os.environ.get('RELEASEDNA_DB', str(ROOT / 'data' / 'scans.sqlite3')))
         def dispatch(**request):
-            if request.pop('kind',None)=='local':
+            kind = request.pop('kind',None)
+            if kind in ('local', 'text'):
                 payload={k:v for k,v in request.items() if k not in ('artifact_id','source_id')}
                 payload.update(artifact=store.read_upload(request['artifact_id']),source=store.read_upload(request['source_id']))
-                return bounded_inspection('local',payload)
+                return bounded_inspection(kind,payload)
             return bounded_inspection('registry',request) if scanner is scan else scanner(**request)
         worker = Worker(store, dispatch)
         worker.start()
@@ -65,9 +84,63 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
     application = FastAPI(title='ReleaseDNA', version='0.2.0', lifespan=lifespan,
                           description='Durable package/source inspection jobs. CLEAN: No suspicious differences detected within the available analysis scope.')
 
+    @application.middleware('http')
+    async def access_control(request: Request, call_next):
+        token = os.environ.get('RELEASEDNA_API_TOKEN', '')
+        protected = request.url.path.startswith('/api/') or request.url.path in ('/docs', '/redoc', '/openapi.json', '/corpus', '/evaluation', '/fresh-evaluation')
+        if token and protected:
+            supplied = request.headers.get('Authorization', '')
+            if not secrets.compare_digest(supplied.encode(), ('Bearer ' + token).encode()):
+                return JSONResponse({'detail': 'Workspace access key required'}, status_code=401,
+                                    headers={'WWW-Authenticate': 'Bearer', 'Cache-Control': 'no-store'})
+        response = await call_next(request)
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'no-referrer'
+        if request.url.path == '/':
+            response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+        if protected:
+            response.headers['Cache-Control'] = 'no-store'
+        return response
+
     @application.get('/health')
     def health():
-        return {'status': 'ok', 'engine': '0.2.0', 'worker_alive': application.state.worker.thread.is_alive(), 'monitor_alive': application.state.monitor.thread.is_alive()}
+        return {'status': 'ok', 'engine': '0.2.0', 'worker_alive': application.state.worker.thread.is_alive(), 'monitor_alive': application.state.monitor.thread.is_alive(),
+                'auth_required': bool(os.environ.get('RELEASEDNA_API_TOKEN')), 'scan_concurrency': 1,
+                'storage': os.environ.get('RELEASEDNA_STORAGE', 'local-filesystem'),
+                'deployment': os.environ.get('RELEASEDNA_DEPLOYMENT', 'development process; not container-verified')}
+
+    @application.get('/api/queue')
+    def queue_status():
+        return application.state.store.queue()
+
+    @application.post('/api/scans/batch', status_code=202)
+    def batch(request: BatchRequest):
+        try:
+            for package in request.packages:
+                validate_input(package.ecosystem, package.name, package.version)
+            jobs = application.state.store.create_many([package.model_dump() for package in request.packages])
+        except QueueFull as exc:
+            raise HTTPException(429, str(exc)) from exc
+        except InspectionError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        application.state.worker.wake.set()
+        return {'items': jobs, 'concurrency': 1}
+
+    @application.post('/api/text-comparisons', status_code=202)
+    def text_comparison(request: TextRequest, response: Response):
+        from app.core.safety import safe_path
+        try:
+            name = safe_path(request.name)
+            if '/' in name:
+                raise ValueError('Use a filename without directories')
+            job = application.state.store.create({'kind': 'text', **request.model_dump()})
+        except QueueFull as exc:
+            raise HTTPException(429, str(exc)) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        response.headers['Location'] = '/api/scans/' + job['id']
+        application.state.worker.wake.set()
+        return job
 
     @application.get('/api/monitor')
     def monitor_status():
@@ -104,13 +177,13 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
 
     @application.get('/corpus',include_in_schema=False)
     def corpus_page():
-        path=ROOT/'data/adversarial.html'
+        path=evidence_path('adversarial.html')
         if not path.exists(): raise HTTPException(404,'Run python -m app.adversarial_corpus first')
         return FileResponse(path,media_type='text/html')
 
     @application.get('/api/corpus')
     def corpus_json():
-        path=ROOT/'data/adversarial.json'
+        path=evidence_path('adversarial.json')
         if not path.exists(): raise HTTPException(404,'No corpus run has been generated')
         return FileResponse(path,media_type='application/json')
 
@@ -175,26 +248,26 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
 
     @application.get('/evaluation', include_in_schema=False)
     def evaluation_page():
-        path = ROOT / 'data/evaluation.html'
+        path = evidence_path('evaluation.html')
         if not path.exists():
             raise HTTPException(404, 'Run python -m app.evaluation run --include-fixtures first')
         return FileResponse(path, media_type='text/html')
 
     @application.get('/fresh-evaluation',include_in_schema=False)
     def fresh_evaluation_page():
-        path=ROOT/'data/fresh-evaluation.html'
+        path=evidence_path('fresh-evaluation.html')
         if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run; see docs/submission-verification.md')
         return FileResponse(path,media_type='text/html')
 
     @application.get('/api/evaluation/fresh')
     def fresh_evaluation_json():
-        path=ROOT/'data/fresh-evaluation.json'
+        path=evidence_path('fresh-evaluation.json')
         if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run')
         return FileResponse(path,media_type='application/json')
 
     @application.get('/api/evaluation')
     def evaluation_json():
-        path = ROOT / 'data/evaluation.json'
+        path = evidence_path('evaluation.json')
         if not path.exists():
             raise HTTPException(404, 'No evaluation has been generated')
         return FileResponse(path, media_type='application/json', filename='releasedna-evaluation.json')
