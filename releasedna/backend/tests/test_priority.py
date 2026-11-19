@@ -1,4 +1,5 @@
 import copy
+import gzip
 import json
 import tempfile
 import threading
@@ -42,8 +43,27 @@ class DetectorPriorityTests(unittest.TestCase):
         self.assertIn('HIGH_ENTROPY_CHANGE',compare({'blob':File(blob)},{},True)['risk_reasons'])
         self.assertEqual(compare({'blob':File(blob)},{'blob':File(blob)},True)['findings'],[])
 
+    def test_entropy_skips_known_compressed_assets(self):
+        compressed=gzip.compress(bytes(range(256))*1024,mtime=0)
+        for path,data in (('asset.gz',bytes(range(256))*8),('asset.bin',compressed),
+                          ('module.wasm',b'\x00asm'+bytes(range(256))*8),
+                          ('font.woff2',b'wOF2'+bytes(range(256))*8),
+                          ('font.otf',b'OTTO'+bytes(range(256))*8)):
+            with self.subTest(path=path):
+                report=compare({path:File(data)},{},True)
+                self.assertNotIn('HIGH_ENTROPY_CHANGE',report['risk_reasons'])
+                row=next(x for x in report['files'] if x['path']==path)
+                self.assertIn('entropy_rule_skipped',row)
+                self.assertEqual(row['classification'],'generated_unverified')
+
     def test_regex_exec_not_dynamic_execution(self):
-        self.assertNotIn('DYNAMIC_EXECUTION',compare({'a.js':File(b'/pattern/.exec(input);')},{},True)['risk_reasons'])
+        baseline={'index.js':File(b'module.exports = 1;\n')}
+        artifact={'index.js':File(b'module.exports = 1;\nconst match = /pattern/.exec("input");\n')}
+        report=compare(artifact,baseline,True)
+        self.assertNotIn('DYNAMIC_EXECUTION',report['risk_reasons'])
+        self.assertNotIn('UNEXPLAINED_CODE',report['risk_reasons'])
+        self.assertEqual(report['findings'],[])
+        self.assertEqual(next(x for x in report['files'] if x['path']=='index.js')['classification'],'expected')
         self.assertIn('DYNAMIC_EXECUTION',compare({'a.py':File(b'exec("pass")')},{},True)['risk_reasons'])
 
     def test_specific_obfuscation_patterns_have_precise_findings(self):
@@ -55,9 +75,6 @@ class DetectorPriorityTests(unittest.TestCase):
             'computed-this-call': (b"this[var]('value')", 'OBFUSCATED_DYNAMIC_EXECUTION'),
             'hex-escaped-require': (b"require('\\x63\\x68ild_process')", 'OBFUSCATED_MODULE_LOAD'),
             'bracket-concat-require': (b"pkg['req'+'uire']('child_process')", 'OBFUSCATED_MODULE_LOAD'),
-            'dense-hex-escapes': (b'const text="\\x61\\x62\\x63\\x64";', 'ESCAPE_DENSITY'),
-            'dense-unicode-escapes': (b'const text="\\u0061\\u0062\\u0063\\u0064";', 'ESCAPE_DENSITY'),
-            'dense-concatenated-escapes': (b'const text="\\x61" + "\\x62" + "\\x63" + "\\x64";', 'ESCAPE_DENSITY'),
             'browser-fetch-hook': (b'window.fetch = function(input) { return original(input); };', 'BROWSER_API_HOOK'),
             'hex-obfuscator-array': (b'var _0x4f2a = ["alpha", "beta"];', 'OBFUSCATOR_IDENTIFIER'),
             'short-obfuscator-array': (b'const _0x1 = ["alpha", "beta"];', 'OBFUSCATOR_IDENTIFIER'),
@@ -70,6 +87,22 @@ class DetectorPriorityTests(unittest.TestCase):
                 self.assertEqual(finding['artifact_path'],'dist/index.js')
                 self.assertIn('static heuristic',finding['message'])
                 self.assertNotIn('UNEXPLAINED_CODE',report['risk_reasons'])
+
+    def test_escape_density_is_parser_scoped_and_per_kb(self):
+        escapes=b'\\x61'*8
+        cases=(
+            ('dense-string',b'const s="'+b'\\x61'*16+b'";','ESCAPE_DENSITY'),
+            ('dense-template',b'const s=`'+b'\\u0061'*16+b'`;','ESCAPE_DENSITY'),
+            ('comments',b'// '+b'\\x61'*20+b'\nconst s="plain";','NO_ESCAPE_DENSITY'),
+            ('regex-literal',b'const r=/'+b'\\x61'*20+b'/;','NO_ESCAPE_DENSITY'),
+            ('declaration-file',b'declare const s: "'+b'\\x61'*20+b'";','NO_ESCAPE_DENSITY'),
+            ('below-per-kb',b'/*'+b'a'*1018+b'*/ const s="'+b'\\x61'*8+b'\\x62'*4+b'";','NO_ESCAPE_DENSITY'),
+        )
+        for label,payload,expected in cases:
+            with self.subTest(case=label):
+                report=compare({'dist/index.d.ts' if label=='declaration-file' else 'dist/index.js':File(payload)},{},True)
+                if expected=='ESCAPE_DENSITY': self.assertIn('ESCAPE_DENSITY',report['risk_reasons'])
+                else: self.assertNotIn('ESCAPE_DENSITY',report['risk_reasons'])
 
     def test_obfuscator_rule_does_not_flag_plain_hex_or_local_binding(self):
         for text in (b'const _0x = 1;', b'const _0xabc = ordinaryData;', b"require('child_process');", b'const path="C:\\x";'):
@@ -121,7 +154,7 @@ class DetectorPriorityTests(unittest.TestCase):
             allrow=a['table'][-1]
             self.assertEqual(allrow['TP']+allrow['FN'],11)
             self.assertEqual(allrow['FP']+allrow['TN'],4)
-            self.assertGreater(allrow['FP'],0) # no cherry-picking benign changed blobs
+            self.assertEqual((allrow['FP'],allrow['TN']),(0,4))
 
     def test_cache_explanation_never_exempts_payloads(self):
         p='tests/.pytest_cache/v/cache/nodeids'
