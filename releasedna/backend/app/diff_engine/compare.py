@@ -22,10 +22,11 @@ CAPABILITIES = {
 }
 OBFUSCATION = {
     # Heuristics describe observable source patterns, not intent or maliciousness.
-    'OBFUSCATED_DYNAMIC_EXECUTION': (40, r'''(?ix)(?<![\w.$])eval\s*\(\s*(?:[\w$]+\s*\+\s*|["'][^"']{1,120}["']\s*\+\s*){1,6}'''),
-    'OBFUSCATED_MODULE_LOAD': (30, r'''(?ix)\b(?:require|import)\s*\(\s*(?:["']\\x[0-9a-f]{2}|["']\\u00[0-9a-f]{2})'''),
+    'OBFUSCATED_DYNAMIC_EXECUTION': (40, r'''(?ix)(?:(?<![\w.$])(?:eval|Function)\s*\(\s*(?:[\w$]+\s*\+\s*|["'][^"']{1,120}["']\s*\+\s*){1,6}|[\w$.]+\s*\[\s*["'](?:ev|Fun)["']\s*\+\s*["'](?:al|ction)["']\s*\]\s*\(|\bthis\s*\[\s*[\w$]+\s*\]\s*\()'''),
+    'OBFUSCATED_MODULE_LOAD': (30, r'''(?ix)(?:\b(?:require|import)\s*\(\s*(?:["']\\x[0-9a-f]{2}|["']\\u00[0-9a-f]{2})|[\w$.]+\s*\[\s*["']req["']\s*\+\s*["']uire["']\s*\]\s*\()'''),
+    'ESCAPE_DENSITY': (20, r'''(?ix)(?:(?:\\x[0-9a-f]{2}|\\u[0-9a-f]{4})["'\s+(),]{0,6}){3,}(?:\\x[0-9a-f]{2}|\\u[0-9a-f]{4})'''),
     'BROWSER_API_HOOK': (25, r'''(?ix)\b(?:window|globalThis|self)\s*\.\s*(?:fetch|XMLHttpRequest|WebSocket)\s*=\s*(?:async\s*)?(?:function\b|\([^;]{0,300}=>)'''),
-    'OBFUSCATOR_IDENTIFIER': (15, r'''(?ix)(?<![\w$])(?:var|let|const)\s+_0x[0-9a-f]{3,}\b(?=\s*=\s*(?:\[|function\b))|(?<![\w$])_0x[0-9a-f]{3,}\s*=\s*(?:\[|function\b)'''),
+    'OBFUSCATOR_IDENTIFIER': (15, r'''(?ix)(?<![\w$])(?:var|let|const)\s+_0x[0-9a-f]+\b(?=\s*=\s*(?:\[|function\b))|(?<![\w$])_0x[0-9a-f]+\s*=\s*(?:\[|function\b)'''),
 }
 if set(OBFUSCATION) != set(OBFUSCATION_RULES):
     raise RuntimeError('Obfuscation rule registry and detectors disagree')
