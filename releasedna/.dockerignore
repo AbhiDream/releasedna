@@ -3,3 +3,9 @@ data
 __pycache__
 *.pyc
 .env
+**/.env*
+**/.venv
+**/__pycache__
+**/*.pyc
+docs
+*.sqlite3*

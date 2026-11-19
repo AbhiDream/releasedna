@@ -1,0 +1,28 @@
+# Optional PAID variant. Do not deploy without reviewing the provider cost estimate.
+# Repository-relative paths below assume this file is selected as the Blueprint path.
+services:
+  - type: web
+    name: releasedna
+    runtime: docker
+    plan: standard
+    branch: main
+    dockerfilePath: ./releasedna/Dockerfile
+    dockerContext: ./releasedna
+    healthCheckPath: /health
+    numInstances: 1
+    autoDeployTrigger: "off"
+    disk:
+      name: releasedna-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: RELEASEDNA_REQUIRE_AUTH
+        value: "1"
+      - key: RELEASEDNA_API_TOKEN
+        generateValue: true
+      - key: RELEASEDNA_DB
+        value: /app/data/scans.sqlite3
+      - key: RELEASEDNA_DEPLOYMENT
+        value: render-persistent-docker
+      - key: RELEASEDNA_STORAGE
+        value: persistent-volume

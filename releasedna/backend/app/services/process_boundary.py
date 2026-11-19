@@ -6,6 +6,16 @@ def _child(connection,operation,payload,timeout):
     limits={'separate_process':True,'wall_timeout_seconds':timeout,'os_memory_limit':False,'network_isolation':False}
     try:
         import os
+        from pathlib import Path
+        limits['container'] = {
+            'deployment_configuration': os.environ.get('RELEASEDNA_DEPLOYMENT', 'development'),
+            'docker_marker_observed': Path('/.dockerenv').exists(),
+            'non_root': os.geteuid() != 0 if hasattr(os, 'geteuid') else None,
+            'root_filesystem_read_only': bool(os.statvfs('/').f_flag & os.ST_RDONLY) if hasattr(os, 'statvfs') else None,
+            'note': 'Runtime observations, not an attestation. Provider network/filesystem policy must be verified separately.'}
+        # The inspection child does not use narration or workspace credentials.
+        os.environ.pop('GROQ_API_KEY', None)
+        os.environ.pop('RELEASEDNA_API_TOKEN', None)
         if os.name!='nt':
             import resource
             resource.setrlimit(resource.RLIMIT_AS,(768*1024*1024,768*1024*1024))
@@ -17,6 +27,9 @@ def _child(connection,operation,payload,timeout):
         elif operation=='local':
             from app.services.local_compare import compare_archives
             result=compare_archives(**payload)
+        elif operation=='text':
+            from app.services.text_compare import compare_text_files
+            result=compare_text_files(**payload)
         else: raise ValueError('Unknown inspection operation')
         result['execution_boundary']=limits
         connection.send(('ok',result))

@@ -1,13 +1,28 @@
 services:
   api:
     build: .
+    init: true
+    restart: unless-stopped
     ports: ["127.0.0.1:8000:8000"]
+    environment:
+      RELEASEDNA_REQUIRE_AUTH: "1"
+      RELEASEDNA_API_TOKEN: ${RELEASEDNA_API_TOKEN:?Set a random workspace access key of at least 32 characters}
+      RELEASEDNA_DB: /app/data/scans.sqlite3
+      RELEASEDNA_DEPLOYMENT: docker-compose
+      RELEASEDNA_STORAGE: persistent-volume
     read_only: true
     volumes: ["scan-data:/app/data"]
+    tmpfs: ["/tmp:rw,noexec,nosuid,nodev,size=32m"]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: 512m
+    mem_limit: 1g
     cpus: 1.0
     pids_limit: 64
+    stop_grace_period: 170s
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 volumes:
   scan-data:

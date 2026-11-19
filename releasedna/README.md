@@ -4,6 +4,8 @@ Latest: **0.2 prototype** — bounded local archive jobs, syntax evidence, stati
 
 Package supply-chain forensics for Catalyst Problem Statement 2.
 
+Remote Docker demo: the root `render.yaml` targets **Render Free**, with authenticated access, a sequential batch queue and standalone UTF-8 text comparison. See [deployment steps and verification limits](docs/remote-deployment.md). Free storage is ephemeral and monitoring pauses during idle sleep; this is not durable production hosting. The remote service has not yet been deployed or verified. The original PDF also contained white-text instructions; see the [visible-content and injection audit](docs/pdf-injection-audit.md).
+
 **Phase 1, hardened: inspection engine, CLI, durable job API and verification frontend.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.
 
 This is a static analyzer, not a malware-free certification. Deterministic inspection needs no AI key. Release monitoring and optional Groq narration are implemented; local wheel/ZIP comparison is supported, while official PyPI retrieval uses source distributions. Two independent contributor PRs are reserved in [CONTRIBUTING.md](CONTRIBUTING.md).
