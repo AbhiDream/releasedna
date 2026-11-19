@@ -1,14 +1,14 @@
 # ReleaseDNA
 
-Latest: [0.1.3 priority verification](docs/priority-verification.md) — non-code tampering demo, ETag release monitor, ivory anomaly badge, and optional immutable-findings explanation via Groq. Public alert proxy: 2/8 on the reused corpus; structural hard-negative FPR: 3/4. Open `/corpus` and `/evaluation` on the local server. Earlier metrics below describe the previous milestone.
+Latest: **0.2 prototype** — bounded local archive jobs, syntax evidence, static build adapters, a redesigned inspection desk and a separate fresh public benchmark. See [current verification and remaining gaps](docs/submission-verification.md), [reused corpus results](docs/submission-evaluation.md), and [fresh public holdout](docs/fresh-evaluation.md). Earlier milestone reports are historical snapshots.
 
 Package supply-chain forensics for Catalyst Problem Statement 2.
 
 **Phase 1, hardened: inspection engine, CLI, durable job API and verification frontend.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.
 
-This is an early static analyzer, not a malware-free certification. There is no AI dependency. The local frontend exists to verify real scans and persisted history. Release monitoring, wheel support and the optional open-weight explanation layer remain future work. Phase 2 has not started.
+This is a static analyzer, not a malware-free certification. Deterministic inspection needs no AI key. Release monitoring and optional Groq narration are implemented; local wheel/ZIP comparison is supported, while official PyPI retrieval uses source distributions. Two independent contributor PRs are reserved in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The subsequent detector-evaluation milestone is now implemented: [evaluation guide and measured limitations](docs/evaluation.md). Open `/evaluation` on the local server to inspect public releases, harmless tampering cases, exact findings and known misses. Current measured fixture recall is 11/12; public-release alert rate is 3/8 on a small presumed-benign sample. False-positive reduction is not complete.
+Open `/evaluation`, `/corpus` and `/fresh-evaluation` for generated evidence reports. Reused fixture recall is 12/12; reused public alerts are 1/8. Fresh public alerts are 2/5 with one additional source-resolution error. These small samples do not establish ecosystem-wide accuracy. False-positive reduction is not complete.
 
 ## Run locally
 
@@ -64,9 +64,9 @@ Repository-only files carry `omission_kind`, `omission_rule` and an explanation.
 
 Only HTTPS requests to exact approved registry/GitHub hosts are allowed. Every redirect is revalidated; proxy environment settings are ignored. Network requests have timeouts and a scan deadline. Limits: 24 MiB compressed download, 64 MiB expanded archive, 4 MiB per member, 6,000 entries. Links, devices, sparse files, traversal and case-colliding paths fail closed. Archive contents remain in memory; no member is written or imported. Sourcemap paths are never fetched.
 
-The dependency installation above installs this application's dependencies, never the packages being scanned. The scanner contains no package installation, build, require/import of fetched code or subprocess execution path.
+The dependency installation above installs this application's dependencies, never the packages being scanned. The scanner never installs, builds, imports or executes fetched code. It spawns only its own trusted inspection worker.
 
-The single-process implementation is intended for local evaluation. Python parser operations and archive headers do not have an OS-enforced per-task CPU deadline. Deploying against adversarial traffic requires a resource-limited worker boundary. Compose provides a read-only filesystem, a non-root user, memory/CPU/PID limits and no extra capabilities. Docker execution has not been verified in the development environment because Docker was unavailable.
+Each API/CLI inspection runs in a separate spawned process with a 150-second wall deadline. POSIX workers request CPU/address-space limits; the Windows run has no OS memory cap. This is fault containment, not a filesystem/network sandbox. Compose provides a read-only filesystem, non-root user and resource limits. Docker isolation remains unverified because Docker is unavailable locally. Keep this unauthenticated prototype bound to localhost.
 
 ## Docker
 
@@ -77,9 +77,9 @@ docker compose up --build
 ## Scope and trade-offs
 
 - GitHub only; repository claims can themselves be attacker controlled. Tags may move. Reports record the observed immutable commit and archive digest.
-- PyPI source distributions only. Dynamic versions, setuptools configuration, monorepo mapping beyond npm `repository.directory`, and generated bundles are conservative/partial.
+- Official PyPI retrieval uses source distributions; local supplied wheels/ZIPs are supported without registry-verification claims. Dynamic versions, setuptools configuration and generated bundles remain partial.
 - Source maps supply corroborating evidence only: a matching `sourcesContent` cannot prove the emitted bundle is authentic. Declared compiled output is `generated_unverified`, with zero points solely for being generated; it prevents a CLEAN verdict until equivalence is established. Strong capability rules still apply.
-- Regex capability rules can miss aliases or advanced obfuscation and can flag benign code. No claim of complete semantic analysis.
+- Regex capability rules can miss aliases or advanced obfuscation and can flag benign code. JavaScript Tree-sitter and Python AST comparisons explain comment/location-only changes while preserving literal values and program structure. This is not complete semantic equivalence analysis.
 - Missing-file classifications use supported declarations, limited static imports and conventions; they do not prove complete runtime dependency coverage.
 - npm publication time is read from the official full packument's exact `time[version]` entry. Missing/malformed/unavailable metadata remains null with a reason, never substituted with package `created` or `modified` timestamps.
 - Entirely unchanged files are hash-compared but not malware-scanned. The question answered is release/source divergence.
@@ -91,4 +91,32 @@ docker compose up --build
 
 Connector references: [npm metadata](https://github.com/npm/registry/blob/main/docs/responses/package-metadata.md), [PyPI JSON API](https://docs.pypi.org/api/json/), [GitHub commits API](https://docs.github.com/en/rest/commits/commits).
 
-Hardening work lives on `fix/phase1-hardening`. No remote has been configured and nothing has been published. Use a reviewed pull request when connecting a public repository. See [the Phase 1 audit](docs/phase1-hardening-report.md) for requirement-by-requirement verification.
+Repository: [AbhiDream/releasedna](https://github.com/AbhiDream/releasedna). Previous milestones merged through PRs #1 and #2; new work also goes through branches and PRs. Hosted CI remains unverified; the workflow template is `docs/github-checks.yml.example`.
+
+## Local archive comparison
+
+Choose **Local archives** in the frontend and select an artifact/source pair. Layout controls keep or strip a wrapper and optionally select a subdirectory. Uploads are stored in SQLite (24 MiB each, 256 MiB retained total); remove unused inputs in the panel. Active jobs prevent removal of their inputs. Results persist after input deletion.
+
+From `releasedna/backend`:
+
+```powershell
+..\.venv\Scripts\python -m app.local_cli --artifact artifact.tgz --source source.zip --output ..\data\comparison.json
+```
+
+`POST /api/uploads` accepts raw bytes and returns an ID. `POST /api/comparisons` takes `artifact_id`, `source_id`, optional name, wrapper layouts (`auto`, `strip`, `keep`) and prefixes. Poll `/api/scans/{id}`. Local identity is user-supplied, never registry-verified provenance.
+
+## Reproduce current evaluations
+
+From `releasedna/backend`:
+
+```powershell
+..\.venv\Scripts\python -m app.evaluation capture --include-fixtures
+..\.venv\Scripts\python -m app.adversarial_corpus
+..\.venv\Scripts\python -m app.evaluation capture --corpus evaluation/fresh-corpus.json --output ..\data\fresh-evaluation.json
+```
+
+Capture retrieves archives without installing them. Subsequent `run` commands replay digest-checked caches. Failures remain explicit errors. Committed evidence is under `docs/`; downloaded archives, database and generated dashboards stay under ignored `data/`.
+
+The structural corpus command also writes `data/demo-xz-artifact.tgz` and `data/demo-xz-source.tgz` (plus a debug-style pair). Select these in **Local archives** to demonstrate an actual queued comparison, the ivory anomaly badge, exact changed line, diff and evidence download. They are harmless synthetic analogues, not historical malware or organizer test data.
+
+`GROQ_API_KEY` enables optional narration through `openai/gpt-oss-20b`. Without a key the frontend shows unavailable. Configure it only in the backend environment. Model text never changes saved findings or scores.

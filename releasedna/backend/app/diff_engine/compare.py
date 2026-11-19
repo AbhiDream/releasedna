@@ -6,8 +6,9 @@ import math
 from collections import Counter
 from pathlib import PurePosixPath
 from app.diff_engine.omissions import Omissions
-from app.diff_engine.generated import GeneratedContext
-from app.diff_engine.metadata import explain_metadata
+from app.diff_engine.build_adapters import BuildContext
+from app.diff_engine.metadata import explain_metadata, manifest_cleanup
+from app.diff_engine.syntax import equivalent, code_after_map
 
 CLEAN_MEANING = 'No suspicious differences detected within the available analysis scope.'
 
@@ -29,10 +30,10 @@ def text(data):
         return None
 
 
-def compare(artifact, source, source_corroborated):
+def compare(artifact, source, source_corroborated, source_context=None):
     rows, findings, limitations = [], [], []
     omissions = Omissions(artifact, source)
-    generated = GeneratedContext(artifact, source)
+    generated = BuildContext(artifact, source)
     if not source:
         limitations.append('Source unavailable: added files mean unmatched files, not proven additions')
 
@@ -82,11 +83,18 @@ def compare(artifact, source, source_corroborated):
             row['build_evidence'] = build_evidence
             row.update(classification='generated_unverified', explanation=build_evidence['explanation'])
         is_code = suffix in CODE or a.executable
+        syntax_match = bool(s and is_code and a.executable==s.executable and equivalent(a.data,s.data,suffix))
+        if syntax_match:
+            row.update(classification='expected',explanation='Parsed syntax matches after excluding comments and source locations; literal values and program structure are retained.')
+            row['syntax_evidence']={'parser':'python-ast' if suffix=='.py' else 'tree-sitter-javascript','same_structure':True,'limitation':'Syntax comparison is not build provenance verification.'}
+        trailer=code_after_map(a.data,suffix)
+        if trailer and (not s or not code_after_map(s.data,suffix)):
+            finding(row,'UNEXPLAINED_CODE',15,'Executable statements follow the source-map trailer; matching embedded sources do not account for these statements.',trailer)
         # Non-code build macros and disguised blobs can carry executable text too.
         # Inspect a byte-preserving view of binary data without executing or decompressing it.
         scan_text = at if at is not None else a.data.decode('latin-1')
         old_text = st if st is not None else (s.data.decode('latin-1') if s else '')
-        if scan_text:
+        if scan_text and not syntax_match:
             for rule, (points, pattern) in CAPABILITIES.items():
                 old_count = len(re.findall(pattern, old_text or ''))
                 new_matches = list(re.finditer(pattern, scan_text))
@@ -122,6 +130,9 @@ def compare(artifact, source, source_corroborated):
                 stripped = {k: v for k, v in ap.items() if not k.startswith('_')}
                 if s and stripped == sp and not row['finding_ids']:
                     row.update(classification='expected', explanation='Manifest differs only in JSON formatting or registry underscore metadata.')
+                cleanup=manifest_cleanup(ap,sp)
+                if cleanup and not row['finding_ids']:
+                    row.update(classification='expected',explanation=cleanup)
             except (ValueError, TypeError, AttributeError):
                 finding(row, 'INVALID_MANIFEST', 20, 'Package manifest cannot be compared as a JSON object')
         if a.executable and (not s or not s.executable):
@@ -147,12 +158,16 @@ def compare(artifact, source, source_corroborated):
                 row.update(classification='expected', explanation='Standard source-distribution metadata, not executable code.')
             elif is_code:
                 finding(row, 'UNEXPLAINED_CODE', 15, 'Code has no exact source match; may be build output or a modification requiring review.', added_lines[:12])
+            elif (suffix in {'.md','.rst'} or (suffix=='.txt' and (path.lower().startswith(('docs/','doc/')) or PurePosixPath(path).stem.lower() in {'readme','changelog','license','authors','contributing'}))) and path not in omissions.entrypoints and path not in omissions.runtime and not a.executable and not row['finding_ids']:
+                row.update(classification='expected',explanation='Documentation/text difference without a new capability indicator; contents and hash remain available for review.')
             else:
                 finding(row, 'UNEXPLAINED_NONCODE', 10, 'Non-code file added or modified without a validated packaging explanation; may be legitimate, requires review.', added_lines[:12] or [{'artifact_sha256':a.sha256, 'source_sha256':s.sha256 if s else None, 'size_bytes':len(a.data)}])
+    if source_context and source_context.get('tag_status')=='missing':
+        findings.append({'id':f'F{len(findings)+1:04}','rule':'SOURCE_TAG_MISSING','points':20,'artifact_path':None,'source_path':None,'message':'None of the supported release tag candidates exists. Source identity remains unverified.','evidence':source_context.get('reasons',[]),'diff':''})
     # A rule contributes once per scan, preventing large packages from inflating scores by file count.
     reasons = {f['rule']: f['points'] for f in findings}
     score = min(100, sum(reasons.values()))
-    unresolved = any(r['classification'] in ('unexplained', 'generated_unverified') for r in rows)
+    unresolved = any(r['classification'] in ('unexplained', 'generated_unverified') or r.get('build_evidence') for r in rows)
     status = 'HIGH_RISK' if score >= 70 else 'REVIEW' if findings else 'CLEAN'
     if not source_corroborated or unresolved or limitations:
         status = 'INCONCLUSIVE'

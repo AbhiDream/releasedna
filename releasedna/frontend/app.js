@@ -61,11 +61,12 @@ function render(report) {
 }
 async function history() {
   const data = await api('/api/scans');
+  el('history-count').textContent = data.total;
   el('history').replaceChildren();
   if (!data.items.length) el('history').append(node('p', 'No persisted scans yet.'));
   for (const job of data.items) {
     const row = node('div', undefined, 'history-item');
-    const description = node('div', `${job.package.name}@${job.package.version} · ${job.state}`);
+    const description = node('div', `${job.package.name}${job.package.version ? '@'+job.package.version : ' · local archives'} · ${job.state}`);
     description.append(node('div', `${job.created_at} · ${job.id}`, 'muted'));
     const button = node('button', 'View'); button.type = 'button';
     button.addEventListener('click', () => select(job.id));
@@ -79,8 +80,8 @@ async function select(id) {
   try {
     const job = await api(`/api/scans/${encodeURIComponent(id)}`);
     if (selected !== id) return;
-    el('progress').textContent = `${job.state.toUpperCase()} · ${job.package.name}@${job.package.version} · ${id}`;
-    if (job.result) render(job.result);
+    el('progress').textContent = `${job.state.toUpperCase()} · ${job.package.name} ${job.package.version || '· local archives'} · ${id}`;
+    if (job.result) { render(job.result); filterFiles(); }
     if (job.error) el('error').textContent = job.error;
     if (!terminal(job.state)) poll = setTimeout(() => select(id), 700);
     else await history();
@@ -159,3 +160,74 @@ async function refreshMonitor() {
   setTimeout(refreshMonitor, 10000);
 }
 refreshMonitor();
+
+function filterFiles() {
+  const query = el('file-search').value.toLowerCase();
+  const filter = el('file-filter').value;
+  let visible = 0;
+  [...el('files').children].forEach((row,index) => {
+    const file = currentReport.files[index];
+    row.hidden = !file.path.toLowerCase().includes(query) || (filter !== 'all' && file.state !== filter && file.classification !== filter);
+    if (!row.hidden) visible++;
+  });
+  el('file-count').textContent = `${visible} of ${currentReport?.files?.length || 0} paths`;
+}
+el('file-search').addEventListener('input', () => { if(currentReport) filterFiles(); });
+el('file-filter').addEventListener('change', () => { if(currentReport) filterFiles(); });
+function inputTab(local) {
+  el('registry-input').hidden=local; el('local-input').hidden=!local;
+  for(const side of ['registry','local']) {
+    const active = (side === 'local') === local;
+    el(side+'-tab').setAttribute('aria-selected',String(active));
+    el(side+'-tab').tabIndex = active ? 0 : -1;
+  }
+}
+for(const side of ['registry','local']) {
+  el(side+'-tab').addEventListener('click',()=>inputTab(side==='local'));
+  el(side+'-tab').addEventListener('keydown',event=>{
+    if (['ArrowLeft','ArrowRight'].includes(event.key)) { event.preventDefault(); const next=side==='registry';inputTab(next);el((next?'local':'registry')+'-tab').focus(); }
+  });
+}
+el('baseline').addEventListener('click',()=>{el('ecosystem').value='npm';el('name').value='is-number';el('version').value='7.0.0';el('scan-form').requestSubmit();});
+async function uploads() {
+  const data=await api('/api/uploads');
+  el('uploads').replaceChildren();
+  if(!data.items.length) el('uploads').append(node('p','No stored uploads.'));
+  for(const item of data.items) {
+    const row=node('div',undefined,'history-item');
+    row.append(node('span',`${item.label} · ${(item.bytes/1024).toFixed(1)} KiB`));
+    const button=node('button','Remove');button.type='button';
+    button.addEventListener('click',async()=>{
+      try { const res=await fetch('/api/uploads/'+encodeURIComponent(item.id),{method:'DELETE'});if(!res.ok)throw new Error((await res.json()).detail);await uploads(); }
+      catch(error){el('local-error').textContent=error.message;}
+    });
+    row.append(button);el('uploads').append(row);
+  }
+}
+el('local-form').addEventListener('submit',async event=>{
+  event.preventDefault();el('local-submit').disabled=true;el('local-error').textContent='';
+  const created=[];let submitted=false;
+  try {
+    const request={name:el('artifact-file').files[0].name};
+    for(const side of ['artifact','source']) {
+      const file=el(side+'-file').files[0];
+      if(!file || file.size>24*1024*1024 || !file.size)throw new Error('Each archive must contain 1 byte to 24 MiB.');
+      const saved=await api('/api/uploads?label='+encodeURIComponent(file.name.slice(0,160)),{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:file});
+      created.push(saved.id);request[side+'_id']=saved.id;
+      request[side+'_layout']=el(side+'-layout').value;request[side+'_prefix']=el(side+'-prefix').value.trim();
+    }
+    const job=await api('/api/comparisons',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)});
+    submitted=true;await history();await select(job.id);
+  } catch(error){el('local-error').textContent=error.message;}
+  finally {
+    if(!submitted) for(const id of created) await fetch('/api/uploads/'+encodeURIComponent(id),{method:'DELETE'}).catch(()=>{});
+    el('local-submit').disabled=false;await uploads().catch(()=>{});
+  }
+});
+async function health() {
+  try {const status=await api('/health');el('health-label').textContent=status.worker_alive?'Inspection engine online':'Worker unavailable';}
+  catch {el('health-label').textContent='Backend disconnected';}
+}
+health();uploads().catch(error=>{el('local-error').textContent=error.message;});
+
+api('/api/explanation/config').then(config=>{if(!config.configured){el('explain').textContent='Groq explanation · key not configured';el('explain').disabled=true;}}).catch(()=>{});

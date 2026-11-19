@@ -43,6 +43,11 @@ def cases():
 def run(output=None):
     output = Path(output or ROOT/'data/adversarial.json')
     output.parent.mkdir(parents=True,exist_ok=True)
+    # Reusable local-input demo archives. These are data-only synthetic fixtures.
+    for label,family in [('xz','xz-style'),('debug','debug-style')]:
+        demo=next(case for case in cases() if case['family']==family)
+        for side in ('artifact','source'):
+            (output.parent/f'demo-{label}-{side}.tgz').write_bytes(pack(demo[side]))
     rows=[]
     for case in cases():
         blob=pack(case['artifact'])
@@ -55,7 +60,7 @@ def run(output=None):
         negatives=[r for r in rows if not r['tampered']]
         tp=sum(r['detected'] for r in positives); fp=sum(r['alerted'] for r in negatives)
         table.append(dict(family=family,TP=tp,FN=len(positives)-tp,FP=fp,TN=len(negatives)-fp,TPR=tp/len(positives),FPR=fp/len(negatives)))
-    result={'engine_version':'0.1.3','detector_sha256':detector_fingerprint(),'detector_hash_format':'sha256-named-files-lf-v1',
+    result={'engine_version':'0.2.0','detector_sha256':detector_fingerprint(),'detector_hash_format':'sha256-named-files-lf-v1',
             'artifact_integrity':'Local synthetic fixture digests; not verified official registry artifacts.',
             'scope':'Synthetic structural analogues, not historical exploit detection. No fixture code executed. Shared controls for each family. Exact expected rule and path required for TP.', 'table':table,'cases':rows}
     output.write_text(json.dumps(result,indent=2),encoding='utf-8')

@@ -1,8 +1,9 @@
 import os
+import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
-from fastapi import FastAPI, HTTPException, Query, Response
+from fastapi import FastAPI, HTTPException, Query, Response, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -10,6 +11,8 @@ from app.core.safety import InspectionError
 from app.connectors.registry import validate_input
 from app.services.jobs import JobStore, Worker, QueueFull
 from app.services.scan import scan
+from app.services.process_boundary import bounded_inspection
+from app.core.safety import MAX_DOWNLOAD
 from app.services.monitor import ReleaseMonitor
 from app.services.explanation import explain, ExplanationUnavailable, MODEL
 
@@ -27,11 +30,27 @@ class WatchRequest(BaseModel):
     name: str = Field(min_length=1,max_length=214)
 
 
+class LocalRequest(BaseModel):
+    artifact_id: str = Field(min_length=36,max_length=36)
+    source_id: str = Field(min_length=36,max_length=36)
+    name: str = Field(default='Local comparison',min_length=1,max_length=160)
+    artifact_layout: Literal['auto','strip','keep'] = 'auto'
+    source_layout: Literal['auto','strip','keep'] = 'auto'
+    artifact_prefix: str = Field(default='',max_length=512)
+    source_prefix: str = Field(default='',max_length=512)
+
+
 def create_app(db_path=None, scanner=scan, monitor_poller=None):
     @asynccontextmanager
     async def lifespan(application):
         store = JobStore(db_path or os.environ.get('RELEASEDNA_DB', str(ROOT / 'data' / 'scans.sqlite3')))
-        worker = Worker(store, scanner)
+        def dispatch(**request):
+            if request.pop('kind',None)=='local':
+                payload={k:v for k,v in request.items() if k not in ('artifact_id','source_id')}
+                payload.update(artifact=store.read_upload(request['artifact_id']),source=store.read_upload(request['source_id']))
+                return bounded_inspection('local',payload)
+            return bounded_inspection('registry',request) if scanner is scan else scanner(**request)
+        worker = Worker(store, dispatch)
         worker.start()
         application.state.store, application.state.worker = store, worker
         monitor = ReleaseMonitor(store,worker,monitor_poller) if monitor_poller else ReleaseMonitor(store,worker)
@@ -43,12 +62,12 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
             monitor.close()
             worker.close()
 
-    application = FastAPI(title='ReleaseDNA', version='0.1.3', lifespan=lifespan,
+    application = FastAPI(title='ReleaseDNA', version='0.2.0', lifespan=lifespan,
                           description='Durable package/source inspection jobs. CLEAN: No suspicious differences detected within the available analysis scope.')
 
     @application.get('/health')
     def health():
-        return {'status': 'ok', 'engine': '0.1.3', 'worker_alive': application.state.worker.thread.is_alive(), 'monitor_alive': application.state.monitor.thread.is_alive()}
+        return {'status': 'ok', 'engine': '0.2.0', 'worker_alive': application.state.worker.thread.is_alive(), 'monitor_alive': application.state.monitor.thread.is_alive()}
 
     @application.get('/api/monitor')
     def monitor_status():
@@ -112,6 +131,39 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
     def history(limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0)):
         return application.state.store.history(limit, offset)
 
+    @application.post('/api/uploads',status_code=201)
+    async def upload(request: Request, label: str = Query('archive',max_length=160)):
+        body=bytearray()
+        try:
+            async with asyncio.timeout(30):
+                async for chunk in request.stream():
+                    if len(body)+len(chunk)>MAX_DOWNLOAD: raise HTTPException(413,'Archive exceeds 24 MiB')
+                    body.extend(chunk)
+            return application.state.store.upload(label,bytes(body))
+        except TimeoutError as exc: raise HTTPException(408,'Upload timed out') from exc
+        except QueueFull as exc: raise HTTPException(429,str(exc)) from exc
+        except ValueError as exc: raise HTTPException(422,str(exc)) from exc
+
+    @application.get('/api/uploads')
+    def uploads():
+        with application.state.store.connect() as db:
+            return {'items':[dict(r) for r in db.execute('SELECT id,label,length(body) AS bytes,created_at FROM uploads ORDER BY created_at DESC')]}
+
+    @application.delete('/api/uploads/{identity}',status_code=204)
+    def remove_upload(identity: str):
+        try: application.state.store.remove_upload(identity)
+        except ValueError as exc: raise HTTPException(409,str(exc)) from exc
+        return Response(status_code=204)
+
+    @application.post('/api/comparisons',status_code=202)
+    def local_comparison(request: LocalRequest,response: Response):
+        try: job=application.state.store.create({'kind':'local',**request.model_dump()})
+        except QueueFull as exc: raise HTTPException(429,str(exc)) from exc
+        except ValueError as exc: raise HTTPException(422,str(exc)) from exc
+        application.state.worker.wake.set()
+        response.headers['Location']='/api/scans/'+job['id']
+        return job
+
     @application.get('/api/scans/{identity}')
     def get_scan(identity: str):
         job = application.state.store.get(identity)
@@ -127,6 +179,18 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
         if not path.exists():
             raise HTTPException(404, 'Run python -m app.evaluation run --include-fixtures first')
         return FileResponse(path, media_type='text/html')
+
+    @application.get('/fresh-evaluation',include_in_schema=False)
+    def fresh_evaluation_page():
+        path=ROOT/'data/fresh-evaluation.html'
+        if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run; see docs/submission-verification.md')
+        return FileResponse(path,media_type='text/html')
+
+    @application.get('/api/evaluation/fresh')
+    def fresh_evaluation_json():
+        path=ROOT/'data/fresh-evaluation.json'
+        if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run')
+        return FileResponse(path,media_type='application/json')
 
     @application.get('/api/evaluation')
     def evaluation_json():

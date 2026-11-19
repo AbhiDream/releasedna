@@ -28,7 +28,12 @@ def npm_publication(fetcher, name, version):
     return result
 
 
-def validate_input(ecosystem, name, version):
+def validate_input(ecosystem,name,version):
+    from app.connectors.adapters import adapter_for
+    return adapter_for(ecosystem).validate(name,version)
+
+
+def _validate_builtin(ecosystem, name, version):
     pattern = r'(?:@[a-z0-9._-]+/)?[a-z0-9][a-z0-9._-]*' if ecosystem == 'npm' else r'[A-Za-z0-9][A-Za-z0-9._-]*'
     if ecosystem not in ('npm', 'pypi') or len(name) > 214 or not re.fullmatch(pattern, name):
         raise InspectionError('Invalid ecosystem or package name')
@@ -49,7 +54,14 @@ def repository(value):
     return '/'.join(parts)
 
 
-def fetch_release(fetcher, ecosystem, name, version):
+def fetch_release(fetcher,ecosystem,name,version):
+    from app.connectors.adapters import adapter_for
+    adapter=adapter_for(ecosystem)
+    adapter.validate(name,version)
+    return adapter.fetch(fetcher,name,version)
+
+
+def _fetch_builtin(fetcher, ecosystem, name, version):
     validate_input(ecosystem, name, version)
     if ecosystem == 'npm':
         meta = fetcher.json(f'https://registry.npmjs.org/{quote(name, safe="")}/{quote(version)}')

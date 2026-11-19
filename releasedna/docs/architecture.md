@@ -14,10 +14,20 @@ Try `v<version>`, `<version>`, and `<package>@<version>` GitHub tags. Peel annot
 
 Exact bytes and executable bits establish identical files. Manifest formatting/registry metadata and standard source-distribution metadata have narrow explanations. Source-only files are classified as development, tests, documentation, packaging exclusions, runtime, entrypoint or unexplained. Entrypoints and detected local imports override exclusion conventions. Supported literal npm files/ignore rules explain exclusions; unsupported complex rules are not treated as proof. Unknown code changes need review; unknown non-code output makes coverage inconclusive. Compiled directory names are never an allowlist. Sourcemap matching is an evidence annotation rather than a clean verdict.
 
-## Planned phases (not implemented)
+## Current extension boundaries (0.2)
 
-2. Expand the verification frontend into the full evidence dashboard, strengthen build-style adapters and adversarial corpus. Evaluate recent releases across both ecosystems and measure false positives explicitly. Basic persisted history was pulled into Phase 1 at the user's explicit request.
-3. SQLite-backed watchlist, conditional registry requests, backoff/jitter, release deduplication, bounded worker queue and local alerts. Never post automated issues/comments to real projects.
-4. Optional local open-weight explanation of immutable findings, attestation-aware source matching, broader artifacts and isolated inspection workers. AI cannot alter scores or evidence.
+Registry retrieval dispatches through `connectors/adapters.py` and its `RegistryAdapter` protocol. npm/PyPI preserve their validated official endpoints and digest checks. New trusted adapters register in application code; package contents cannot register code. Advertising a new ecosystem in the API/CLI and extending the exact host allowlist are explicit integration steps. Registry and build adapters have substitution tests.
+
+`diff_engine/build_adapters.py` composes static explanation providers. The existing npm provider uses repository declarations and embedded source maps. Additional providers implement `explain(path)` and return evidence; the wrapper forces `equivalence_verified=False`, and all deterministic tampering rules still run. No provider executes builds.
+
+JavaScript uses bounded Tree-sitter syntax signatures; Python uses AST structure. Comments/locations are excluded while literals and structure remain. This explains syntax-preserving transformations, not arbitrary minification or transpilation. Source-map trailer statements are detected; changes before the trailer may still evade rules.
+
+API jobs and both CLIs use a spawned trusted worker with a 150-second wall deadline. Archive reads remain non-extracting. POSIX requests resource limits; Windows lacks an OS memory cap. The process boundary is not network/filesystem isolation. Docker sandbox testing remains blocked locally.
+
+Local artifact/source uploads are bounded SQLite blobs, referenced by ID and checked transactionally when creating a queued job. Reports record hashes, chosen layouts and unverified user-supplied identity. Completed results survive upload deletion and restart. Official scans use the same persisted queue.
+
+## Historical roadmap (superseded by current verification)
+
+The evidence dashboard, static adapter interfaces, measured corpora, persisted watchlist, conditional polling, deduplication, local alerts and optional Groq open-weight narration are implemented. Attestation verification, general build equivalence and verified container isolation remain outside the demonstrated scope. See submission-verification.md for PASS/FAIL/BLOCKED results.
 
 Each phase must run its own focused tests before progressing. A winning demonstration needs an honest corpus and measurable detection/false-positive results; neither comprehensive attack coverage nor competition placement can be promised from this initial milestone.

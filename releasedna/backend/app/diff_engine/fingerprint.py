@@ -2,7 +2,7 @@
 import hashlib
 from pathlib import Path
 
-FILES=('compare.py','generated.py','omissions.py','metadata.py','fingerprint.py')
+FILES=('compare.py','generated.py','omissions.py','metadata.py','syntax.py','build_adapters.py','fingerprint.py')
 
 
 def detector_fingerprint(root=None):

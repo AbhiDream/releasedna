@@ -8,7 +8,7 @@ from app.core.safety import InspectionError, inspect_archive, safe_path
 
 def resolve(fetcher, release):
     slug, version = release['repo_slug'], release['version']
-    evidence = {'commit': None, 'tag': None, 'confidence': 'unresolved',
+    evidence = {'commit': None, 'tag': None, 'tag_status':'unknown', 'confidence': 'unresolved',
                 'identity_corroborated': False, 'build_provenance_verified': False, 'reasons': []}
     if not slug:
         evidence['reasons'].append('No unambiguous supported GitHub repository in registry metadata')
@@ -27,7 +27,9 @@ def resolve(fetcher, release):
         except httpx.HTTPStatusError as exc:
             if exc.response.status_code != 404:
                 raise
+    evidence['tag_status']='matched' if commits else 'missing'
     if len(set(commits.values())) > 1:
+        evidence['tag_status']='conflicting'
         evidence['reasons'].append('Release tag candidates disagree on source commit')
         return evidence, {}
     head = release.get('git_head')
