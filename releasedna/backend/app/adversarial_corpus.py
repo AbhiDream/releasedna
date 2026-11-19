@@ -43,6 +43,11 @@ def cases():
 def run(output=None):
     output = Path(output or ROOT/'data/adversarial.json')
     output.parent.mkdir(parents=True,exist_ok=True)
+    # Reusable local-input demo archives. These are data-only synthetic fixtures.
+    for label,family in [('xz','xz-style'),('debug','debug-style')]:
+        demo=next(case for case in cases() if case['family']==family)
+        for side in ('artifact','source'):
+            (output.parent/f'demo-{label}-{side}.tgz').write_bytes(pack(demo[side]))
     rows=[]
     for case in cases():
         blob=pack(case['artifact'])

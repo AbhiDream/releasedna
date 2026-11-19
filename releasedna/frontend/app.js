@@ -229,3 +229,5 @@ async function health() {
   catch {el('health-label').textContent='Backend disconnected';}
 }
 health();uploads().catch(error=>{el('local-error').textContent=error.message;});
+
+api('/api/explanation/config').then(config=>{if(!config.configured){el('explain').textContent='Groq explanation · key not configured';el('explain').disabled=true;}}).catch(()=>{});

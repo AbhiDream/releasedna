@@ -180,6 +180,18 @@ def create_app(db_path=None, scanner=scan, monitor_poller=None):
             raise HTTPException(404, 'Run python -m app.evaluation run --include-fixtures first')
         return FileResponse(path, media_type='text/html')
 
+    @application.get('/fresh-evaluation',include_in_schema=False)
+    def fresh_evaluation_page():
+        path=ROOT/'data/fresh-evaluation.html'
+        if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run; see docs/submission-verification.md')
+        return FileResponse(path,media_type='text/html')
+
+    @application.get('/api/evaluation/fresh')
+    def fresh_evaluation_json():
+        path=ROOT/'data/fresh-evaluation.json'
+        if not path.exists(): raise HTTPException(404,'Fresh evaluation has not been run')
+        return FileResponse(path,media_type='application/json')
+
     @application.get('/api/evaluation')
     def evaluation_json():
         path = ROOT / 'data/evaluation.json'

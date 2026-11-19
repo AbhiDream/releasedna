@@ -194,6 +194,10 @@ def write_reports(result, output):
     for label,key in [('Tampering detected','tampered_detection_rate'),('Public-release alerts','public_alert_rate'),('Public releases inconclusive','public_inconclusive_rate')]:
         dashboard += '<div class="metric"><strong>'+esc(percent(metrics[key]))+'</strong>'+esc(label)+'</div>'
     dashboard += '</div><p>Public-release alerts are a false-positive proxy on presumed-benign samples. Inconclusive is not clean. This small corpus does not establish ecosystem-wide accuracy.</p><p>'+esc(result.get('evaluation_design',''))+'</p><p>Coverage limit: arbitrary generated-code modifications can evade heuristic rules. Matching source maps do not prove bundle integrity.</p><p>Generated '+esc(result['generated_at'])+' · engine '+esc(result['engine_version'])+' · <a href="/api/evaluation">Download complete JSON evidence</a></p>'+''.join(cards)+'</html>'
+    if any(row.get('case',{}).get('split')=='fresh_holdout' for row in result['public_releases']):
+        dashboard=dashboard.replace('href="/api/evaluation"','href="/api/evaluation/fresh"')
+    else:
+        dashboard=dashboard.replace('<h1>Detection, with receipts.</h1>','<h1>Detection, with receipts.</h1><p><a href="/fresh-evaluation">View the separate fresh public holdout report →</a></p>')
     output.with_suffix('.html').write_text(dashboard, encoding='utf-8')
 
 
