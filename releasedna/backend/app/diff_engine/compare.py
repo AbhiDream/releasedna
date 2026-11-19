@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import PurePosixPath
 from app.diff_engine.omissions import Omissions
+from app.diff_engine.generated import GeneratedContext
 
 CLEAN_MEANING = 'No suspicious differences detected within the available analysis scope.'
 
@@ -13,7 +14,7 @@ CAPABILITIES = {
     'DYNAMIC_EXECUTION': (35, r'\b(?:eval|exec|Function)\s*\('),
     'ENCODED_PAYLOAD': (25, r'(?:fromCharCode|atob\s*\(|b64decode|[A-Za-z0-9+/]{300,}={0,2})'),
 }
-CODE = {'.js', '.mjs', '.cjs', '.ts', '.py', '.sh', '.ps1', '.bat', '.cmd'}
+CODE = {'.js', '.mjs', '.cjs', '.ts', '.mts', '.cts', '.py', '.sh', '.ps1', '.bat', '.cmd'}
 
 
 def text(data):
@@ -27,6 +28,7 @@ def text(data):
 def compare(artifact, source, source_corroborated):
     rows, findings, limitations = [], [], []
     omissions = Omissions(artifact, source)
+    generated = GeneratedContext(artifact, source)
     if not source:
         limitations.append('Source unavailable: added files mean unmatched files, not proven additions')
 
@@ -71,6 +73,10 @@ def compare(artifact, source, source_corroborated):
                 row['diff_truncated'] = True
                 limitations.append(f'{path}: line diff exceeds processing budget; whole-file pattern comparison used')
         suffix = PurePosixPath(path).suffix.lower()
+        build_evidence = generated.explain(path)
+        if build_evidence:
+            row['build_evidence'] = build_evidence
+            row.update(classification='generated_unverified', explanation=build_evidence['explanation'])
         is_code = suffix in CODE or a.executable
         if is_code and at is not None:
             for rule, (points, pattern) in CAPABILITIES.items():
@@ -106,22 +112,16 @@ def compare(artifact, source, source_corroborated):
         if a.data.startswith((b'\x7fELF', b'MZ', b'\xcf\xfa\xed\xfe')):
             finding(row, 'BINARY_CHANGED', 30, 'New or modified native executable; build provenance required')
         if suffix == '.map' and at:
-            try:
-                sm = json.loads(at)
-                matches, mismatches = [], []
-                for origin, content in zip(sm.get('sources', [])[:1000], sm.get('sourcesContent', [])[:1000]):
-                    if not isinstance(origin, str) or not isinstance(content, str):
-                        continue
-                    # Compare only exact relative paths. Never resolve URLs or traverse map paths.
-                    target = origin.removeprefix('./')
-                    if target in source:
-                        (matches if content.encode() == source[target].data else mismatches).append(target)
-                row['source_map_evidence'] = {'matching_sources': matches, 'mismatched_sources': mismatches}
-                if mismatches:
-                    finding(row, 'SOURCEMAP_SOURCE_MISMATCH', 25, 'Embedded source differs from repository: ' + ', '.join(mismatches[:8]))
-                row['explanation'] = 'Source map checked as data. Matching embedded source does not prove the generated JavaScript is trustworthy.'
-            except (ValueError, TypeError, AttributeError):
-                row['explanation'] = 'Malformed source map; cannot establish generated-code origin.'
+            evidence = generated.maps[path]
+            row['source_map_evidence'] = evidence
+            if evidence['mismatched_sources']:
+                finding(row, 'SOURCEMAP_SOURCE_MISMATCH', 25, 'Embedded sources differ from repository content.', evidence['mismatched_sources'][:8])
+            elif evidence['all_embedded_sources_match'] and not row['finding_ids']:
+                row['classification'] = 'expected'
+            row['explanation'] = ('Source-map metadata inspected without fetching references. '
+                                  f"{len(evidence['matching_sources'])} embedded sources match; "
+                                  f"{len(evidence['mismatched_sources'])} differ; "
+                                  f"{len(evidence['unresolved_sources'])} unresolved. " + evidence['limitation'])
         if row['classification'] == 'unexplained':
             if state == 'added' and (path == 'PKG-INFO' or '.egg-info/' in path) and not is_code:
                 row.update(classification='expected', explanation='Standard source-distribution metadata, not executable code.')
@@ -132,7 +132,7 @@ def compare(artifact, source, source_corroborated):
     # A rule contributes once per scan, preventing large packages from inflating scores by file count.
     reasons = {f['rule']: f['points'] for f in findings}
     score = min(100, sum(reasons.values()))
-    unresolved = any(r['classification'] == 'unexplained' for r in rows)
+    unresolved = any(r['classification'] in ('unexplained', 'generated_unverified') for r in rows)
     status = 'HIGH_RISK' if score >= 70 else 'REVIEW' if findings else 'CLEAN'
     if not source_corroborated or unresolved or limitations:
         status = 'INCONCLUSIVE'
@@ -145,4 +145,5 @@ def compare(artifact, source, source_corroborated):
             'total_files_inspected_definition': 'Artifact plus source file instances; shared paths count twice. Use metrics.unique_comparison_paths for comparison rows.',
             'metrics': metrics, 'counts': counts,
             'expected_generated_differences': [r['path'] for r in rows if r['classification'] == 'expected' and r['state'] != 'removed'],
+            'unverified_generated_outputs': [r['path'] for r in rows if r.get('build_evidence')],
             'findings': findings, 'files': rows, 'limitations': limitations}

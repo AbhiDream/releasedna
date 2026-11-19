@@ -32,12 +32,12 @@ def create_app(db_path=None, scanner=scan):
         finally:
             worker.close()
 
-    application = FastAPI(title='ReleaseDNA', version='0.1.1', lifespan=lifespan,
+    application = FastAPI(title='ReleaseDNA', version='0.1.2', lifespan=lifespan,
                           description='Durable package/source inspection jobs. CLEAN: No suspicious differences detected within the available analysis scope.')
 
     @application.get('/health')
     def health():
-        return {'status': 'ok', 'engine': '0.1.1', 'worker_alive': application.state.worker.thread.is_alive()}
+        return {'status': 'ok', 'engine': '0.1.2', 'worker_alive': application.state.worker.thread.is_alive()}
 
     @application.post('/api/scans', status_code=202)
     def create_scan(request: ScanRequest, response: Response):
@@ -64,6 +64,20 @@ def create_app(db_path=None, scanner=scan):
         return job
 
     frontend = ROOT / 'frontend'
+
+    @application.get('/evaluation', include_in_schema=False)
+    def evaluation_page():
+        path = ROOT / 'data/evaluation.html'
+        if not path.exists():
+            raise HTTPException(404, 'Run python -m app.evaluation run --include-fixtures first')
+        return FileResponse(path, media_type='text/html')
+
+    @application.get('/api/evaluation')
+    def evaluation_json():
+        path = ROOT / 'data/evaluation.json'
+        if not path.exists():
+            raise HTTPException(404, 'No evaluation has been generated')
+        return FileResponse(path, media_type='application/json', filename='releasedna-evaluation.json')
     application.mount('/assets', StaticFiles(directory=frontend), name='assets')
 
     @application.get('/', include_in_schema=False)
