@@ -12,7 +12,7 @@ This iteration scores added/changed non-code content, inspects text and binary b
 | Public release alert-rate proxy | 2/8 (25%), previously 3/8 (37.5%) | picocolors and nanoid still alert; 5/8 INCONCLUSIVE, 2/8 CLEAN, 1/8 REVIEW |
 | Original mutation suite | 11/12 (91.7%) | Quiet generated-code modification remains a known miss |
 | Original benign controls | 0/3 alerts | No certified ecosystem-wide FPR claim |
-| Regression suite | PASS: 73 tests | Detector, metadata, queue, persistence, ETag/dedup, retry, model immutability and API paths |
+| Regression suite | PASS: 74 tests | Detector, metadata, queue, persistence, ETag/dedup, retry, model immutability and API paths |
 | Frontend | PASS | JS syntax; real nanoid@5.1.5 scan, anomaly badge, corpus evidence and missing-key UI inspected |
 | Registry monitor | PASS | Real npm 200 -> conditional 304; 15-version initial baseline creates no historic scans; watch survives backend restart |
 | Model provider live inference | BLOCKED / intentionally deferred | User chose no API key. Mocked valid/invalid output, cache and immutable report checks pass |
@@ -42,7 +42,7 @@ From `releasedna/backend`:
 ..\.venv\Scripts\python -m app.evaluation run --include-fixtures
 ```
 
-Two offline public/fixture replays matched after excluding the generation timestamp. Reports include detector hashes. The corpus generator is deterministic and traverses the same bounded archive reader and comparator as production scans.
+Two offline public/fixture replays matched after excluding the generation timestamp. Reports include detector hashes using named files and normalized LF line endings, stable across Windows/Linux Git checkouts. The corpus generator is deterministic and traverses the same bounded archive reader and comparator as production scans.
 
 Open `/corpus` for the judge demo, expand `xz-script-m4-build.m4`, and inspect SHELL_PIPELINE at line 2 / byte 31 plus the exact diff. `/evaluation` shows the separate public-release and original fixture results. The ivory anomaly badge signifies a finding, not proven malware.
 

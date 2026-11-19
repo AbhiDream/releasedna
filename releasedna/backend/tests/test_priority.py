@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 from app.core.safety import File
 from app.diff_engine.compare import compare
+from app.diff_engine.fingerprint import detector_fingerprint,FILES
 from app.adversarial_corpus import run
 from app.services.jobs import JobStore
 from app.services.monitor import ReleaseMonitor,registry_poll
@@ -17,6 +18,15 @@ from fastapi.testclient import TestClient
 
 
 class DetectorPriorityTests(unittest.TestCase):
+    def test_detector_fingerprint_is_portable_but_content_sensitive(self):
+        with tempfile.TemporaryDirectory() as folder:
+            for name in FILES: (Path(folder)/name).write_bytes(b'first\nsecond\n')
+            expected=detector_fingerprint(folder)
+            for name in FILES: (Path(folder)/name).write_bytes(b'first\r\nsecond\r\n')
+            self.assertEqual(expected,detector_fingerprint(folder))
+            (Path(folder)/FILES[0]).write_bytes(b'changed\r\n')
+            self.assertNotEqual(expected,detector_fingerprint(folder))
+
     def test_noncode_changed_and_added_scored(self):
         for path in ('build.m4','a.blob','a.sh'):
             for source in ({},{path:File(b'old')}):

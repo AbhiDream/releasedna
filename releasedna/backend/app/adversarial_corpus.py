@@ -5,6 +5,7 @@ from pathlib import Path
 from html import escape
 from app.core.safety import File, inspect_archive
 from app.diff_engine.compare import compare
+from app.diff_engine.fingerprint import detector_fingerprint
 from app.evaluation_fixtures import pack
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,8 +55,7 @@ def run(output=None):
         negatives=[r for r in rows if not r['tampered']]
         tp=sum(r['detected'] for r in positives); fp=sum(r['alerted'] for r in negatives)
         table.append(dict(family=family,TP=tp,FN=len(positives)-tp,FP=fp,TN=len(negatives)-fp,TPR=tp/len(positives),FPR=fp/len(negatives)))
-    detector=Path(__file__).parent/'diff_engine'
-    result={'engine_version':'0.1.3','detector_sha256':hashlib.sha256(b''.join((detector/name).read_bytes() for name in ('compare.py','generated.py','omissions.py','metadata.py'))).hexdigest(),
+    result={'engine_version':'0.1.3','detector_sha256':detector_fingerprint(),'detector_hash_format':'sha256-named-files-lf-v1',
             'artifact_integrity':'Local synthetic fixture digests; not verified official registry artifacts.',
             'scope':'Synthetic structural analogues, not historical exploit detection. No fixture code executed. Shared controls for each family. Exact expected rule and path required for TP.', 'table':table,'cases':rows}
     output.write_text(json.dumps(result,indent=2),encoding='utf-8')
