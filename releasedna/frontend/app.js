@@ -18,6 +18,8 @@ function node(tag, content, className) {
 }
 function render(report) {
   currentReport = report;
+  el('anomaly-badge').hidden = !report.findings?.length;
+  el('explanation').replaceChildren();
   el('result').hidden = false;
   el('verdict').textContent = `${report.status} · risk score ${report.risk_score ?? 'unavailable'}`;
   el('meaning').textContent = report.status === 'CLEAN' ? report.clean_definition : 'Review the evidence and limitations. The verdict describes release/source differences within the available scope.';
@@ -100,3 +102,60 @@ el('download').addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 history().catch(error => { el('error').textContent = error.message; });
+
+el('explain').addEventListener('click', async () => {
+  if (!currentReport) return;
+  const identity = currentReport.scan_id;
+  el('explain').disabled = true;
+  el('explanation').textContent = 'Requesting explanation of saved findings…';
+  try {
+    const result = await api(`/api/scans/${encodeURIComponent(identity)}/explanation`, {method:'POST'});
+    if (currentReport?.scan_id !== identity) return;
+    el('explanation').replaceChildren(node('p', result.notice));
+    if (!result.explanations.length) el('explanation').append(node('p', 'No findings to explain. Analysis limitations still apply.'));
+    for (const item of result.explanations) el('explanation').append(node('p', `${item.finding_id}: ${item.text}`));
+    el('explanation').append(node('small', `Frozen report SHA256: ${result.report_sha256}`));
+  } catch (error) { if (currentReport?.scan_id === identity) el('explanation').textContent = error.message; }
+  finally { el('explain').disabled = false; }
+});
+
+async function monitor() {
+  const data = await api('/api/monitor');
+  el('watches').replaceChildren(); el('alerts').replaceChildren();
+  for (const watch of data.watches) {
+    const row = node('div', undefined, 'history-item');
+    row.append(node('p', `${watch.ecosystem}:${watch.name} · ${watch.initialized ? 'baseline recorded' : 'waiting for first poll'} · ${watch.last_checked || 'not checked'}${watch.error ? ' · ' + watch.error : ''}`));
+    const remove = node('button', 'Stop watching'); remove.type = 'button';
+    remove.addEventListener('click', async () => {
+      try {
+        const response = await fetch(`/api/monitor/${encodeURIComponent(watch.id)}`, {method:'DELETE'});
+        if (!response.ok) throw new Error('Could not stop monitoring');
+        await monitor();
+      } catch (error) { el('monitor-error').textContent = error.message; }
+    });
+    row.append(remove); el('watches').append(row);
+  }
+  if (!data.alerts.length) el('alerts').append(node('p', 'No local release alerts yet.'));
+  for (const alert of data.alerts) {
+    const row = node('div', undefined, alert.read ? 'history-item' : 'history-item unread');
+    row.append(node('p', `${alert.message} · ${alert.created_at}`));
+    const view = node('button', 'View scan'); view.type = 'button';
+    view.addEventListener('click', async () => {
+      try { await api(`/api/alerts/${encodeURIComponent(alert.id)}/read`, {method:'POST'}); await select(alert.scan_id); await monitor(); }
+      catch (error) { el('monitor-error').textContent = error.message; }
+    });
+    row.append(view); el('alerts').append(row);
+  }
+}
+el('watch-form').addEventListener('submit', async event => {
+  event.preventDefault(); el('monitor-error').textContent = '';
+  try {
+    await api('/api/monitor', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ecosystem:el('watch-ecosystem').value,name:el('watch-name').value.trim()})});
+    await monitor();
+  } catch (error) { el('monitor-error').textContent = error.message; }
+});
+async function refreshMonitor() {
+  try { await monitor(); } catch (error) { el('monitor-error').textContent = error.message; }
+  setTimeout(refreshMonitor, 10000);
+}
+refreshMonitor();

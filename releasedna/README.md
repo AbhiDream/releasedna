@@ -1,5 +1,7 @@
 # ReleaseDNA
 
+Latest: [0.1.3 priority verification](docs/priority-verification.md) — non-code tampering demo, ETag release monitor, ivory anomaly badge, and optional immutable-findings explanation via Groq. Public alert proxy: 2/8 on the reused corpus; structural hard-negative FPR: 3/4. Open `/corpus` and `/evaluation` on the local server. Earlier metrics below describe the previous milestone.
+
 Package supply-chain forensics for Catalyst Problem Statement 2.
 
 **Phase 1, hardened: inspection engine, CLI, durable job API and verification frontend.** Download an exact npm release or PyPI source distribution, verify its registry digest, match a GitHub source revision, inspect both archives without extracting or executing them, and produce deterministic file-level evidence.

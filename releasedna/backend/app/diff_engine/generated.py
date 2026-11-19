@@ -10,8 +10,8 @@ def package_pattern(pattern):
     """Supported npm-files subset: literals, *, ** and ?. No negation/extglobs."""
     if not isinstance(pattern, str) or not pattern or re.search(r'[!\[\]{}()\\:]', pattern):
         return None
-    pattern = pattern.removeprefix('./').rstrip('/')
-    if pattern.startswith('/') or '..' in pattern.split('/'):
+    pattern = pattern.removeprefix('./').lstrip('/').rstrip('/')
+    if not pattern or '..' in pattern.split('/'):
         return None
     escaped = re.escape(pattern)
     escaped = escaped.replace(r'\*\*/', '(?:.*/)?').replace(r'\*\*', '.*').replace(r'\*', '[^/]*').replace(r'\?', '[^/]')
@@ -94,6 +94,13 @@ class GeneratedContext:
             map_path = local_reference(posixpath.dirname(path), links[-1])
             if map_path in self.maps:
                 evidence['source_map'] = self.maps[map_path]
+        elif path + '.map' in self.maps:
+            evidence['source_map'] = self.maps[path + '.map']
+        if path.endswith('.d.ts'):
+            stem = PurePosixPath(path).name[:-5]
+            candidates = [p for p in self.source if p.startswith('src/') and p.endswith('.ts') and not p.endswith('.d.ts') and PurePosixPath(p).stem == stem]
+            evidence['declaration_sources'] = candidates
+            evidence['declaration_pairing'] = 'unique basename candidate; type equivalence is unverified' if len(candidates)==1 else 'ambiguous or unavailable; no type equivalence claim'
         evidence['explanation'] = ('Declared build output: repository package.json declares a build and this output path. '
                                    'Its absence from the repository is expected for a build, but emitted-code equivalence is unverified. '
                                    'Capability and tampering rules still apply.')

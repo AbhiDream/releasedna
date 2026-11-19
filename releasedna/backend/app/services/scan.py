@@ -16,7 +16,7 @@ def scan(ecosystem, name, version):
               'status': 'INCONCLUSIVE', 'risk_score': None, 'risk_reasons': {},
               'publication': None, 'artifact': None, 'repository': None, 'source': None,
               'total_files_inspected': 0, 'counts': {}, 'findings': [], 'files': [],
-              'limitations': [], 'engine_version': '0.1.2', 'error': None, 'clean_definition': CLEAN_MEANING,
+              'limitations': [], 'engine_version': '0.1.3', 'error': None, 'clean_definition': CLEAN_MEANING,
               'metrics': {'artifact_file_count': 0, 'source_file_count': 0, 'unique_comparison_paths': 0,
                           'identical_files': 0, 'added_files': 0, 'removed_files': 0, 'changed_files': 0}}
     fetcher = Fetcher()

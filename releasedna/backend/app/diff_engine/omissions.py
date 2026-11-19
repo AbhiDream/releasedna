@@ -62,6 +62,26 @@ class Omissions:
         # Static local references from shipped JS are stronger evidence than ignore rules.
         # No dynamic resolution or package code execution is performed.
         for path, item in artifact.items():
+            if PurePosixPath(path).suffix == '.py':
+                # Parse syntax only; never import/execute package modules.
+                import ast
+                try:
+                    tree = ast.parse(item.data.decode('utf-8'))
+                    for node in ast.walk(tree):
+                        candidates = []
+                        if isinstance(node, ast.Import):
+                            candidates = [alias.name.replace('.', '/') for alias in node.names]
+                        elif isinstance(node, ast.ImportFrom):
+                            base = posixpath.dirname(path) if node.level else ''
+                            for _ in range(max(0, node.level - 1)): base = posixpath.dirname(base)
+                            module = posixpath.join(base, (node.module or '').replace('.', '/'))
+                            candidates = [module] + [posixpath.join(module, alias.name) for alias in node.names]
+                        for target in candidates:
+                            for candidate in (target + '.py', target + '/__init__.py'):
+                                if candidate in source:
+                                    self.runtime[candidate] = f'{path}:{node.lineno} statically imports {target}'
+                except (SyntaxError, UnicodeError, ValueError, RecursionError):
+                    pass
             if PurePosixPath(path).suffix not in {'.js', '.cjs', '.mjs', '.ts'}:
                 continue
             content = item.data.decode('utf-8', errors='replace')
@@ -112,7 +132,9 @@ class Omissions:
             return result('tests', 'expected', 'OMITTED_TEST', 'Test/benchmark convention; no detected shipped-code reference or declared inclusion.')
         if any(p.lower() in {'docs', 'doc', 'examples'} for p in parts) or name.lower().endswith(('.md', '.rst')):
             return result('documentation', 'expected', 'OMITTED_DOCUMENTATION', 'Documentation/example convention; no detected runtime reference or declared inclusion.')
-        if path in DEVELOPMENT or parts[0] in {'.github', '.git', '.circleci'}:
+        config = (re.match(r'^(?:\..*rc(?:\..+)?|(?:eslint|rollup|webpack|vite|vitest|jest|babel|tsup|prettier)\.config\..+|(?:tsconfig|jsconfig)(?:\.[^.]+)?\.json|noxfile\.py|tox\.ini)$', name)
+                  or parts[0] in {'bin', 'scripts', 'tasks', '.github', '.git', '.circleci'})
+        if path in DEVELOPMENT or config:
             return result('development', 'expected', 'OMITTED_DEVELOPMENT', 'Development/CI configuration normally omitted from publishing.')
         # Fully understood literal files lists can explain omitted build inputs, but not entrypoints/references.
         if self.file_patterns is not None and all(self.file_patterns):

@@ -160,7 +160,7 @@ def write_reports(result, output):
     lines += ['', '## Limits', '',
               '- `quiet-generated-modification` is intentionally included: signature-free emitted-code changes can escape current rules. It is a false negative for detection, although the scan remains INCONCLUSIVE rather than CLEAN.',
               '- Source maps and build declarations explain why output exists; they do not prove emitted-code equivalence. Matching maps never disable capability checks.',
-              '- Four development releases informed the generic changes. Four holdout releases were evaluated only after those changes; this is not a large independent benchmark.',
+              '- Original development/holdout labels are historical. Both sets informed version 0.1.3; this reused corpus is not a fresh independent holdout.',
               '- Cases are pinned historical versions and a convenience sample, not a claim about current ecosystem-wide prevalence or recall.',
               '- No real malware corpus was used. Mutations are harmless text/metadata and are never executed.',
               '- Full path-level evidence, diffs, hashes, source matching and error reasons are in the sibling JSON report.']
@@ -192,7 +192,7 @@ def write_reports(result, output):
     dashboard = '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ReleaseDNA — detector evaluation</title><style>body{font:16px/1.6 system-ui;background:#0b1220;color:#e2e8f0;max-width:1120px;margin:auto;padding:28px}a{color:#6ee7ce}h1{font-size:40px}h2{margin-top:40px}.metrics{display:flex;gap:16px;flex-wrap:wrap}.metric,details{background:#142137;border:1px solid #334155;border-radius:12px;padding:20px;margin:12px 0}.metric{flex:1;min-width:230px}.metric strong{display:block;font-size:30px;color:#6ee7ce}summary{cursor:pointer;font-weight:650}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;background:#091321;padding:16px}article{border-left:3px solid #fbbf24;padding:0 16px}p{color:#c4cfe0}</style><a href="/">ReleaseDNA scan console</a><h1>Detection, with receipts.</h1><p>Real public releases. Harmless tampered copies. Explicit coverage gaps.</p><div class="metrics">'
     for label,key in [('Tampering detected','tampered_detection_rate'),('Public-release alerts','public_alert_rate'),('Public releases inconclusive','public_inconclusive_rate')]:
         dashboard += '<div class="metric"><strong>'+esc(percent(metrics[key]))+'</strong>'+esc(label)+'</div>'
-    dashboard += '</div><p>Public-release alerts are a false-positive proxy on presumed-benign samples. Inconclusive is not clean. This small corpus does not establish ecosystem-wide accuracy.</p><p>Known miss: a quiet generated-code modification has no matching capability signature. Matching source maps do not prove bundle integrity.</p><p>Generated '+esc(result['generated_at'])+' · engine '+esc(result['engine_version'])+' · <a href="/api/evaluation">Download complete JSON evidence</a></p>'+''.join(cards)+'</html>'
+    dashboard += '</div><p>Public-release alerts are a false-positive proxy on presumed-benign samples. Inconclusive is not clean. This small corpus does not establish ecosystem-wide accuracy.</p><p>'+esc(result.get('evaluation_design',''))+'</p><p>Known miss: a quiet generated-code modification has no matching capability signature. Matching source maps do not prove bundle integrity.</p><p>Generated '+esc(result['generated_at'])+' · engine '+esc(result['engine_version'])+' · <a href="/api/evaluation">Download complete JSON evidence</a></p>'+''.join(cards)+'</html>'
     output.with_suffix('.html').write_text(dashboard, encoding='utf-8')
 
 
@@ -220,9 +220,10 @@ def main():
     if args.include_fixtures:
         tampered, controls = synthetic_results()
         metrics = summarize(results, tampered, controls)
-        payload = {'schema_version':1, 'engine_version':'0.1.2', 'generated_at':datetime.now(timezone.utc).isoformat(),
+        payload = {'schema_version':1, 'engine_version':'0.1.3', 'generated_at':datetime.now(timezone.utc).isoformat(),
                    'corpus_sha256':hashlib.sha256(CORPUS.read_bytes()).hexdigest(), 'metrics':metrics,
-                   'detector_sha256':hashlib.sha256(b''.join((Path(__file__).parent/'diff_engine'/name).read_bytes() for name in ('compare.py','generated.py','omissions.py'))).hexdigest(),
+                   'detector_sha256':hashlib.sha256(b''.join((Path(__file__).parent/'diff_engine'/name).read_bytes() for name in ('compare.py','generated.py','omissions.py','metadata.py'))).hexdigest(),
+                   'evaluation_design':'Original development/holdout labels retained for historical comparison. Both sets informed version 0.1.3; this is now a reused development corpus, not a fresh holdout.',
                    'public_releases':results, 'tampered_fixtures':tampered, 'benign_controls':controls}
         write_reports(payload,args.output)
         print(json.dumps(metrics, indent=2))
